@@ -12,9 +12,10 @@ import urllib.error as _urlerr
 from pathlib import Path
 from typing import Optional, Any, Dict, List
 
-from flask import Flask, render_template, request, redirect, url_for, jsonify, abort
+from flask import Flask, render_template, request, redirect, url_for, jsonify, abort, make_response
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
+from jinja2 import TemplateNotFound
 
 # ---------------------------------------------------------------------
 # Env
@@ -28,7 +29,9 @@ load_dotenv()
 app = Flask(__name__, template_folder="templates", static_folder="static")
 CORS(app)
 app.config["GA_MEASUREMENT_ID"] = os.getenv("GA_MEASUREMENT_ID", "").strip()
-app.config["JSON_AS_ASCII"] = False  # ensure UTF-8 JSON responses
+app.config["JSON_AS_ASCII"] = False
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.jinja_env.auto_reload = True
 
 @app.context_processor
 def _inject_ga():
@@ -40,8 +43,8 @@ def _inject_ga():
 PROJECT_ROOT = Path(__file__).resolve().parent
 KB_DIR       = PROJECT_ROOT / "kb"
 PDF_PATH     = str(KB_DIR / "dream_faqs.pdf")
-LOCAL_JSON_EN = str(KB_DIR / "parsed_faqs_en.json")  # optional cache
-LOCAL_JSON_RU = str(KB_DIR / "parsed_faqs_ru.json")  # optional cache
+LOCAL_JSON_EN = str(KB_DIR / "parsed_faqs_en.json")
+LOCAL_JSON_RU = str(KB_DIR / "parsed_faqs_ru.json")
 
 def _mtime(p: str) -> float:
     try:
@@ -57,14 +60,12 @@ GH_REPO    = (os.getenv("GH_REPO",   "dream") or "").strip()
 GH_BRANCH  = (os.getenv("GH_BRANCH", "kb-data") or "").strip()
 GH_JSON_EN = (os.getenv("GH_JSON_EN","kb/parsed_faqs_en.json") or "").strip()
 GH_JSON_RU = (os.getenv("GH_JSON_RU","kb/parsed_faqs_ru.json") or "").strip()
-GH_TOKEN   = (os.getenv("GH_TOKEN",  "") or "").strip()  # fine-grained PAT (contents: read+write)
+GH_TOKEN   = (os.getenv("GH_TOKEN",  "") or "").strip()
 
-# Conservative timeouts + overall budget so requests never hang long enough to 502
-GITHUB_TIMEOUT_RAW   = int(os.getenv("GITHUB_TIMEOUT_RAW", "6"))   # per raw/download hop
-GITHUB_TIMEOUT_API   = int(os.getenv("GITHUB_TIMEOUT_API", "6"))   # per API hop
-GITHUB_TOTAL_BUDGET  = int(os.getenv("GITHUB_TOTAL_BUDGET", "12")) # overall per fetch
+GITHUB_TIMEOUT_RAW   = int(os.getenv("GITHUB_TIMEOUT_RAW", "6"))
+GITHUB_TIMEOUT_API   = int(os.getenv("GITHUB_TIMEOUT_API", "6"))
+GITHUB_TOTAL_BUDGET  = int(os.getenv("GITHUB_TOTAL_BUDGET", "12"))
 
-# Freshness window to ensure immediate consistency after mutations
 MUTATION_FRESH_TTL = int(os.getenv("FAQ_MUTATION_FRESH_TTL", "45"))
 _API_FIRST_UNTIL: Dict[str, float] = {"en": 0.0, "ru": 0.0}
 _LAST_PAYLOAD: Dict[str, Optional[Dict[str, Any]]] = {"en": None, "ru": None}
@@ -97,14 +98,6 @@ def _raw_github_url(path_in_repo: str) -> str:
     return f"https://raw.githubusercontent.com/{GH_OWNER}/{GH_REPO}/{GH_BRANCH}/{path_in_repo}"
 
 def _gh_get_file_bytes(path_in_repo: str, deadline: Optional[float] = None, *, api_first: bool = False) -> bytes:
-    """
-    Return raw bytes for a file in repo/branch.
-    Fast-fail strategy with per-hop timeouts and an overall budget:
-      1) raw.githubusercontent.com
-      2) Contents API (inline base64 or download_url)
-      3) Git blob by sha
-    The 'api_first' flag tries the Contents API first to avoid raw CDN staleness.
-    """
     if deadline is None:
         deadline = time.monotonic() + GITHUB_TOTAL_BUDGET
 
@@ -113,9 +106,8 @@ def _gh_get_file_bytes(path_in_repo: str, deadline: Optional[float] = None, *, a
             req = _urlreq.Request(_raw_github_url(path_in_repo), headers=_gh_headers())
             with _urlreq.urlopen(req, timeout=min(GITHUB_TIMEOUT_RAW, _time_left(deadline))) as r:
                 return r.read()
-        except _urlerr.HTTPError as e:
-            if e.code != 404:
-                pass
+        except _urlerr.HTTPError:
+            pass
         except Exception:
             pass
         return None
@@ -138,22 +130,13 @@ def _gh_get_file_bytes(path_in_repo: str, deadline: Optional[float] = None, *, a
                     req2 = _urlreq.Request(_gh_blob_url(sha), headers=_gh_headers_raw())
                     with _urlreq.urlopen(req2, timeout=min(GITHUB_TIMEOUT_API, _time_left(deadline))) as rr:
                         return rr.read()
-        except _urlerr.HTTPError as e:
-            if e.code != 404:
-                app.logger.warning("GitHub contents fetch (%s) -> %s", path_in_repo, e)
-        except Exception as e:
-            app.logger.warning("GitHub contents error (%s): %s", path_in_repo, e)
+        except Exception:
+            pass
         return None
 
-    data = None
-    if api_first:
-        data = _try_contents_then_blob() or _try_raw()
-    else:
-        data = _try_raw() or _try_contents_then_blob()
-
+    data = _try_raw() or _try_contents_then_blob() if not api_first else _try_contents_then_blob() or _try_raw()
     if data is not None:
         return data
-
     raise RuntimeError(f"Cannot fetch '{path_in_repo}' from GitHub (branch={GH_BRANCH}) within time budget")
 
 def _gh_current_sha(path_in_repo: str) -> Optional[str]:
@@ -190,16 +173,12 @@ def push_kb_to_github(path_in_repo: str, raw_bytes: bytes, message: str) -> bool
         return False
 
 # ---------------------------------------------------------------------
-# JSON decode/normalize (robust) + GitHub load/save
+# JSON decode/normalize
 # ---------------------------------------------------------------------
-# Raw string so \x escapes are handled by the regex engine, not Python string literal parsing.
 _CTRL_RE = re.compile(r"[\x00-\x08\x0B\x0C\x0E-\x1F]")
-
-# Repair invalid JSON backslash escapes before json.loads
-# Valid JSON escapes: \" \\ \/ \b \f \n \r \t and \uXXXX
 _RE_INVALID_ESCAPE = re.compile(r'\\(?!["\\/bfnrtu])')
 _RE_BAD_U_ESCAPE   = re.compile(r'\\u(?![0-9a-fA-F]{4})')
-_RE_TRAILING_BS    = re.compile(r'\\(?=$)')  # stray backslash at end of string
+_RE_TRAILING_BS    = re.compile(r'\\(?=$)')
 
 def _safe_json_loads(txt: str) -> Any:
     try:
@@ -211,7 +190,6 @@ def _safe_json_loads(txt: str) -> Any:
         return json.loads(txt2)
 
 def _decode_json_bytes(raw: bytes) -> Any:
-    # Try several encodings (RU files are sometimes saved oddly)
     for enc in ("utf-8-sig", "utf-8", "utf-16", "utf-16-le", "utf-16-be", "cp1251", "latin-1"):
         try:
             txt = raw.decode(enc, errors="strict")
@@ -224,37 +202,29 @@ def _decode_json_bytes(raw: bytes) -> Any:
     return _safe_json_loads(txt)
 
 def _normalize_faq_json_obj(obj: Any) -> Dict[str, Any]:
-    # Find list of faqs
     if isinstance(obj, dict):
         faqs_src = obj.get("faqs")
         if not isinstance(faqs_src, list):
             for key in ("items", "data", "list"):
                 if isinstance(obj.get(key), list):
-                    faqs_src = obj[key]
-                    break
+                    faqs_src = obj[key]; break
             if not isinstance(faqs_src, list):
                 for v in obj.values():
                     if isinstance(v, list) and (not v or all(isinstance(x, dict) for x in v)):
-                        faqs_src = v
-                        break
+                        faqs_src = v; break
         meta = dict(obj.get("metadata") or {})
     elif isinstance(obj, list):
         faqs_src, meta = obj, {}
     else:
         faqs_src, meta = [], {}
-
     out: List[Dict[str, Any]] = []
     for f in (faqs_src or []):
-        if not isinstance(f, dict):
-            continue
-        try:
-            n = int(f.get("number", 0))
-        except Exception:
-            n = 0
+        if not isinstance(f, dict): continue
+        try: n = int(f.get("number", 0))
+        except Exception: n = 0
         q = f.get("question") or f.get("title") or f.get("question_ru") or f.get("question_en") or ""
         a = f.get("answer")   or f.get("body")  or f.get("answer_ru")   or f.get("answer_en")   or ""
         out.append({"number": n, "question": q, "answer": a})
-
     out.sort(key=lambda x: x["number"])
     meta["total_faqs"] = len(out)
     return {"metadata": meta, "faqs": out}
@@ -263,11 +233,9 @@ def _dir_of(p: str) -> str:
     parts = (p or "").split("/")
     return "/".join(parts[:-1]) if len(parts) > 1 else ""
 
-# If RU path is generic, coerce it to live next to EN
 if not GH_JSON_RU or GH_JSON_RU.strip() in {"parsed_faqs_ru.json", "ru/parsed_faqs_ru.json"}:
     GH_JSON_RU = f"{_dir_of(GH_JSON_EN) or 'kb'}/parsed_faqs_ru.json"
 
-# Use lists for cached paths so we never iterate a single character (fixes 'r' path symptom).
 _GH_PATH_CACHE: Dict[str, List[str]] = {}
 _GH_PATH_CACHE.setdefault("en", [GH_JSON_EN])
 _GH_PATH_CACHE.setdefault("ru", [GH_JSON_RU])
@@ -283,25 +251,16 @@ def _read_local_cache(lang: str) -> Optional[Dict[str, Any]]:
     return None
 
 def gh_load_lang_json(lang: str) -> Dict[str, Any]:
-    """
-    Read from GitHub with a strict time budget; fall back to local cache if GitHub is slow/unavailable.
-    If a candidate path yields 0 FAQs while metadata claims >0, keep trying; do not silently return 0.
-    Evict a cached bad path immediately to avoid pinning to a wrong location.
-    During a freshness window after mutations, serve the in-memory payload and fetch API-first.
-    """
     now = time.monotonic()
     api_first = now < _API_FIRST_UNTIL.get(lang, 0.0)
-
-    # If we just mutated, serve the in-memory payload immediately
     if api_first:
         mem = _LAST_PAYLOAD.get(lang)
-        if mem and mem.get("faqs"):
-            return mem
+        if mem and mem.get("faqs"): return mem
 
     attempts: List[str] = []
     cached_list = _GH_PATH_CACHE.get(lang, [])
     canonical = [GH_JSON_EN if lang == "en" else GH_JSON_RU]
-    cand_paths = list(dict.fromkeys((cached_list or []) + canonical))  # preserve order, de-dupe
+    cand_paths = list(dict.fromkeys((cached_list or []) + canonical))
 
     last_err: Optional[str] = None
     best_data: Optional[Dict[str, Any]] = None
@@ -309,8 +268,7 @@ def gh_load_lang_json(lang: str) -> Dict[str, Any]:
     deadline = time.monotonic() + GITHUB_TOTAL_BUDGET
 
     for path in cand_paths:
-        if not path:
-            continue
+        if not path: continue
         attempts.append(path)
         try:
             raw = _gh_get_file_bytes(path, deadline=deadline, api_first=api_first)
@@ -338,7 +296,7 @@ def gh_load_lang_json(lang: str) -> Dict[str, Any]:
     if best_data is None:
         cached_local = _read_local_cache(lang)
         if cached_local and cached_local.get("faqs"):
-            app.logger.warning("[kb] %s serving local cache; GH attempts=%s; last_err=%s",
+            app.logger.warning("[kb] %s serving local cache; attempts=%s; last_err=%s",
                                lang.upper(), attempts, last_err)
             return cached_local
         app.logger.error("[kb] %s GH failed. attempts=%s last_err=%s", lang.upper(), attempts, last_err)
@@ -351,11 +309,9 @@ def gh_load_lang_json(lang: str) -> Dict[str, Any]:
             return cached_local
         raise RuntimeError(f"{lang.upper()} JSON parsed successfully but contains 0 FAQs (path: {best_path}).")
 
-    # Cache path that worked (store single-element list)
     if best_path:
         _GH_PATH_CACHE[lang] = [best_path]
 
-    # Write local cache (for status page / debugging)
     try:
         os.makedirs(KB_DIR, exist_ok=True)
         cache_path = LOCAL_JSON_RU if lang == "ru" else LOCAL_JSON_EN
@@ -369,7 +325,6 @@ def gh_load_lang_json(lang: str) -> Dict[str, Any]:
     return best_data
 
 def gh_save_lang_json(lang: str, payload: Dict[str, Any], commit_msg: str) -> bool:
-    # Save back to the same path that worked, or primary if none cached
     path_list = _GH_PATH_CACHE.get(lang) or ([GH_JSON_RU] if lang == "ru" else [GH_JSON_EN])
     path = path_list[0]
     raw = json.dumps(payload, ensure_ascii=False, indent=2).encode("utf-8")
@@ -441,6 +396,7 @@ NAV = [
     ("falsification","nav.falsification","/falsification"),
     ("faq","nav.faq","/faq"),
     ("about","nav.about","/about"),
+    ("articles","nav.articles","/articles")
 ]
 
 @app.context_processor
@@ -495,11 +451,65 @@ def theorems(): return render_template("theorems.html", title=t("nav.theorems"))
 
 
 
+# ----------------------------- ARTICLES ---------------------------------
 
+def _template_exists(name: str) -> bool:
+    try:
+        app.jinja_env.get_template(name)
+        return True
+    except TemplateNotFound:
+        return False
 
+def _slug_title(slug: str) -> str:
+    return slug.replace("-", " ").replace("_", " ").title()
+
+def _render_article(lang: str, slug: str):
+    """
+    Resolve the include path and ALWAYS render through templates/articles.html.
+    Adds a debug header with the resolved template path.
+    """
+    # Try the requested language first, then EN, then RU
+    candidates = [
+        f"i18n/{lang}/articles/{slug}.html",
+        f"i18n/en/articles/{slug}.html",
+        f"i18n/ru/articles/{slug}.html",
+    ]
+    chosen = next((p for p in candidates if _template_exists(p)), None)
+    if not chosen:
+        abort(404)
+
+    html = render_template(
+        "articles.html",
+        title=_slug_title(slug),
+        include_path=chosen,
+        lang=("ru" if chosen.startswith("i18n/ru/") else "en"),
+    )
+    resp = make_response(html)
+    resp.headers["X-Article-Template"] = chosen  # so you can verify in Network panel
+    return resp
+
+# List page (wrapper decides which body to include)
+@app.get("/articles")
+def articles():
+    return render_template("articles.html", title=t("nav.articles"))
+
+# English default: /articles/<slug>.html
+@app.get("/articles/<slug>.html")
+def article_en(slug):
+    return _render_article("en", slug)
+
+# Explicit language: /<lang>/articles/<slug>.html   (lang in {en,ru})
+@app.get("/<lang>/articles/<slug>.html")
+def article_lang(lang, slug):
+    if lang not in ("en", "ru"):
+        abort(404)
+    return _render_article(lang, slug)
+
+# ---------------------------------------------------------------------
+# Caching headers for /faq/*
+# ---------------------------------------------------------------------
 app.url_map.strict_slashes = False
 
-# Prevent browser caching of /faq/* responses (ensure instant UI updates)
 @app.after_request
 def _no_store_for_faq(resp):
     try:
@@ -512,7 +522,7 @@ def _no_store_for_faq(resp):
     return resp
 
 # ---------------------------------------------------------------------
-# Admin page (view)
+# Admin (view-only page gate via header/query token)
 # ---------------------------------------------------------------------
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "January@1")
 
@@ -530,24 +540,21 @@ def admin_page():
     return render_template("admin.html", title="Admin FAQs")
 
 # ---------------------------------------------------------------------
-# Groq bot bits: import lazily and degrade gracefully if unavailable
+# Groq bot bits (safe fallbacks)
 # ---------------------------------------------------------------------
 try:
     from groq_bot import warm_index, groq_answer, reload_index  # type: ignore
 except Exception as _e:
     app.logger.warning("groq_bot import failed; RAG functions disabled: %s", _e)
-
     def groq_answer(*args, **kwargs):  # type: ignore
         return "RAG unavailable (groq_bot import failed)."
-
     def warm_index(*args, **kwargs):  # type: ignore
         return None
-
     def reload_index(*args, **kwargs):  # type: ignore
         return None
 
 # ---------------------------------------------------------------------
-# Simple FAQ search (GitHub JSON as the source of truth)
+# Simple FAQ search
 # ---------------------------------------------------------------------
 @app.post("/chat")
 def chat():
@@ -575,7 +582,7 @@ def chat():
         return jsonify({"reply": f"Error while processing your request: {str(e)}"})
 
 # ---------------------------------------------------------------------
-# Status (reads from GitHub directly and reports counts)
+# Status
 # ---------------------------------------------------------------------
 @app.get("/api/rag-status")
 def rag_status():
@@ -621,7 +628,7 @@ def groq_ask():
     return jsonify({"ok": True, "answer": ans})
 
 # ---------------------------------------------------------------------
-# /faq API - hits GitHub (with cache/freshness via gh_load_lang_json)
+# /faq API
 # ---------------------------------------------------------------------
 @app.get("/faq/list")
 def faq_list():
@@ -690,7 +697,6 @@ def faq_save():
 
         ok = gh_save_lang_json(lang, data, f"admin: save {lang.upper()} FAQ #{n}")
         if ok:
-            # Immediate consistency for this language
             _LAST_PAYLOAD[lang] = data
             _API_FIRST_UNTIL[lang] = time.monotonic() + MUTATION_FRESH_TTL
             try:
@@ -732,31 +738,9 @@ def faq_delete(number):
         return jsonify({"ok": False, "error": f"GH delete failed: {str(e)}"})
 
 # ---------------------------------------------------------------------
-# Debug helpers (optional but handy)
-# ---------------------------------------------------------------------
-@app.get("/api/debug/gh-ru-path")
-def dbg_ru_path():
-    return jsonify({
-        "GH_JSON_EN": GH_JSON_EN,
-        "GH_JSON_RU": GH_JSON_RU,
-        "cached_en": _GH_PATH_CACHE.get("en"),
-        "cached_ru": _GH_PATH_CACHE.get("ru"),
-        "branch": GH_BRANCH,
-        "repo": f"{GH_OWNER}/{GH_REPO}",
-        "fresh_until_en": _API_FIRST_UNTIL.get("en", 0.0),
-        "fresh_until_ru": _API_FIRST_UNTIL.get("ru", 0.0),
-    })
-
-@app.post("/api/debug/gh-evict-ru")
-def dbg_evict_ru():
-    _GH_PATH_CACHE.pop("ru", None)
-    return jsonify({"ok": True, "message": "evicted ru path cache"})
-
-# ---------------------------------------------------------------------
-# Background poller: keep a local cache fresh for status/RAG (optional)
+# Background poller (optional)
 # ---------------------------------------------------------------------
 def _pull_and_cache_from_github() -> bool:
-    """Pull EN/RU JSONs from GitHub into local cache; returns True if changed."""
     changed = False
     try:
         os.makedirs(KB_DIR, exist_ok=True)
@@ -798,29 +782,27 @@ def start_kb_poll(interval_sec: int = 60):
 _BOOT_DONE = False
 _BOOT_LOCK = threading.Lock()
 
+try:
+    from groq_bot import warm_index, reload_index  # type: ignore
+except Exception:
+    def warm_index(*args, **kwargs): return None
+    def reload_index(*args, **kwargs): return None
+
 def _boot_once():
     global _BOOT_DONE
     with _BOOT_LOCK:
-        if _BOOT_DONE:
-            return
-        # Warm Groq retriever (if PDF exists). This is safe: warm_index is a no-op fallback if import failed.
+        if _BOOT_DONE: return
         try:
-            if os.path.exists(PDF_PATH):
-                warm_index(PDF_PATH)
-            else:
-                warm_index()
+            if os.path.exists(PDF_PATH): warm_index(PDF_PATH)
+            else: warm_index()
         except Exception as e:
             app.logger.warning("[rag] warm_index failed: %s", e)
-
-        # Start poller
         start_kb_poll(interval_sec=60)
         _BOOT_DONE = True
-        app.logger.info("[boot] Ready (GitHub-first FAQs with robust RU loader and instant post-mutation freshness).")
+        app.logger.info("[boot] Ready.")
 
-# Trigger on import and again on first request (idempotent)
 _boot_once()
 
-# For local dev convenience
 if __name__ == "__main__":
     try:
         threading.Timer(1.0, lambda: webbrowser.open("http://127.0.0.1:5000/")).start()

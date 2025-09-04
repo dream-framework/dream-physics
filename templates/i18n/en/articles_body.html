@@ -1,0 +1,79 @@
+{# EN articles list (partial). Included from templates/articles.html #}
+<section class="content-section">
+  <div class="section-header">
+    <h1 class="section-title">Articles</h1>
+    <p class="muted">Browse the articles below.</p>
+  </div>
+
+  {# Base path for EN article pages #}
+  {% set BASE = '/articles/' %}
+
+  {# Add your articles here: file name (relative to i18n/en/articles/) and a human title #}
+  {% set ARTICLES = [
+
+    {'file': 'introduction.html', 'title': 'Introduction to D.R.E.A.M'},
+    {'file': 'meta-manifold.html', 'title': 'Meta-Manifold Overview'},
+
+  ] %}
+
+  {# If a variable `articles` is provided by the view, prefer it #}
+  {% set LIST = (articles if articles is defined and articles else ARTICLES) %}
+
+  <div class="cards-grid">
+    {% if LIST and LIST|length > 0 %}
+      {% for a in LIST %}
+        <a class="card doc-card" href="{{ BASE ~ a.file }}">
+          <div class="card-body">
+            <div class="doc-title">{{ a.title }}</div>
+            {% if a.desc %}<div class="doc-desc muted">{{ a.desc }}</div>{% endif %}
+          </div>
+          <div class="card-tail muted">{{ a.file }}</div>
+        </a>
+      {% endfor %}
+    {% else %}
+      <div class="empty-note muted">
+        No articles yet. Add <code>*.html</code> under
+        <code>templates/i18n/en/articles/</code> and list them in this file’s <code>ARTICLES</code> array.
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+  /* Light, site-compatible card grid */
+  .content-section { display:grid; gap:12px; }
+  .section-header { display:grid; gap:4px; }
+  .section-title { margin:0; font-size:22px; font-weight:800; }
+  .muted { color:#6b7280; }
+
+  .cards-grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap:12px;
+  }
+  .card.doc-card {
+    display:flex; flex-direction:column; justify-content:space-between;
+    border:1px solid #e5e7eb; border-radius:10px; background:#fff;
+    text-decoration:none; color:inherit; padding:12px;
+  }
+  .card.doc-card:hover { border-color:#c7d2fe; background:#eef2ff; }
+  .card-body { display:grid; gap:6px; }
+  .doc-title { font-weight:700; font-size:16px; line-height:1.3; }
+  .doc-desc { font-size:13px; }
+  .card-tail { font-size:12px; margin-top:8px; }
+  .empty-note { padding:12px; border:1px dashed #e5e7eb; border-radius:10px; background:#fafafa; }
+
+    /* Make card links use normal black text (and keep it on all states) */
+a.card.doc-card { color: #111; }
+a.card.doc-card:hover,
+a.card.doc-card:visited,
+a.card.doc-card:active,
+a.card.doc-card:focus { color: #111; }
+
+/* Explicitly set the title too (belt & suspenders) */
+a.card.doc-card .doc-title { color: #111; }
+a.card.doc-card:hover .doc-title,
+a.card.doc-card:visited .doc-title,
+a.card.doc-card:active .doc-title,
+a.card.doc-card:focus .doc-title { color: #111; }
+</style>

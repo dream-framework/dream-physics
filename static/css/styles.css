@@ -1,4 +1,3 @@
-
 :root{
   --bg:#0f1220;
   --card:#171a2f;
@@ -97,11 +96,7 @@ kbd{background:#0b0e24;border:1px solid #2a2e5a;border-bottom-color:#161a3f;bord
 .site-footer{padding:1rem 1rem;border-top:1px solid #262b4e}
 
 
-/* BEGIN: Optional page background overlay
-   To use your own fractal background, place an image in static/img/
-   and change the URL below (relative to /static/css/styles.css):
-   Example: background-image: url('../img/my_fractal.jpg');
-*/
+/* BEGIN: Optional page background overlay */
 body::before{
   content:"";
   position:fixed; inset:0;
@@ -109,8 +104,8 @@ body::before{
   background-position:center;
   background-size:cover;
   background-repeat:no-repeat;
-  opacity:0.06;         /* adjust subtlety here */
-  pointer-events:none;  /* keep the page clickable */
+  opacity:0.06;
+  pointer-events:none;
   z-index:0;
 }
 /* keep main content above the overlay */
@@ -122,24 +117,52 @@ body::before{
 .figure img, .figure svg{width:100%;height:auto;border-radius:14px;border:1px solid #2a2f5a;background:#10132b}
 .figure .cap{font-size:0.9rem;color:#a9b2d0}
 
-.prose {
-    white-space: pre-line;
-}
+.prose { white-space: pre-line; }
 
 /* === Toggle overrides (added) === */
 .show-math .math-block { display: block; }
 .show-math .math-inline { display: inline; }
 .show-spec .speculative { display: block; }
-/* hide speculative everywhere unless show-spec is on */
 body:not(.show-spec) .speculative { display: none !important; }
-/* keep FAQ clouds behaviour but respect spec toggle */
 body:not(.show-spec) .cloud.open .a.speculative,
 body:not(.show-spec) .cloud[open] .a.speculative { display: none !important; }
 
 .figure .figure-media {
-    width: 100%;
-    height: auto;
-    border-radius: 14px;
-    border: 1px solid #2a2f5a;
-    background: #10132b;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid #2a2f5a;
+  background: #10132b;
 }
+
+/* ===== All article pages (actual article content) ===== */
+
+/* 1) Make the header/nav full-width on article pages */
+body.is-article .site-header{
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  border-radius: 0;
+}
+
+/* 2) Remove any light/white rectangles and keep clean content area */
+body.is-article :is(.article-shell,#article-root){
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Neutralize common “card/hero/panel” wrappers inside the article shell */
+body.is-article :is(.article-shell,#article-root) :where(.card,.panel,.section,.capsule,.box,.well,.content,.article-panel,.hero){
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Optional comfortable typography */
+body.is-article :is(.article-shell,#article-root) h2{ font-size:20px; line-height:1.35; margin:22px 0 8px; font-weight:800; }
+body.is-article :is(.article-shell,#article-root) h3{ font-size:18px; line-height:1.35; margin:16px 0 6px;  font-weight:700; }
+body.is-article :is(.article-shell,#article-root) p { margin:10px 0; line-height:1.65; }

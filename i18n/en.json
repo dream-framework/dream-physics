@@ -18,13 +18,14 @@
     "axioms": "Axioms",
     "theorems": "Theorems",
     "math": "Math Frame",
-    "kernel": "Projection Kernel",
+    "kernel": "Kernel",
     "topology": "Topology",
     "spectrum": "Fractal Spectrum",
     "predictions": "Predictions",
     "falsification": "Falsification",
     "faq": "FAQ Clouds",
-    "about": "AI Analysis"
+    "about": "AI Analysis",
+    "articles": "Articles"
   },
   "home": {
     "hero": {

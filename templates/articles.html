@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {# flag whether this request is a single-article view #}
+  {% set _is_article = (include_path is defined and include_path) %}
+
+  {# set a safe data flag + add the proper body class with tiny JS #}
+  <div id="__article_flag" data-article="{{ '1' if _is_article else '0' }}" hidden></div>
+  <script>
+    (function () {
+      var el = document.getElementById('__article_flag');
+      var isArticle = el && el.getAttribute('data-article') === '1';
+      document.body.classList.remove('is-article', 'is-article-list');
+      document.body.classList.add(isArticle ? 'is-article' : 'is-article-list');
+    })();
+  </script>
+
+  {% if _is_article %}
+    <div class="article-shell">
+      {% include include_path %}
+    </div>
+  {% else %}
+    {% include ['i18n/' ~ lang ~ '/articles_body.html', 'i18n/en/articles_body.html'] %}
+  {% endif %}
+{% endblock %}
