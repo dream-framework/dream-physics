@@ -56,7 +56,7 @@ def _mtime(p: str) -> float:
 # GitHub kb-data integration (source of truth)
 # ---------------------------------------------------------------------
 GH_OWNER   = (os.getenv("GH_OWNER",  "dream-framework") or "").strip()
-GH_REPO    = (os.getenv("GH_REPO",   "dream") or "").strip()
+GH_REPO    = (os.getenv("GH_REPO",   "dream-physics") or "").strip()
 GH_BRANCH  = (os.getenv("GH_BRANCH", "kb-data") or "").strip()
 GH_JSON_EN = (os.getenv("GH_JSON_EN","kb/parsed_faqs_en.json") or "").strip()
 GH_JSON_RU = (os.getenv("GH_JSON_RU","kb/parsed_faqs_ru.json") or "").strip()
