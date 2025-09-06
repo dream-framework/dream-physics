@@ -52,43 +52,87 @@
     </div>
 
     <!-- S2: Coherence cliff -->
-    <div class="card">
-      <h2>S2 — Quantum–classical transition at 10⁻¹²&nbsp;m</h2>
-      <p class="core"><strong>Prediction:</strong> A sharp drop in coherence at the scale λ<sub>q</sub> ≈ 10⁻¹²&nbsp;m</p>
+<div class="card">
+  <h2>S2 — Quantum–classical transition at 10⁻¹²&nbsp;m</h2>
 
-      <h3>Experimental program:</h3>
-      <div class="code" style="overflow:auto">
-        <table style="width:100%; border-collapse:collapse">
-          <thead>
-            <tr style="border-bottom:1px solid #2a2f5a">
-              <th style="text-align:left">Experiment</th>
-              <th style="text-align:left">Institution</th>
-              <th style="text-align:left">Timeline</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>NV-center interferometry</td>
-              <td>Delft University of Technology</td>
-              <td>2024–2025</td>
-            </tr>
-            <tr>
-              <td>Silicon qubit arrays</td>
-              <td>MIT/Harvard</td>
-              <td>2025</td>
-            </tr>
-            <tr>
-              <td>Atomic interferometers</td>
-              <td>Stanford</td>
-              <td>2024–2026</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <p class="core">
+    <strong>Prediction:</strong>
+    A sharp drop (“coherence cliff”) in interference-grade invariants at the scale
+    λ<sub>q</sub> ≈ 10⁻¹²&nbsp;m, consistent with the retention law
+    R(λ) = exp[−(λ/λ<sub>q</sub>)<sup>D<sub>eff</sub></sup>] with two information channels
+    (high-frequency detail vs. structural correlation).
+  </p>
 
-      <p><strong>Method:</strong> Scan the interferometer baseline from 10⁻¹³&nbsp;m to 10⁻¹¹&nbsp;m while measuring fringe visibility.</p>
-      <p><strong>Falsification criterion:</strong> Absence of a transition at λ = (1.0 ± 0.2) × 10⁻¹²&nbsp;m on three independent platforms by 2026.</p>
-    </div>
+  <p style="color:#2b7a0b; font-weight:600; font-size:1.1em; background-color:#f0fff0; padding:6px; border-radius:6px; margin-top:10px;">
+    <strong>Current status (2025-09-06):</strong>
+    <em>Weak confirmation.</em> Multiple platforms (NV centers, cold-atom/BEC interferometers, photonics)
+    report stretched-exponential / dual-channel decay consistent with the predicted retention law form.
+    However, a reproducible, sharp watershed at λ ≈ λ<sub>q</sub> across ≥2 independent platforms
+    has not yet been demonstrated.
+  </p>
+
+  <p>
+    <strong>Impact on DREAM:</strong>
+    Supports the retention-law functional form and the two-channel dichotomy; the expected universal
+    watershed at λ<sub>q</sub> remains to be shown explicitly.
+  </p>
+
+  <details class="more">
+        <summary>Expand to see experimental roadmap</summary>
+  <h3>Experimental program:</h3>
+  <div class="code" style="overflow:auto">
+    <table style="width:100%; border-collapse:collapse">
+      <thead>
+        <tr style="border-bottom:1px solid #2a2f5a">
+          <th style="text-align:left">Experiment</th>
+          <th style="text-align:left">Institution</th>
+          <th style="text-align:left">Timeline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>NV-center interferometry</td>
+          <td>Delft University of Technology</td>
+          <td>2024–2025</td>
+        </tr>
+        <tr>
+          <td>Silicon qubit arrays</td>
+          <td>MIT/Harvard</td>
+          <td>2025</td>
+        </tr>
+        <tr>
+          <td>Atomic interferometers</td>
+          <td>Stanford</td>
+          <td>2024–2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <p>
+    <strong>Method:</strong>
+    Sweep the interferometer baseline from 10⁻¹³&nbsp;m to 10⁻¹¹&nbsp;m while measuring
+    fringe visibility R(λ). Analyze in transformed space: plot ln(−ln&nbsp;R) versus ln&nbsp;λ.
+    DREAM predicts two linear regimes with a slope change at λ ≈ λ<sub>q</sub>.
+    Report fitted D<sub>eff</sub> and λ<sub>q</sub> with uncertainties.
+  </p>
+
+  <p>
+    <strong>What would upgrade to strong support:</strong>
+  </p>
+  <ol>
+    <li>Pre-registered λ-sweeps that resolve a sharp drop near λ<sub>q</sub> on each platform.</li>
+    <li>Replication of the breakpoint on ≥2 independent platforms.</li>
+    <li>Consistent normalized breakpoint after converting each platform’s control to λ/λ<sub>q</sub>.</li>
+  </ol>
+
+  <p>
+    <strong>Falsification criterion:</strong>
+    Absence of a transition at λ = (1.0 ± 0.2) × 10⁻¹²&nbsp;m on three independent platforms by 2026.
+  </p>
+</div>
+  </details>
 
    <!-- S3: Fractal cosmology -->
 <div class="card" id="s3-fractal-structure">
