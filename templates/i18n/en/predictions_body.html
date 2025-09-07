@@ -250,6 +250,69 @@
   </div>
 
   <div class="card">
+  <span class="kicker">DREAM — Predictions & Early Evidence</span>
+  <h2>S5 - Strong Lensing: Decisive Invariants (Most Confirming)</h1>
+
+  <div data-mode="science">
+    <p><strong>Scope.</strong> Galaxy- and cluster-scale lenses. Claims are stated at the kernel-invariant level (no kernel retuning).</p>
+    <p><strong>Scale mapping.</strong> Use a common angular ruler \( \lambda \): PSF FWHM or Gaussian blur width (arcsec). For cross-band data, convert each band’s sharpness to the shared \( \lambda \) axis.</p>
+
+     <p style="color:#2b7a0b; font-weight:600; font-size:1.1em; background-color:#f0fff0; padding:6px; border-radius:6px; margin-top:10px;"><strong>Status — early/weak confirmation in current observations.</strong> Preliminary analyses on existing lenses already show the qualitative and semi-quantitative behaviors expected by DREAM:
+      <br>• <em>Two-channel split:</em> high-frequency power \(R_{\mathrm{HF}}(\lambda)\) decays faster with smoothing than structural correlation \(R_{\mathrm{corr}^2}(\lambda)\).
+      <br>• <em>Log–linear fingerprint:</em> \(\ln[-\ln R(\lambda)]\) vs \(\ln\lambda\) is approximately linear over available \(\lambda\) decades, enabling slope \(D_{\mathrm{eff}}\) and intercept (shared \( \lambda_q \)) estimates.
+      <br>• <em>Cross-band consistency:</em> after scale-normalization, fitted \((\lambda_q,D_{\mathrm{eff}})\) from independent bands/instruments are consistent for a subset of systems (within current uncertainties).
+      <br>• <em>Critical-set persistence:</em> connectivity/parity of the ring/arc skeleton remains stable as \(\lambda\) increases, while HF variance collapses.
+      <br><em>Note:</em> sample sizes remain modest and pipelines differ; broader, harmonized reductions are underway.</p>
+
+
+      <details class="more">
+        <summary>Expand to see details</summary>
+    <ol>
+      <li><strong>Two-channel retention split (key invariant).</strong> Under angular smoothing \( \lambda \), both channels follow
+        <div class="math-block">\[
+          R(\lambda)=\exp\!\Big[-\Big(\tfrac{\lambda}{\lambda_q}\Big)^{D_{\mathrm{eff}}}\Big]
+        \]</div>
+        with a <em>shared</em> coherence scale \( \lambda_q \) and channel-specific \( D_{\mathrm{eff}} \):
+        <div class="math-block">\[
+          R_{\mathrm{corr}^2}(\lambda)=\mathrm{corr}^2\!\big(I|_{\lambda\to 0}, I|_{\lambda}\big),\qquad
+          R_{\mathrm{HF}}(\lambda)=\frac{\int_{\Omega>\Omega_{\mathrm{Nyq}}}\!|\widehat{I}(\Omega\mid\lambda)|^2\,d\Omega}{\int_{\Omega>\Omega_{\mathrm{Nyq}}}\!|\widehat{I}(\Omega\mid 0)|^2\,d\Omega},
+        \]</div>
+        and \(R_{\mathrm{HF}}(\lambda)\prec R_{\mathrm{corr}^2}(\lambda)\).
+      </li>
+
+      <li><strong>Log–linear fingerprint.</strong> The double-log transform is ~linear:
+        <div class="math-block">\[
+          \ln\!\big(-\ln R(\lambda)\big)=D_{\mathrm{eff}}\,\ln\lambda - D_{\mathrm{eff}}\ln\lambda_q,
+        \]</div>
+        giving straight lines whose slopes are \(D_{\mathrm{eff}}\) and whose intercepts fix \( \lambda_q \). HF and structure lines have different slopes but converge to the same \( \lambda_q \) (within errors).
+      </li>
+
+      <li><strong>Cross-band invariance (scale-normalized).</strong> After mapping each instrument’s resolution to \( \lambda \), the fitted \((\lambda_q,D_{\mathrm{eff}})\) agree across VIS/NIR/mm for the same lens.
+      </li>
+
+      <li><strong>Critical-set persistence on CPI ridges.</strong> As \( \lambda \) increases, the <em>connectivity</em> and <em>parity pattern</em> of the critical-curve / Einstein-ring network remain stable (bearing-wall trait), while HF variance collapses by the same law. With
+        <div class="math-block">\[
+          \mathrm{CPI}(x)=\log_{10}M(\lambda,\varepsilon;x)\sim \log_{10}A(x)+D_I\log_{10}(\lambda/\varepsilon),\quad
+          A(x)=\langle 1/J_\pi\rangle_{\pi^{-1}(x)} ,
+        \]</div>
+        CPI ridges (large \(A\)) align with the observed arc skeleton and remain visible as HF texture fades.
+      </li>
+    </ol>
+    </details>
+
+    <p><strong>Report minimally:</strong> the \( \lambda \)-grid; \( R_{\mathrm{HF}}(\lambda) \), \( R_{\mathrm{corr}^2}(\lambda) \); log–linear plots with fitted \( \widehat{\lambda}_q \), \( \widehat{D}_{\mathrm{eff}} \) (both channels); a simple critical-set topology summary vs \( \lambda \); CPI ridge coordinates.</p>
+  </div>
+
+  <div data-mode="public">
+    <p><strong>Plain story.</strong> In real lens images we already see the pattern: as you blur, the tiny sparkle fades fast, but the ring’s backbone hardly moves. Put data from different telescopes on the same sharpness ruler and the two curves (sparkle vs shape) follow the same master rule and point to the same “cliff setting” \( \lambda_q \). That split—plus a neat straight-line fingerprint on a special plot—is <em>already</em> showing up, weak but telling, and is the strongest single-picture support for DREAM’s projection math in the sky.</p>
+  </div>
+
+  <ul>
+    <li><em>Priority datasets:</em> Euclid lenses (VIS/NISP), JWST deep clusters (NIRCam/MIRI), ALMA arcs (multi-freq), LSST seeing-stacked coadds.</li>
+  </ul>
+</div>
+
+  <div class="card">
     <h2>Summary timeline for experimental verification</h2>
     <div class="code" style="overflow:auto">
       <table style="width:100%; border-collapse:collapse">
