@@ -283,5 +283,63 @@
     </div>
   </div>
 
+  <style>
+
+    /* Keep the closed control (on dark card) as you like */
+#dataset{
+  background:#0f172a;
+  color:#fff;                      /* closed label stays white */
+  -webkit-text-fill-color:#fff;
+  border:1px solid #334155;
+  border-radius:10px;
+  padding:8px 12px;
+  font-weight:500;
+  appearance:none;
+
+  /* KEY: tell the UA to render the popup in a LIGHT scheme */
+  color-scheme: light;
+}
+
+/* ----- WILDCARD: force black text inside dropdown popups site-wide ----- */
+select option,
+select optgroup{
+  color:#0b0f14 !important;        /* black text in the popup */
+  background:#ffffff !important;   /* light menu background */
+}
+
+/* (Optional) keep the highlighted row black-on-light too */
+select option:checked,
+select option:hover:checked,
+select option:focus:checked{
+  background:#e5e7eb !important;   /* light gray highlight */
+  color:#0b0f14 !important;        /* still black text */
+}
+  </style>
+
 </div>
+
+<script>
+(function flattenOptgroups(id){
+  const sel = document.getElementById(id);
+  if(!sel) return;
+  const val = sel.value, frag = document.createDocumentFragment();
+
+  Array.from(sel.children).forEach(node=>{
+    if(node.tagName === 'OPTGROUP'){
+      const head = document.createElement('option');
+      head.textContent = node.label || '';
+      head.disabled = true;
+      head.className = 'group-label';      // style hook
+      frag.appendChild(head);
+      Array.from(node.children).forEach(opt => frag.appendChild(opt));
+    } else {
+      frag.appendChild(node);
+    }
+  });
+
+  sel.innerHTML = '';
+  sel.appendChild(frag);
+  if (val) sel.value = val;
+})('dataset');
+</script>
 {% endblock %}

@@ -97,6 +97,66 @@
       
     </div>
 </div>
+<style>
+/* Keep selected value readable at all times */
+#dataset{
+  color:#ffffff !important;              /* closed select text */
+  -webkit-text-fill-color:#ffffff;       /* Safari/Chromium quirk */
+  color-scheme: dark;                    /* hint OS to use dark popups */
+}
+
+/* Options in the popup */
+#dataset option{
+  color:#e5e7eb;
+  background:#0b1220;
+}
+
+/* The currently selected (highlighted) option */
+#dataset option:checked,
+#dataset option:focus,
+#dataset option:hover:checked{
+  color:#ffffff !important;
+  background:#1f2937 !important;         /* dark highlight */
+}
+
+/* Legacy Edge/IE (if you need it) */
+#dataset::-ms-value{ color:#ffffff; background:#0f172a; }
+
+/* --- Kernel toy selects: make popup readable --- */
+/* Apply to the Deff select; add other selects here if needed */
+#kw-deff{
+  background:#0f172a;               /* closed control on dark card */
+  color:#ffffff;                    /* closed label is white */
+  -webkit-text-fill-color:#ffffff;  /* Safari/Chromium quirk */
+  border:1px solid #334155;
+  border-radius:10px;
+  padding:8px 10px;
+
+  /* Key: tell the UA to render the dropdown in a LIGHT scheme
+     so option text is black by default. */
+  color-scheme: light;
+}
+
+/* Popup list items */
+#kw-deff option{
+  background:#ffffff;               /* light menu background */
+  color:#0b0f14;                    /* non-selected = black text */
+}
+
+/* Highlighted/selected row stays white-on-dark */
+#kw-deff option:checked,
+#kw-deff option:hover:checked,
+#kw-deff option:focus:checked{
+  background:#2563eb !important;    /* blue highlight */
+  color:#ffffff !important;         /* selected text = white */
+}
+
+/* Focus ring for keyboard users */
+#kw-deff:focus-visible{
+  outline:2px solid #22d3ee;
+  outline-offset:2px;
+}
+</style>
 
 <script>
 // Re-typeset math after an expander is opened
