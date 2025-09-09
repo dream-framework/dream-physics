@@ -26,10 +26,51 @@ a{color:var(--accent)}
   position:sticky;top:0;z-index:1000;font-size: 14px;
 }
 .brand a{font-weight:2000;letter-spacing:0.6px;text-decoration:none;color:var(--text);font-size:2rem}
-.nav{display:flex;flex-wrap:wrap;gap:0.5rem}
-.nav-link{padding:0.4rem 0.7rem;border-radius:999px;text-decoration:none;color:var(--muted);background:#141734;transition:all .2s ease}
+
+/* drop-in: denser nav when there are many items + tighter left/right margins */
+.nav{
+  display:flex;
+  flex-wrap:nowrap;                 /* keep on one line */
+  align-items:center;
+  gap:clamp(0.2rem, 0.8vw, 0.5rem); /* shrink spacing as space gets tight */
+  margin-inline:0.25rem;            /* less margin left/right */
+  overflow-x:auto;                  /* graceful fallback if still too many */
+  -webkit-overflow-scrolling:touch;
+}
+.nav-link{
+  padding:clamp(0.25rem, 0.9vw, 0.4rem) clamp(0.45rem, 1.2vw, 0.7rem);
+  border-radius:999px;
+  text-decoration:none;
+  color:var(--muted);
+  background:#141734;
+  transition:all .2s ease;
+  white-space:nowrap;               /* avoid multi-line pills */
+}
 .nav-link:hover{color:var(--text);background:#1a1f45}
 .nav-link.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#0b0b14}
+
+/* auto-densify when many items are present (needs :has support) */
+.nav:has(.nav-link:nth-child(n+7)){
+  gap:0.35rem;
+  margin-inline:0.2rem;
+}
+.nav:has(.nav-link:nth-child(n+7)) .nav-link{
+  padding:0.3rem 0.55rem;
+}
+.nav:has(.nav-link:nth-child(n+10)){
+  gap:0.25rem;
+  margin-inline:0.15rem;
+}
+.nav:has(.nav-link:nth-child(n+10)) .nav-link{
+  padding:0.25rem 0.5rem;
+}
+
+/* optional: super tight mode on very small viewports */
+@media (max-width: 520px){
+  .nav{ gap:0.25rem; margin-inline:0.15rem; }
+  .nav-link{ padding:0.25rem 0.5rem; }
+}
+
 .controls{display:flex;align-items:center;gap:1rem}
 .toggles{display:flex;align-items:center;gap:0.75rem}
 .switch{display:inline-flex;align-items:center;gap:0.5rem;user-select:none}
