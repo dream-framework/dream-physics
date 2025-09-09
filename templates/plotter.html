@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D.R.E.A.M. — Плоттер закона удержания (универсальный, реальные данные, RU v2)</title>
+<style>
+  :root { --fg:#0b0b0c; --muted:#6b7280; --bg:#ffffff; --card:#f8fafc; --accent:#0f766e; }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+  header{padding:14px 16px;border-bottom:1px solid #e5e7eb;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0 6px 0 0}
+  header .kicker{color:var(--muted);font-size:13px}
+  .wrap{max-width:1100px;margin:12px auto;padding:0 16px}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0 14px}
+  select,button{padding:8px 10px;border:1px solid #d1d5db;border-radius:8px;background:#fff}
+  button.primary{background:var(--accent);color:#fff;border-color:transparent;cursor:pointer}
+  .row{display:grid;grid-template-columns:1fr 380px;gap:16px;align-items:start}
+  .card{background:var(--card);border:1px solid #e5e7eb;border-radius:12px;padding:12px}
+  canvas{width:100%;height:520px;border-radius:10px;background:#fff}
+  .meta{font-size:13px;color:var(--muted)}
+  .small{font-size:12px;color:var(--muted)}
+  .bold{font-weight:700;color:#111}
+  a{color:#0ea5e9;text-decoration:none}
+  .badge{display:inline-block;border-radius:999px;padding:2px 8px;background:#e2e8f0;font-size:12px;color:#111}
+  .pill{display:inline-flex;gap:6px;align-items:center;border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:4px 8px;font-size:12px}
+  .right{margin-left:auto}
+  .spinner{display:inline-block;width:14px;height:14px;border:2px solid #cbd5e1;border-top-color:#0f766e;border-radius:50%;animation:spin 0.8s linear infinite;margin-right:6px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .explain{font-size:14px;line-height:1.4;margin-top:8px;color:#0b0b0c}
+  .note{font-size:12px;color:#6b7280;margin-top:6px}
+  .math{font-size:14px;color:#0b0b0c}
+  .math i{font-style:italic}
+  .sep{height:1px;background:#e5e7eb;margin:10px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Плоттер закона удержания</h1>
+  <span class="kicker">Только официальные живые данные. Без демо.</span>
+  <span class="badge">Лог–лог · растянутая эксп‑подгонка · λ‑обрыв</span>
+  <span class="pill right"><input id="normalize" type="checkbox"> <label for="normalize">Нормировать x по λ (x → x/λ)</label></span>
+</header>
+
+<div class="wrap">
+  <div class="controls">
+    <label for="dataset">Набор данных:</label>
+    <select id="dataset">
+      <optgroup label="Космос (SWPC GOES)">
+        <option value="goes_xrs">Рентген (ЭМ) — 6 ч JSON</option>
+        <option value="goes_mag">Магнитометр — 6 ч JSON</option>
+        <option value="goes_ele">Электроны ≥2 МэВ — 6 ч JSON</option>
+        <option value="goes_pro">Протоны ≥10 МэВ — 6 ч JSON</option>
+      </optgroup>
+      <optgroup label="Земля (USGS)">
+        <option value="usgs_flow">Расход реки — Potomac @ Little Falls (01646500), 7 дн JSON</option>
+        <option value="usgs_quakes">Землетрясения — all_week, почасовые счёты JSON</option>
+      </optgroup>
+      <optgroup label="Социальное / инфо">
+        <option value="wiki_views">Просмотры Wikipedia — enwiki «Earth», 180 дн</option>
+      </optgroup>
+      <optgroup label="Экономика (официальные + рынок)">
+        <option value="wb_gdp_us">Всемирный банк — ВВП США (текущие $)</option>
+        <option value="wb_cpi_us">Всемирный банк — CPI США (2010=100)</option>
+        <option value="wb_unemp_us">Всемирный банк — Безработица США (%)</option>
+        <option value="cg_btc">CoinGecko — Биткойн (дневн., 180 дн)</option>
+      </optgroup>
+      <optgroup label="Биология и др. (бесплатно)">
+        <option value="inat_monarch">iNaturalist — Монарх (дневн., 180 дн)</option>
+        <option value="inat_global">iNaturalist — Глобальные наблюдения (дневн., 180 дн)</option>
+      </optgroup>
+    </select>
+    <button id="load" class="primary">Загрузить и построить</button>
+    <span id="status" class="meta"></span>
+  </div>
+
+  <div class="card math">
+    Модель: <i>S</i>(<i>W</i>) ≈ exp(−(<i>W</i>/<i>λ</i>)<sup><i>β</i></sup>).
+    <span class="small">Пунктирная вертикаль отмечает <i>λ</i> («обрыв когерентности»). <i>λ</i> всегда в исходных единицах.</span>
+  </div>
+
+  <div class="row">
+    <div class="card">
+      <canvas id="plot" width="1000" height="520"></canvas>
+      <div id="explain" class="explain"></div>
+      <div class="note">Подсказка: включите «Нормировать x по λ», чтобы совместить обрыв в x=1. Масштабируется только ось x; оценка <i>λ</i> остаётся в минутах/часах/днях/годах.</div>
+    </div>
+    <div class="card">
+      <div><strong>Подгонка:</strong> <span id="fit">—</span></div>
+      <div class="meta"><strong class="bold">Статус:</strong> <span id="done">—</span></div>
+      <div class="sep"></div>
+      <div class="meta">
+        <div><strong>Ось X:</strong> <span id="xunits">выборки</span></div>
+        <div><strong>Окна:</strong> геометрические от 1 до ≈N·0.45</div>
+        <div><strong>Контраст:</strong> <i>S</i>(<i>W</i>) = std(mavg<sub><i>W</i></sub>)/std(raw)</div>
+      </div>
+      <div class="sep"></div>
+      <div class="small">
+        Источники:
+        <ul>
+          <li>SWPC GOES JSON: <code>/json/goes/primary/*.json</code></li>
+          <li>USGS NWIS IV &amp; USGS Earthquakes GeoJSON</li>
+          <li>Wikimedia Pageviews REST</li>
+          <li>World Bank API (JSON)</li>
+          <li>CoinGecko Markets API (daily)</li>
+          <li>iNaturalist API (observations histogram)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- утилиты ----------
+const byId = (id)=>document.getElementById(id);
+const mean = arr => arr.reduce((s,x)=>s+x,0)/arr.length;
+function std(arr){
+  if(arr.length<2) return 0;
+  const m=mean(arr); let v=0, n=0;
+  for(const x of arr){ if(Number.isFinite(x)){ v+=(x-m)*(x-m); n++; } }
+  return n>1 ? Math.sqrt(v/(n-1)) : 0;
+}
+function movingAvg(x, W){
+  const n=x.length, half=Math.floor(W/2), out=new Array(n);
+  for(let i=0;i<n;i++){
+    const a=Math.max(0,i-half), b=Math.min(n-1,i+half);
+    let s=0,c=0; for(let k=a;k<=b;k++){ const v=x[k]; if(Number.isFinite(v)){ s+=v; c++; } }
+    out[i]= c>0 ? s/c : NaN;
+  }
+  return out;
+}
+function retentionS(y, windows){
+  const yy = y.filter(Number.isFinite);
+  const base = std(yy);
+  return windows.map(W=>{
+    const m = movingAvg(y, W).filter(Number.isFinite);
+    return base>0 ? std(m)/base : NaN;
+  });
+}
+function geomWindows(n, frac=0.45, bins=24){
+  const maxw=Math.max(5, Math.floor(n*frac));
+  const out=[]; const r = Math.pow(maxw/1, 1/(bins-1));
+  let v=1; for(let i=0;i<bins;i++){ out.push(Math.max(1, Math.round(v))); v*=r; }
+  return [...new Set(out)];
+}
+
+// Плотная подборка: β шаг 0.01; λ — 120 лог‑точек между min и max W
+function fitStretchedExp(W, S){
+  const Wf=[], Sf=[];
+  for(let i=0;i<W.length;i++){ const w=W[i], s=S[i]; if(isFinite(w)&&isFinite(s)&&s>0&&s<=1){ Wf.push(w); Sf.push(s);} }
+  if(Wf.length<6) return {lam:NaN, beta:NaN, r2:NaN};
+  const wmin = Math.min(...Wf), wmax=Math.max(...Wf);
+  const lamGrid = [];
+  const steps = 120;
+  for(let i=0;i<steps;i++){
+    const f=i/(steps-1);
+    lamGrid.push(wmin*Math.pow(wmax/wmin, f));
+  }
+  let best={lam:NaN, beta:NaN, loss:Infinity};
+  for(let beta=0.20; beta<=1.80+1e-9; beta+=0.01){
+    for(const lam of lamGrid){
+      let loss=0;
+      for(let i=0;i<Wf.length;i++){
+        const p = Math.exp(-(Math.pow(Wf[i]/lam, beta)));
+        loss += Math.pow(Math.log(Sf[i]) - Math.log(p), 2);
+      }
+      if(loss<best.loss){ best={lam,beta,loss}; }
+    }
+  }
+  // log-R^2
+  const ylog = Sf.map(x=>Math.log(x));
+  const yhat = Wf.map(w=>Math.log(Math.exp(-Math.pow(w/best.lam, best.beta))));
+  const ybar = mean(ylog);
+  const ss_res = ylog.reduce((s,y,i)=>s+Math.pow(y - yhat[i],2),0);
+  const ss_tot = ylog.reduce((s,y)=>s+Math.pow(y - ybar,2),0);
+  const r2 = (ss_tot>0) ? (1 - ss_res/ss_tot) : NaN;
+  return {lam:best.lam, beta:best.beta, r2};
+}
+function fmtLam(x){
+  if(!Number.isFinite(x)) return '—';
+  const a=Math.abs(x);
+  if(a>=1000 || a<0.01) return x.toExponential(2);
+  const d = (a>=100)?0:(a>=10?1:(a>=1?2:3));
+  return x.toFixed(d);
+}
+function fmtBeta(x){ if(!Number.isFinite(x)) return '—'; return x.toFixed(3); }
+function fmtR2(x){ if(!Number.isFinite(x)) return '—'; return x.toFixed(3); }
+
+// ---------- отрисовка ----------
+function plotLog(canvas, W_in, S, fit, xlabel, normalized){
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const pad={l:68,r:20,t:24,b:56};
+  const inner={x:pad.l, y:pad.t, w:canvas.width-pad.l-pad.r, h:canvas.height-pad.t-pad.b};
+
+  const W = W_in.slice();
+  const vW=W.filter(isFinite), vS=S.filter(isFinite);
+  const minX=Math.min(...vW)*0.95, maxX=Math.max(...vW)*1.05;
+  const minY=Math.max(Math.min(...vS)*0.8, 1e-6), maxY=Math.min(Math.max(...vS)*1.2, 1.0);
+  const lx=x=>Math.log10(x), ly=y=>Math.log10(y);
+  const x0=lx(minX), x1=lx(maxX), y0=ly(minY), y1=ly(maxY);
+  const xpix=x=> inner.x + (lx(x)-x0)/(x1-x0)*inner.w;
+  const ypix=y=> inner.y + inner.h - (ly(y)-y0)/(y1-y0)*inner.h;
+
+  // рамка
+  ctx.strokeStyle='#94a3b8'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(inner.x, inner.y); ctx.lineTo(inner.x, inner.y+inner.h); ctx.lineTo(inner.x+inner.w, inner.y+inner.h); ctx.stroke();
+
+  // x‑декады
+  ctx.fillStyle='#64748b'; ctx.font='12px system-ui';
+  const drawXTicks=()=>{
+    const a0=Math.floor(x0), a1=Math.ceil(x1);
+    for(let d=a0; d<=a1; d++){
+      const v=Math.pow(10,d);
+      const xp=xpix(v);
+      ctx.beginPath(); ctx.moveTo(xp, inner.y+inner.h); ctx.lineTo(xp, inner.y+inner.h+4); ctx.stroke();
+      const label = v>=1000 ? (v/1000+'k') : String(v);
+      ctx.fillText(label, xp-8, inner.y+inner.h+18);
+    }
+  };
+  drawXTicks();
+
+  // y‑типы 1.0, 0.7, 0.5, ...
+  const yTicks=[1.0,0.7,0.5,0.3,0.2,0.1,0.07,0.05,0.03,0.02,0.01];
+  ctx.fillStyle='#64748b'; ctx.font='12px system-ui';
+  for(const v of yTicks){
+    if(v<minY || v>maxY) continue;
+    const yp=ypix(v);
+    ctx.beginPath(); ctx.moveTo(inner.x-4, yp); ctx.lineTo(inner.x, yp); ctx.stroke();
+    ctx.strokeStyle='#e5e7eb'; ctx.beginPath(); ctx.moveTo(inner.x, yp); ctx.lineTo(inner.x+inner.w, yp); ctx.stroke();
+    ctx.strokeStyle='#94a3b8';
+    ctx.fillText(v.toString(), inner.x-48, yp+4);
+  }
+
+  // точки
+  ctx.fillStyle='#0f766e';
+  for(let i=0;i<W.length;i++){
+    const w=W[i], s=S[i];
+    if(!(isFinite(w)&&isFinite(s))) continue;
+    ctx.beginPath(); ctx.arc(xpix(w), ypix(s), 3, 0, Math.PI*2); ctx.fill();
+  }
+
+  // кривая подгонки
+  if(isFinite(fit.lam) && isFinite(fit.beta)){
+    ctx.strokeStyle='#0f766e'; ctx.lineWidth=2;
+    ctx.beginPath(); let first=true;
+    for(let i=0;i<500;i++){
+      const w = minX*Math.pow(maxX/minX, i/499);
+      const y = Math.exp(-Math.pow(w/fit.lam, fit.beta));
+      const xp=xpix(w), yp=ypix(y);
+      if(first){ ctx.moveTo(xp, yp); first=false; } else { ctx.lineTo(xp, yp); }
+    }
+    ctx.stroke();
+
+    // вертикаль λ
+    const lamX = normalized ? 1 : fit.lam;
+    if(Number.isFinite(lamX) && lamX>minX && lamX<maxX){
+      const xp = xpix(lamX);
+      ctx.setLineDash([6,4]); ctx.strokeStyle='#334155'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(xp, inner.y); ctx.lineTo(xp, inner.y+inner.h); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#334155'; ctx.font='12px system-ui';
+      const label = normalized ? 'λ (x=1)' : 'λ (обрыв)';
+      ctx.fillText(label, Math.min(Math.max(xp-20, inner.x+4), inner.x+inner.w-60), inner.y+16);
+    }
+  }
+
+  // подписи
+  ctx.fillStyle='#0b0b0c'; ctx.font='14px system-ui';
+  ctx.fillText(xlabel, inner.x+inner.w/2-70, canvas.height-18);
+  ctx.save(); ctx.translate(20, inner.y+inner.h/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('удержание  S(W)', -54, 0); ctx.restore();
+}
+
+// ---------- загрузчики (официальные эндпоинты) ----------
+async function fetchJSON(url){
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('HTTP '+r.status+' для '+url);
+  return await r.json();
+}
+async function fetchText(url){
+  const r = await fetch(url);
+  if(!r.ok) throw new Error('HTTP '+r.status+' для '+url);
+  return await r.text();
+}
+
+// SWPC GOES
+async function loadGOES_XRS(){
+  const base='https://services.swpc.noaa.gov/json/goes/primary/xrays-6-hour.json';
+  const j=await fetchJSON(base);
+  const keys=Object.keys(j[0]);
+  const fluxKey = keys.find(k=>/flux/i.test(k));
+  const bandKey = keys.find(k=>(/energy|wavelength|band|channel/i).test(k));
+  const arr = bandKey ? j.filter(r=>String(r[bandKey]).includes('0.8')||String(r[bandKey]).includes('0.1')) : j;
+  const series = arr.map(r=>+r[fluxKey]).filter(Number.isFinite);
+  return {series, unit:'minutes', stepMinutes:1};
+}
+async function loadGOES_Mag(){
+  const url='https://services.swpc.noaa.gov/json/goes/primary/magnetometers-6-hour.json';
+  const j=await fetchJSON(url);
+  const numeric = Object.keys(j[0]).filter(k=>typeof j[0][k]==='number');
+  const comp = numeric.find(k=>/hp|bx|by|bz/i.test(k)) || numeric[0];
+  return {series:j.map(r=>+r[comp]).filter(Number.isFinite), unit:'minutes', stepMinutes:1};
+}
+async function loadGOES_Electrons(){
+  const url='https://services.swpc.noaa.gov/json/goes/primary/integral-electrons-6-hour.json';
+  const j=await fetchJSON(url);
+  const fluxKey = Object.keys(j[0]).find(k=>/flux/i.test(k));
+  const tkey = Object.keys(j[0]).find(k=>/time/i.test(k));
+  const series = j.map(r=>+r[fluxKey]).filter(Number.isFinite);
+  let stepMinutes=1;
+  if(tkey){
+    const ts = j.map(r=>Date.parse(r[tkey])).filter(Number.isFinite);
+    const diffs=[]; for(let i=1;i<ts.length;i++){ const d=(ts[i]-ts[i-1])/60000; if(d>0&&d<300) diffs.push(d); }
+    if(diffs.length) stepMinutes = Math.round(diffs.reduce((s,x)=>s+x,0)/diffs.length);
+  }
+  return {series, unit:'minutes', stepMinutes};
+}
+async function loadGOES_Protons(){
+  const url='https://services.swpc.noaa.gov/json/goes/primary/integral-protons-6-hour.json';
+  const j=await fetchJSON(url);
+  const keys=Object.keys(j[0]);
+  const fluxKey = keys.find(k=>/flux/i.test(k));
+  const thrKey = keys.find(k=>/(energy|threshold)/i.test(k));
+  const arr = thrKey ? j.filter(r=>String(r[thrKey]).includes('10')) : j;
+  const tkey = keys.find(k=>/time/i.test(k));
+  const series = arr.map(r=>+r[fluxKey]).filter(Number.isFinite);
+  let stepMinutes=1;
+  if(tkey){
+    const ts = arr.map(r=>Date.parse(r[tkey])).filter(Number.isFinite);
+    const diffs=[]; for(let i=1;i<ts.length;i++){ const d=(ts[i]-ts[i-1])/60000; if(d>0&&d<300) diffs.push(d); }
+    if(diffs.length) stepMinutes = Math.round(diffs.reduce((s,x)=>s+x,0)/diffs.length);
+  }
+  return {series, unit:'minutes', stepMinutes};
+}
+
+// USGS
+async function loadUSGS_Flow(){
+  const url='https://waterservices.usgs.gov/nwis/iv/?format=json&sites=01646500&period=P7D&parameterCd=00060';
+  const j=await fetchJSON(url);
+  const vs = (((j||{}).value||{}).timeSeries||[]);
+  if(!vs.length) throw new Error('NWIS: нет timeSeries');
+  const arr = vs[0].values[0].value.map(v=>+v.value).filter(Number.isFinite);
+  const ts = vs[0].values[0].value.map(v=>Date.parse(v.dateTime)).filter(Number.isFinite);
+  let stepMinutes=1; const diffs=[];
+  for(let i=1;i<ts.length;i++){ const d=(ts[i]-ts[i-1])/60000; if(d>0&&d<300) diffs.push(d); }
+  if(diffs.length) stepMinutes = Math.round(diffs.reduce((s,x)=>s+x,0)/diffs.length);
+  return {series:arr, unit:'minutes', stepMinutes};
+}
+async function loadUSGS_Quakes(){
+  const url='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson';
+  const j=await fetchJSON(url);
+  const feats = (j.features||[]);
+  const times = feats.map(f=>f.properties && f.properties.time).filter(Number.isFinite);
+  if(!times.length) throw new Error('USGS EQ: нет событий');
+  const now = Date.now(), hours = 7*24, bins = new Array(hours).fill(0);
+  for(const t of times){
+    const dtMs = now - t;
+    if(dtMs>=0 && dtMs <= 7*24*3600*1000){
+      const h = Math.floor(dtMs/3600000);
+      const idx = hours-1 - h;
+      if(idx>=0 && idx<hours) bins[idx]++;
+    }
+  }
+  return {series:bins, unit:'hours', stepMinutes:60};
+}
+
+// Wikimedia
+async function loadWikiViews(){
+  const today = new Date();
+  const end = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const start = new Date(end.getTime() - 180*24*3600*1000);
+  const fmt=(d)=>`${d.getUTCFullYear()}${String(d.getUTCMonth()+1).padStart(2,'0')}${String(d.getUTCDate()).padStart(2,'0')}`;
+  const article='Earth';
+  const url = `https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/en.wikipedia/all-access/user/${encodeURIComponent(article)}/daily/${fmt(start)}/${fmt(end)}`;
+  const j=await fetchJSON(url);
+  const arr=(j.items||[]).map(o=>+o.views).filter(Number.isFinite);
+  return {series:arr, unit:'days', stepMinutes:1440};
+}
+
+// Всемирный банк (экономика, официально)
+async function loadWB(country, indicator){
+  const url = `https://api.worldbank.org/v2/country/${encodeURIComponent(country)}/indicator/${encodeURIComponent(indicator)}?format=json&per_page=20000`;
+  const j = await fetchJSON(url);
+  if(!Array.isArray(j) || !Array.isArray(j[1])) throw new Error('World Bank: неверный ответ');
+  const rows = j[1].filter(r=>r && r.value!=null).map(r=>({y:parseFloat(r.value), t:parseInt(r.date,10)})).filter(r=>Number.isFinite(r.y)&&Number.isFinite(r.t)).sort((a,b)=>a.t-b.t);
+  const series = rows.map(r=>r.y);
+  return {series};
+}
+async function loadWB_GDP_US(){
+  const {series} = await loadWB('US','NY.GDP.MKTP.CD'); // текущие доллары США (годовые)
+  return {series, unit:'years', stepMinutes:525600};
+}
+async function loadWB_CPI_US(){
+  const {series} = await loadWB('US','FP.CPI.TOTL'); // CPI (2010=100), годовые
+  return {series, unit:'years', stepMinutes:525600};
+}
+async function loadWB_UNEMP_US(){
+  const {series} = await loadWB('US','SL.UEM.TOTL.ZS'); // безработица (%), годовые
+  return {series, unit:'years', stepMinutes:525600};
+}
+
+// Биология через iNaturalist (гистограмма наблюдений по дням)
+async function loadINatMonarch(){
+  const today = new Date();
+  const d2 = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const d1 = new Date(d2.getTime() - 180*24*3600*1000);
+  const fmt=(d)=>`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+  const url = `https://api.inaturalist.org/v1/observations/histogram?taxon_id=48662&date_field=observed&interval=day&d1=${fmt(d1)}&d2=${fmt(d2)}`;
+  const j = await fetchJSON(url);
+  const day = (j.results && j.results.day) ? j.results.day : {};
+  const keys = Object.keys(day).sort();
+  const series = keys.map(k=>+day[k]).filter(Number.isFinite);
+  return {series, unit:'days', stepMinutes:1440};
+}
+async function loadINatGlobal(){
+  const today = new Date();
+  const d2 = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+  const d1 = new Date(d2.getTime() - 180*24*3600*1000);
+  const fmt=(d)=>`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+  const url = `https://api.inaturalist.org/v1/observations/histogram?date_field=observed&interval=day&d1=${fmt(d1)}&d2=${fmt(d2)}&verifiable=true`;
+  const j = await fetchJSON(url);
+  const day = (j.results && j.results.day) ? j.results.day : {};
+  const keys = Object.keys(day).sort();
+  const series = keys.map(k=>+day[k]).filter(Number.isFinite);
+  return {series, unit:'days', stepMinutes:1440};
+}
+
+// CoinGecko (крипто, дневные цены, 180 дн) — раздел Экономика
+async function loadCoinGeckoBTC(){
+  const url = 'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=180&interval=daily';
+  const j = await fetchJSON(url);
+  const prices = (j.prices||[]).map(p=>+p[1]).filter(Number.isFinite);
+  return {series:prices, unit:'days', stepMinutes:1440};
+}
+
+const LOADERS = {
+  goes_xrs: loadGOES_XRS,
+  goes_mag: loadGOES_Mag,
+  goes_ele: loadGOES_Electrons,
+  goes_pro: loadGOES_Protons,
+  usgs_flow: loadUSGS_Flow,
+  usgs_quakes: loadUSGS_Quakes,
+  wiki_views: loadWikiViews,
+  wb_gdp_us: loadWB_GDP_US,
+  wb_cpi_us: loadWB_CPI_US,
+  wb_unemp_us: loadWB_UNEMP_US,
+  cg_btc: loadCoinGeckoBTC,
+  inat_monarch: loadINatMonarch,
+  inat_global: loadINatGlobal
+};
+
+function explanationText(name, lam, beta, r2, xlabel){
+  const unit = (xlabel.match(/\((.*?)\)/)||[])[1] || (xlabel.includes('λ')?'λ‑единицы':'единицы');
+  const cliff = Number.isFinite(lam) && lam>0 ? `Пунктирная вертикаль — λ ≈ ${fmtLam(lam)} ${unit}.` : `Пунктирная вертикаль — оценка λ.`;
+  const slope = Number.isFinite(beta) ? (beta>1.05 ? 'круче экспоненты' : (beta<0.95 ? 'растянутая (пологее экспоненты)' : 'близка к экспоненте')) : '—';
+  const qual = Number.isFinite(r2) ? ` Качество (лог‑R²) ≈ ${fmtR2(r2)}.` : '';
+  return `<p><strong>${name}</strong>: контраст падает по мере расширения окна усреднения (ось x). ${cliff} Форма кривой — ${slope} (β≈${fmtBeta(beta)}).${qual} Это «обрыв когерентности» S2: ниже λ видна микро‑деталь; выше λ — гладкое макро.</p>`;
+}
+
+async function runReal(key){
+  const status=byId('status'), fitOut=byId('fit'), xunits=byId('xunits'), normalize=byId('normalize'), done=byId('done'), explain=byId('explain');
+  done.textContent='—'; fitOut.textContent='—'; explain.textContent='';
+  status.innerHTML = '<span class="spinner"></span>Загрузка…';
+  try{
+    const loader = LOADERS[key];
+    if(!loader) throw new Error('Неизвестный ключ набора данных: '+key);
+    const {series, unit, stepMinutes} = await loader();
+    if(!series || series.length<20) throw new Error('Слишком мало точек с живого эндпоинта ('+(series?series.length:0)+')');
+
+    // окна и S(W)
+    let W = geomWindows(series.length, 0.45, 24);
+    let S = retentionS(series, W);
+
+    // перевод окна из выборок в нативные единицы
+    let Wnative = W.slice();
+    let xlabel = 'окно (выборки)';
+    let u = unit || 'samples';
+    let step = stepMinutes || 1;
+    if(u==='minutes'){ Wnative = W.map(w=>w*step); xlabel = 'окно (минуты)'; }
+    else if(u==='hours'){ Wnative = W.map(w=>w*(step/60)); xlabel = 'окно (часы)'; }
+    else if(u==='days'){ Wnative = W.map(w=>w*(step/1440)); xlabel = 'окно (дни)'; }
+    else if(u==='years'){ Wnative = W.map(w=>w*(step/(1440*365))); xlabel = 'окно (годы)'; }
+
+    // подгонка в нативных единицах
+    let fit = fitStretchedExp(Wnative, S);
+
+    // ось x для отрисовки
+    let Wplot = Wnative.slice();
+    let normalized = false;
+    if(normalize.checked && Number.isFinite(fit.lam) && fit.lam>0){
+      Wplot = Wnative.map(w=>w/fit.lam);
+      normalized = true;
+      xlabel = 'окно / λ (безразм.)';
+    }
+
+    fitOut.textContent = `λ≈${fmtLam(fit.lam)},  β≈${fmtBeta(fit.beta)},  лог‑R²≈${fmtR2(fit.r2)}`;
+    xunits.textContent = xlabel.replace('окно (','').replace(')','');
+    plotLog(byId('plot'), Wplot, S, fit, xlabel, normalized);
+
+    // пояснение
+    const Sel = byId('dataset');
+    const label = Sel.options[Sel.selectedIndex].textContent;
+    explain.innerHTML = explanationText(label, fit.lam, fit.beta, fit.r2, xlabel);
+
+    status.textContent='';
+    done.textContent='ПОСТРОЕНО';
+    done.classList.add('bold');
+  }catch(e){
+    console.error(e);
+    fitOut.textContent='—';
+    status.innerHTML = 'Ошибка: '+String(e.message||e)+'.';
+    done.textContent='ОШИБКА';
+  }
+}
+
+byId('load').addEventListener('click', ()=> runReal(byId('dataset').value));
+window.addEventListener('DOMContentLoaded', ()=> runReal(byId('dataset').value));
+</script>
+</body>
+</html>
