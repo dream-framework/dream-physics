@@ -29,6 +29,13 @@
     <!-- ============================== -->
     <div data-mode="public">
 
+        <!-- FOUNDATION STATUS (General) -->
+        <div class="card" style="margin-top:1rem">
+            <h2>Foundation Status</h2>
+            <p class="core"> <strong>Retention Law</strong> is the <strong>FOUNDATION (Confirmed)</strong> of D.R.E.A.M. It quantifies how information fades with probe scale and predicts a clear coherence “cliff” at a characteristic λ<sub>q</sub>. The previous “particle ladder / dust” track is now <strong>Speculative</strong> and non-foundational unless directly observed.</p>
+            <p class="note">Details and live demo are on the <a href="/retention">Retention Law</a> page; test gates and timelines are on <a href="/predictions">Predictions</a> and <a href="/falsification">Falsification</a>.</p>
+        </div>
+
         <!-- Plain-language abstract -->
         <div class="grid two" style="margin-top:1rem">
             <div class="card">
@@ -87,22 +94,22 @@
         <div class="card">
             <h2>How We Test This: The Hunt for Projection Footprints</h2>
             <div class="grid three">
-                <div class="card">
-                    <h3>The Particle Ladder</h3>
+                <div class="card speculative">
+                    <h3>The Particle Ladder <span class="badge">Speculative</span></h3>
                     <p>
-                        The projection should leave behind a "ladder" of ultra-light particles with very specific masses. The first step on this ladder is predicted to be at a precise energy, a direct echo of the 10D source's structure.
+                        A non-harmonic ladder of ultra-light particles is a <em>speculative</em> track. It remains outside the foundation and only becomes relevant if directly observed above the Retention visibility threshold.
                     </p>
                 </div>
                 <div class="card">
-                    <h3>The Resolution Cliff</h3>
+                    <h3>The Resolution Cliff (Retention)</h3>
                     <p>
-                        If we probe reality at smaller and smaller scales, there should be a sharp cliff where quantum coherence doesn't just fade, but <strong>plummets</strong>. This is the fundamental resolution limit of our cosmic projector.
+                        When we probe with coarser λ, quantum coherence and fine detail don’t fade linearly—they <strong>plummet</strong> near a shared cliff at λ<sub>q</sub>. This is the foundational Retention footprint.
                     </p>
                 </div>
-                <div class="card">
-                    <h3>Gravity's Hidden Signature</h3>
+                <div class="card speculative">
+                    <h3>Gravity’s Hidden Signature <span class="badge">Speculative</span></h3>
                     <p>
-                        The strain from massive cosmic events might carry an extra, subtle signature—a sixth polarization—that standard gravity can't explain, but that emerges naturally from a higher-dimensional projection.
+                        A subtle extra polarization in gravitational strain is a possible projection echo, but remains <em>speculative</em> until isolated from systematics and confirmed.
                     </p>
                 </div>
             </div>
@@ -114,9 +121,9 @@
                 <h2>How We'd Know We're Wrong</h2>
                 <p>D.R.E.A.M makes bold, specific predictions. It's not philosophy. It fails if:</p>
                 <ul>
-                    <li>We build sensitive enough experiments and find <strong>no trace of the particle ladder</strong>.</li>
-                    <li>The predicted <strong>"resolution cliff" is a smooth ramp</strong> instead.</li>
-                    <li>We look for the extra signature in gravity waves and find <strong>nothing</strong>.</li>
+                    <li><strong>Retention:</strong> no shared cliff scale across channels or no straight-line transforms after controls and replication.</li>
+                    <li><strong>Cross-domain:</strong> platforms disagree in ways not traced to instruments or analysis choices.</li>
+                    <li class="speculative"><strong>Ladder / Modulations:</strong> decisive nulls in pre-registered windows (does not affect the Retention foundation).</li>
                 </ul>
             </div>
 
@@ -135,7 +142,17 @@
     <!-- ============================== -->
     <div data-mode="science" style="display:none">
 
-
+  <!-- FOUNDATION STATUS (Science) -->
+  <div class="card" style="margin-top:1rem">
+    <h2>Foundation Status</h2>
+    <p><strong>Retention Law</strong> is the <strong>FOUNDATION (Confirmed)</strong>. “Ladder / dust” is <strong>Speculative</strong> and non-foundational.</p>
+    <h3>What Was Tested</h3>
+    <ul>
+      <li>Dual-channel retention (<em>HF</em> vs <em>corr²</em>) with a <strong>shared</strong> λ<sub>q</sub> and distinct slopes.</li>
+      <li>Linear regimes in the transform <code>\(\ln(-\ln R)\)</code> vs <code>\(\ln \lambda\)</code> across platforms.</li>
+      <li>Cross-domain consistency after mapping instrument controls → λ.</li>
+    </ul>
+  </div>
 
   <div class="grid two" style="margin-top:1rem">
 
@@ -226,61 +243,28 @@
     <div class="card">
       <h2>Experimental Predictions (2024-2030)</h2>
       
-      <h3>1. ALP Mass Ladder (DMRadio/ADMX)</h3>
+      <h3>1. ALP Mass Ladder (Speculative)</h3>
       <div class="math-block">
         \[
         m_n = m_0 \cdot n^{1/D_h}, \quad D_h \approx 1.72, \quad m_0 \sim 65 \text{ neV}
         \]
       </div>
-      <p><strong>Prediction:</strong> ≥3 detectable resonances between 50-80 neV window.<br>
-      <strong>Falsification:</strong> Null result in this window with sensitivity better than 10<sup>-21</sup> eV.</p>
+      <p><strong>Status:</strong> Speculative (relegated). <strong>Falsification:</strong> Null in pre-registered windows at forecast sensitivity.</p>
       
-      <h3>2. Retention Law Dichotomy</h3>
-      <p>Quantum coherence and structural persistence follow distinct decay laws:</p>
+      <h3>2. Retention Law Dichotomy (FOUNDATION)</h3>
+      <p>Quantum coherence and structural persistence follow distinct decay laws with a shared λ<sub>q</sub>.</p>
       <div class="math-block">
         \[
-        \alpha_{\text{HF}}(\lambda) \approx \exp\left[-\left(\frac{\lambda}{0.50\lambda_0}\right)^{1.71}\right], \quad 
-        \alpha_{\text{struct}}(\lambda) \approx \exp\left[-\left(\frac{\lambda}{2.95\lambda_0}\right)^{1.11}\right]
+        R_{\text{HF}}(\lambda) \sim e^{-(\lambda/\lambda_q)^{\alpha_{\text{HF}}}},\quad
+        R_{\text{corr}^2}(\lambda) \sim e^{-(\lambda/\lambda_q)^{\alpha_{\text{struct}}}}
         \]
       </div>
-      <p><strong>Prediction:</strong> Measurable in NV centers, BECs, and photonic systems.<br>
-      <strong>Falsification:</strong> Absence of dichotomous retention across ≥2 experimental platforms.</p>
       
-      <h3>3. Vacuum Energy Suppression</h3>
-      <p>The 4D vacuum density is a push-forward of MM ground energy:</p>
-      <div class="math-block">
-        \[
-        \rho_{\text{vac}}^{(4)}(x; \lambda) = \int K_\lambda(x,X)\rho_0(X)d^{10}X - \mathcal{N}_\lambda
-        \]
-      </div>
-      <p>High-dimensional microstates phase-cancel at finite λ, suppressing the naive 4D mode sum by ∼ M<sup>-1/2</sup> with M ∼ (λ/ε)<sup>D<sub>I</sub></sup>.</p>
-      <p><strong>Prediction:</strong> Small positive mean (meV<sup>4</sup> scale), weak geometry-dependent modulations.<br>
-      <strong>Test:</strong> Advanced Casimir experiments with structured boundaries.</p>
+      <h3>3. Vacuum Energy Modulation (Speculative)</h3>
+      <p>Small geometry-dependent shifts; requires extreme care with systematics.</p>
       
-      <h3>4. Hub Topology and Galaxy Formation</h3>
-      <p><strong>Prediction:</strong> Stable hub/filament skeleton persists for λ up to several λ<sub>q</sub><sup>HF</sup>.<br>
-      <strong>Test:</strong> JWST observations of early galaxy formation, dark matter distribution.</p>
-    </div>
-
-    <div class="card">
-      <h2>Theoretical Implications</h2>
-      
-      <h3>Resolution of Long-Standing Problems</h3>
-      <ul>
-        <li><strong>Quantum-Classical Divide:</strong> Emerges naturally from finite resolution projection</li>
-        <li><strong>Hierarchy Problems:</strong> Mass scales determined by kernel parameters, not UV physics</li>
-        <li><strong>Cosmological Constant:</strong> Natural suppression via hidden dimension phase cancellation</li>
-        <li><strong>Constants of Nature:</strong> Explained as fixed kernel parameters rather than fine-tuned values</li>
-      </ul>
-      
-      <h3>Novel Mathematical Framework</h3>
-      <p>D.R.E.A.M introduces several innovative mathematical constructs:</p>
-      <ul>
-        <li><strong>Projection Invariants:</strong> Quantities preserved under the kernel mapping</li>
-        <li><strong>Complexity-Packing Index:</strong> Measures hidden state multiplicity per 4D locus</li>
-        <li><strong>Retention Laws:</strong> Quantitative description of information preservation under coarse-graining</li>
-        <li><strong>Focusing Factor:</strong> A(x) = ⟨1/J<sub>F</sub>⟩ quantifying energy concentration</li>
-      </ul>
+      <h3>4. Hub Topology & Galaxy Formation</h3>
+      <p>Skeleton persists beyond HF fade; consistent with retention of structure.</p>
     </div>
 
     <div class="card speculative">
@@ -298,33 +282,6 @@
       
       <p class="note">These speculative elements remain outside the current empirically testable framework but suggest directions for future theoretical development.</p>
     </div>
-
-<!--     <div class="card">
-      <h2>Experimental Program Roadmap</h2>
-      
-      <h3>Phase I (2024-2026): Foundation</h3>
-      <ul>
-        <li>Retention law validation in NV centers and photonic systems</li>
-        <li>DMRadio pathfinder measurements in 50-80 neV window</li>
-        <li>Casimir force measurements with nanostructured boundaries</li>
-        <li>Development of CPI mapping techniques</li>
-      </ul>
-      
-      <h3>Phase II (2027-2030): Verification</h3>
-      <ul>
-        <li>Full ALP ladder characterization</li>
-        <li>Retention law confirmation across ≥3 experimental platforms</li>
-        <li>Hubble tension resolution via D.R.E.A.M cosmology</li>
-        <li>High-precision vacuum energy measurements</li>
-      </ul>
-      
-      <h3>Phase III (2031+): Unification</h3>
-      <ul>
-        <li>Complete topological classification of particle states</li>
-        <li>Experimental determination of D<sub>I</sub> and D<sub>eff</sub></li>
-        <li>Development of full MM dynamical action (if warranted by data)</li>
-      </ul>
-    </div> -->
 
   </div>
 </div>
