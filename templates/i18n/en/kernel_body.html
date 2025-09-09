@@ -85,16 +85,17 @@
       </ul>
     </div>
 
-    <!-- Illustration -->
-    <div class="card">
-      <h2>Illustration — toy kernel weave reality (10D -> 4D modeling in Python)</h2>
-      <img src="{{ url_for('static', filename='img/kernel.png') }}"
-           alt="Toy projection kernel weaving high‑D structure into a 4D slice"
-           style="width:90%; max-width:340px; height:auto; border-radius:14px; border:1px solid #2a2f5a; background:#10132b;">
-      
-    </div>
+
 
   </div>
+
+      <!-- Illustration -->
+    <div class="card">
+      <h2>Illustration — toy kernel weave reality (10D -> 4D modeling in Python)</h2>
+      {% include 'partials/weave_embed.html' %}
+      {% include 'partials/weave_explainer.html' %}
+      
+    </div>
 </div>
 
 <script>

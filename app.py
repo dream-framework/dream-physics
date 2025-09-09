@@ -17,6 +17,9 @@ from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from jinja2 import TemplateNotFound
 
+from weave_blueprint import weave
+
+
 # ---------------------------------------------------------------------
 # Env
 # ---------------------------------------------------------------------
@@ -32,6 +35,7 @@ app.config["GA_MEASUREMENT_ID"] = os.getenv("GA_MEASUREMENT_ID", "").strip()
 app.config["JSON_AS_ASCII"] = False
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
+app.register_blueprint(weave)  # no url_prefix so routes are /weave and /weave/data
 
 @app.context_processor
 def _inject_ga():
@@ -385,7 +389,7 @@ def t(key: str):
 NAV = [
     ("home","nav.home","/"),
     ("case","nav.case","/case"),
-    ("overview","nav.overview","/overview"),
+    ("retention","nav.retention","/retention"),
     ("axioms","nav.axioms","/axioms"),
     ("theorems","nav.theorems","/theorems"),
     ("math","nav.math","/math"),
@@ -413,8 +417,8 @@ def setlang(lang_code):
 @app.route("/")
 def home(): return render_template("home.html", title=t("meta.title"))
 
-@app.route("/overview")
-def overview(): return render_template("overview.html", title=t("nav.overview"))
+@app.route("/retention")
+def retention(): return render_template("retention.html", title=t("nav.retention"))
 
 @app.route("/axioms")
 def axioms(): return render_template("axioms.html", title=t("nav.axioms"))
@@ -448,6 +452,9 @@ def case(): return render_template("case.html", title=t("nav.case"))
 
 @app.route("/theorems")
 def theorems(): return render_template("theorems.html", title=t("nav.theorems"))
+
+@app.route("/plotter")
+def plotter(): return render_template("plotter.html", title=t("nav.plotter"))
 
 
 
