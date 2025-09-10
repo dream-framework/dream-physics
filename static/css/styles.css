@@ -160,20 +160,36 @@ body::before{
 
 .prose { white-space: pre-line; }
 
-/* === Toggle overrides (added) === */
+/* === Toggle overrides (unified, no :has, no [hidden]) === */
 .show-math .math-block { display: block; }
 .show-math .math-inline { display: inline; }
-.show-spec .speculative { display: block; }
-body:not(.show-spec) .speculative { display: none !important; }
-body:not(.show-spec) .cloud.open .a.speculative,
-body:not(.show-spec) .cloud[open] .a.speculative { display: none !important; }
 
-.figure .figure-media {
-  width: 100%;
-  height: auto;
-  border-radius: 14px;
-  border: 1px solid #2a2f5a;
-  background: #10132b;
+/* Default: speculative OFF site-wide */
+.speculative { display: none; }
+
+/* Turn ON by adding either class to <body> (header/script can pick one): */
+body.show-spec .card.speculative,
+body.spec-on   .card.speculative {
+  display: block !important;
+}
+
+/* Inline/speculative bits (not cards) stay inline when ON */
+body.show-spec .speculative:not(.card),
+body.spec-on   .speculative:not(.card) {
+  display: inline !important;
+}
+
+/* Clouds: show speculative answers ONLY when a cloud is open AND spec is ON */
+body.show-spec .cloud.open .a.speculative,
+body.show-spec .cloud[open] .a.speculative,
+body.spec-on   .cloud.open .a.speculative,
+body.spec-on   .cloud[open] .a.speculative {
+  display: block !important;
+}
+
+/* Strong OFF fallback (guards against any old page-specific CSS) */
+body:not(.show-spec):not(.spec-on) .speculative {
+  display: none !important;
 }
 
 /* ===== All article pages (actual article content) ===== */

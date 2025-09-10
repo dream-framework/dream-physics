@@ -1,131 +1,176 @@
-{% block content %}
+{% block content %} 
 
-<div class="container"> <!-- HERO --> <div class="card hero"> <h1>Основные теоремы D.R.E.A.M</h1> <p class="kicker">Ниже собраны ключевые результаты, вытекающих из аксиом: проекция 10→4 через конечное по разрешению ядро, «10→4», калибровочная ковариантность и разделение режимов по \(\lambda\).</p> <p class="note">Подробности и эскизы доказательств раскрываются в коллапсируемых блоках.</p> </div> <div class="grid two" style="margin-top:1rem">
+<style>
+  /* HERO spans the grid — no width hacks, no CLS */
+  .grid.two > .card.hero { grid-column: 1 / -1; }
 
-<!-- КАПСУЛА -->
-<div class="card">
-  <h2>Капсула — список теорем</h2>
-  <ol>
-    <li><strong>Т1 — Удержание фотонов.</strong> Электромагнитный сектор — неизбывная «лесá» проекции: при поздневременной эволюции его нормированная доля стремится к 1.</li>
-    <li><strong>Т2 — Монотонность ядра по массе.</strong> Чем больше эффективный массовый масштаб сектора, тем сильнее подавление при конечном разрешении.</li>
-    <li><strong>Т3 — Когомологическая стабильность \(U(1)\).</strong> Класс \([F]\) сохраняется под сглаживанием; калибровочно-точные представители не исчезают.</li>
-    <li><strong>Т4 — Минимальное действие Максвелла.</strong> Среди безмассовых проекций свободное электромагнитное поле минимизирует усреднённую плотность действия.</li>
-    <li><strong>Т5 — Лестница почти безмассовых ALP.</strong> Фрактальная башня с законом \(m_n\sim m_0\,n^{1/D_h}\) выживает дольше тяжёлых мод, но не заменяет фотонную «лесу».</li>
-  </ol>
-  <p class="note">Все формулировки опираются только на инварианты ядра и когомологию, поэтому не зависят от частных разбиений 10-мерного многообразия.</p>
+  /* Speculative visibility: minimal and deterministic */
+  .speculative { display: none; }                 /* default OFF */
+  body.spec-on .card.speculative { display: block; }
+  body.spec-on .speculative:not(.card) { display: inline; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const t = document.getElementById('speculativeToggle');
+  const apply = () => document.body.classList.toggle('spec-on', !!(t && t.checked));
+  apply();
+  t && t.addEventListener('change', apply);
+});
+</script>
+
+<div class="container">
+
+  <div class="grid two" style="margin-top:1rem">
+
+    <!-- HERO -->
+    <div class="card hero">
+      <h1>Основные теоремы</h1>
+      <p class="kicker">Главные результаты, выводимые из базовых аксиом, как тестируемые связи между <em>инвариантами</em>.</p>
+      <p class="note">Для каждой теоремы приведены краткая идея доказательства и операционные метрики. Математика скрыта по умолчанию — используйте переключатель «Math» в шапке.</p>
+    </div>
+
+    <!-- Capsule list of theorems -->
+    <div class="card">
+      <h2>Капсула — основные теоремы</h2>
+      <ol>
+        <li><strong>T1 — Топологическое квантование</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></li>
+        <li><strong>T2 — Проекция симметрий (Нётер при проталкивании)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
+        <li><strong>T3 — Порог когерентности (закон удержания)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></li>
+        <li><strong>T4 — Фокусировка структуры и CPI (поддержка S2)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
+        <li><strong>T5 — Размерностное течение к однородности</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
+        <li><strong>T6 — Междоменный закон ранжированных спектров (отношений)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
+      </ol>
+      <p class="note">Бывшая «лестница ALP», связанная с S1, переведена ниже в раздел <em>спекулятивно</em> (для полноты; скрывается, когда выключен переключатель «Спекулятивно»).</p>
+    </div>
+
+    <!-- T1 -->
+    <div class="card">
+      <h2>T1 — Топологическое квантование <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></h2>
+      <p class="core">Устойчивые целочисленные инварианты на компактном Метамногообразии размечают дискретные 4D-классы; заряды и индексы квантуются при проекции.</p>
+      <div class="math-block">\[
+        Q_{\mathrm{U(1)}}=\frac{1}{2\pi}\oint A\in\mathbb{Z},\qquad 
+        k=\frac{1}{8\pi^2}\int \operatorname{tr}(F\wedge F)\in\mathbb{Z}.
+      \]</div>
+      <p><strong>Операционные метрики.</strong> Целочисленные заряды и числа инстантонов; правила отбора из арифметики классов; требование компенсации аномалий как условие согласованности.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Эскиз.</strong> На гладкой компактной базе целочисленные топологические данные сохраняются при непрерывных деформациях и переживают проталкивание; дискретные 4D-наблюдаемые следуют из A5.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- T2 -->
+    <div class="card">
+      <h2>T2 — Проекция симметрий (Нётер при проталкивании) <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
+      <p class="core">При эквивариантном ядре токи Нётера «коммутируют» с проекцией: непрерывные 10D-симметрии дают сохраняющиеся 4D-величины.</p>
+      <div class="math-block">\[
+        K_\lambda(g\!\cdot\!x;g\!\cdot\!X)=K_\lambda(x;X)\quad\Longrightarrow\quad
+        \delta O(x)=\!\int K_\lambda\,\delta\Phi\,d\mu_{\mathrm{MM}}=0\ \Rightarrow\ \partial_\mu J^\mu=0.
+      \]</div>
+      <p><strong>Операционные метрики.</strong> Проверка законов сохранения с машинной точностью; поиск артефактов, нарушающих эквивариантность ядра.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Эскиз.</strong> Если 10D-поля инвариантны и \(K_\lambda\) уважает симметрию, то и 4D-наблюдаемая инвариантна; теорема Нётера даёт сохранение тока.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- T3 -->
+    <div class="card">
+      <h2>T3 — Порог когерентности (закон удержания) <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></h2>
+      <p class="core">Существует шкала когерентности \( \lambda_q \), разделяющая режимы: ниже сохраняются интерференционные инварианты, выше доминирует грубое усреднение.</p>
+      <div class="math-block">\[
+        R(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big],\qquad
+        \ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda-D_{\mathrm{eff}}\ln\lambda_q.
+      \]</div>
+      <p><strong>Операционные метрики.</strong> Два канала следуют одному закону с собственными \( \lambda_q,D_{\mathrm{eff}} \): ВЧ-мощность \(R_{\mathrm{HF}}(\lambda)\) и структурная корреляция \(R_{\mathrm{struct}}(\lambda)=\mathrm{corr}^2(e_4|_{\lambda\to0},e_4|_\lambda)\).</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Эскиз.</strong> Конечное разрешение суммирует \(\sim(\lambda/\lambda_q)^{D_{\mathrm{eff}}}\) некогерентных микрокомпонент; экспоненциальная «верность» по их числу даёт растянутую экспоненту удержания.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- T4 -->
+    <div class="card">
+      <h2>T4 — Фокусировка структуры и CPI (поддержка S2) <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
+      <p class="core">Малый якобиан волокна порождает «узлы/нити», переживающие сглаживание; CPI количествует локальный бюджет микросостояний и предсказывает, где структура живёт дольше всего.</p>
+      <div class="math-block">\[
+        A(x)\ \sim\ \big\langle J_\pi^{-1}\big\rangle,\qquad
+        M(\lambda,\varepsilon;x)\ \sim\ A(x)\,\big(\tfrac{\lambda}{\varepsilon}\big)^{D_I},\quad
+        \mathrm{CPI}(x)=\log_{10} M.
+      \]</div>
+      <p><strong>Операционные метрики.</strong> Повышенное удержание в областях с большим \(A(x)\); более медленный спад \(R_{\mathrm{struct}}\) по сравнению с \(R_{\mathrm{HF}}\), согласующийся с долговечностью «скелета».</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Эскиз.</strong> Коареа-формула усиливает плотность там, где мал \(J_\pi\); CPI описывает уплотнение мод с масштабом. В связке с T3 объясняет, почему структура убывает медленнее ВЧ-контента.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- T5 -->
+    <div class="card">
+      <h2>T5 — Размерностное течение к однородности <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
+      <p class="core">При S2 эффективная размерность, извлекаемая из структуры, стремится к \(3\) на больших масштабах: «фрактальные» признаки — только в окне ниже \( \lambda_q \); выше проявляется однородность.</p>
+      <div class="math-block">\[
+        D_{\mathrm{eff}}(\lambda)\ \nearrow\ 3\quad\text{при}\ \lambda\to\infty.
+      </div>
+      <p><strong>Операционные метрики.</strong> На лог-лог подсчётах появляется \(3\)D-скейлинг за «обрывом»; межмасштабные корреляции исчезают в соответствии с T3.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Эскиз.</strong> Растянутая экспонента подавляет ВЧ-деталь и корреляции, что ведёт к 3D-грубой геометрии, согласуя «паутинную» суб-\( \lambda_q \) структуру с крупномасштабной однородностью.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- T6 -->
+    <div class="card">
+      <h2>T6 — Междоменный закон ранжированных спектров (отношений) <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
+      <p class="core">Кумулятивное число сохраняемых мод масштабируется как \(N(\Omega)\!\sim\!\Omega^{D_{\mathrm{eff}}}\); ранжированные энергии/массы obey закон отношений, независимый от базы:</p>
+      <div class="math-block">\[
+        N(\Omega)\sim\Omega^{D_{\mathrm{eff}}},\quad \rho(\Omega)\sim\Omega^{D_{\mathrm{eff}}-1},\qquad
+        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}.
+      \]</div>
+      <p><strong>Операционные метрики.</strong> Оценка \(D_{\mathrm{eff}}\) по счёту сохраняемых мод и проверка предсказания по ранг-отношениям там, где применимо (база \(m_1\) контекстна; инвариант — <em>отношение</em>).</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Эскиз.</strong> Плотность состояний с эффективной размерностью \(D_{\mathrm{eff}}\) даёт \(N\!\propto\!\Omega^{D_{\mathrm{eff}}}\); обращение ведёт к ранг-масштабам \(\propto n^{1/D_{\mathrm{eff}}}\).</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- Relegated S1 item (kept for completeness) -->
+    <div class="card speculative">
+      <h2>ALP / негармоническая «лестница» (переведено)</h2>
+      <p class="core">В текущей постановке S1 (ALP/«пыль») считается нулевой ниже «обрыва» и не используется для опоры каркаса; соотношение «лестницы» сохранено лишь как спекулятивное расширение.</p>
+      <div class="math-block">\[
+        m_n = m_1\, n^{1/D_{\mathrm{eff}}}.
+      \]</div>
+      <p class="note">Скрывается, когда «Спекулятивно» выключено.</p>
+    </div>
+
+    <!-- Interpretive note -->
+    <div class="card speculative">
+      <h2 class="kicker">Интерпретационная заметка (спекулятивно)</h2>
+      <p>Думайте о T3–T5 как о триаде «как размывание съедает деталь»: T3 задаёт закон удержания, T4 объясняет долговечность «скелета» относительно ВЧ-контента, T5 — почему на крупнейших масштабах возникает однородность.</p>
+    </div>
+
+  </div>
 </div>
 
-<!-- Т1: УДЕРЖАНИЕ ФОТОНОВ -->
-<div class="card">
-  <h2>Т1 — Теорема удержания фотонов</h2>
-  <p class="core">При калибровочно-ковариантном, конечном по разрешению и необратимом ядре, а также при монотонном убывании свободной энергии во времени, удержание электромагнитного сектора равно единице для любой \(\lambda&gt;0\); сектора с \(m&gt;0\) вымываются.</p>
-  <div class="math-block">\[
-  \mathcal R_\lambda(\mathcal S)=1\ \ \forall\,\lambda>0,\qquad
-  \lim_{t\to\infty}\mathcal R_\lambda(m;t)=0\ \ \text{при}\ \ m>0.
-  \]</div>
-  <details class="more">
-    <summary>Доказательство (эскиз)</summary>
-    <div class="expander-body prose">
-      <ul>
-        <li><em>Шаг 1 (монотонность):</em> конечная \(\lambda\) реализует сглаживание, приводящее к экспоненциальному подавлению пропагаторов с массой (юкавовская форма), тогда как безмассовые не подавляются.</li>
-        <li><em>Шаг 2 (когомология):</em> оператор \(d\) коммутирует со сглаживанием, следовательно, если \(F=dA,\ dF=0\), то класс \([F]\) остаётся ненулевым.</li>
-        <li><em>Шаг 3 (минимальность действия):</em> среди безмассовых проекций свободное поле Максвелла минимизирует \(\int \tfrac14 F_{\mu\nu}F^{\mu\nu}\,d^4x\); при разреживании энергии динамика «стекает» в этот сектор.</li>
-      </ul>
-    </div>
-  </details>
-  <details class="more">
-    <summary>Следствия и подписи</summary>
-    <div class="expander-body prose">
-      <ul>
-        <li>Поздневременный остаток — длинноволновой электромагнитный фон на нулевых геодезиках («безвременный» в смысле нулевого собственного времени).</li>
-        <li>Кинематическая оболочка заселённости \(\propto k^{-1}\) как универсальная форма при больших длинах волн.</li>
-      </ul>
-    </div>
-  </details>
-</div>
-
-<!-- Т2: МОНОТОННОСТЬ -->
-<div class="card">
-  <h2>Т2 — Монотонность ядра по массовому масштабу</h2>
-  <p class="core">Сектора с бо́льшим эффективным \(m\) подавляются сильнее при фиксированной \(\lambda\); безмассовые доминируют в удержании при укрупнении масштаба.</p>
-  <div class="math-block">\[
-  \mathcal R_\lambda(m_1)\le \mathcal R_\lambda(m_2)\quad \text{если}\quad m_1>m_2.
-  \]</div>
-  <details class="more">
-    <summary>Доказательство (эскиз)</summary>
-    <div class="expander-body prose">
-      <p>Конечное разрешение реализует положительно определённый сжимающий оператор на 4D-пропагаторах. Для \(m&gt;0\) дальнодействие принимает юкавовскую форму \(\sim e^{-mr}/r\), что при свёртке с локальным ядром падает быстрее, чем для безмассового случая \(\sim 1/r\). Отсюда упорядочивание по \(\mathcal R_\lambda\).</p>
-    </div>
-  </details>
-</div>
-
-<!-- Т3: КОГОМОЛОГИЧЕСКАЯ СТАБИЛЬНОСТЬ -->
-<div class="card">
-  <h2>Т3 — Когомологическая стабильность \(U(1)\)</h2>
-  <p class="core">Если пространство наблюдений допускает ненулевой второй когомологический класс, то калибровочно-точный класс \([F]\) сохраняется под действием ядра; не существует естественного механизма «стереть» все представители \(F=dA,\ dF=0\).</p>
-  <div class="math-block">\[
-  d\big(K_\lambda * F\big)=K_\lambda * (dF)=0,\qquad
-  K_\lambda * F = dA'\ \Rightarrow\ [F]\ \text{инвариантен}.
-  \]</div>
-  <details class="more">
-    <summary>Доказательство (эскиз)</summary>
-    <div class="expander-body prose">
-      <p>Ковариантность по калибровке и линейность свёртки дают коммутирование с \(d\). Неприводимость класса по \(H^2_{\mathrm{dR}}\) означает, что при сглаживании сохраняется ненулевой представитель; следовательно, электромагнитная «лесá» не исчезает.</p>
-    </div>
-  </details>
-</div>
-
-<!-- Т4: МИНИМАЛЬНОЕ ДЕЙСТВИЕ МАКСВЕЛЛА -->
-<div class="card">
-  <h2>Т4 — Минимальное действие сектора Максвелла</h2>
-  <p class="core">Среди всех ненулевых безмассовых калибровочно-точных проекций усреднённая по ядру плотность действия минимальна у свободного электромагнитного поля.</p>
-  <div class="math-block">\[
-  \mathcal A_\lambda[A]=\int \frac14 F_{\mu\nu}F^{\mu\nu}\,d^4x+O(\lambda)\quad \Rightarrow\quad
-  \delta \mathcal A_\lambda\big|_{F=dA}=0\ \ \text{и}\ \ \delta^2\mathcal A_\lambda\ge 0.
-  \]</div>
-  <details class="more">
-    <summary>Доказательство (эскиз)</summary>
-    <div class="expander-body prose">
-      <p>Любые массовые и нелинейные добавки вносят положительно определённые слагаемые, которые не аннулируются сглаживанием. Для свободного поля главный масштабно-свободный вклад минимален; при росте энтропии динамика притягивается к этому минимуму.</p>
-    </div>
-  </details>
-</div>
-
-<!-- Т5: ЛЕСТНИЦА ALP -->
-<div class="card">
-  <h2>Т5 — Лестница почти безмассовых ALP</h2>
-  <p class="core">Дополнительная «пыль» из почти безмассовых мод образует башню с нетривиальным спектральным показателем; выживаемость выше, чем у тяжёлых мод, но ниже безмассовых.</p>
-  <div class="math-block">\[
-  m_n \sim m_0\,n^{1/D_h},\qquad
-  \mathcal R_\lambda(m_n)\searrow \text{при росте }n,\ \ \text{а}\ \ \mathcal R_\lambda(\gamma)\to 1.
-  \]</div>
-  <details class="more">
-    <summary>Эскиз вывода</summary>
-    <div class="expander-body prose">
-      <p>Нефакторизуемая проекция «all-to-four» с эффективной спектральной размерностью \(D_h\) порождает дискретный нетривиальный ряд малых масс. Монотонность по массе (Т2) задаёт упорядочивание удержаний; строгого удержания, как у фотонов (Т1–Т4), у этих мод нет.</p>
-    </div>
-  </details>
-</div>
-
-<!-- ЗАКОН УДЕРЖАНИЯ (КОЛИЧЕСТВЕННО) -->
-<div class="card">
-  <h2>Количественная форма закона удержания</h2>
-  <p class="core">Эмпирические кривые удержания согласуются со степенным экспонентом по разрешению; фотонный сектор отличается большим масштабом структуры и мягким показателем.</p>
-  <div class="math-block">\[
-  R_\gamma(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q^\gamma}\big)^{\alpha_\gamma}\Big],\qquad
-  \alpha_\gamma\approx 1,\ \ \lambda_q^\gamma\gg \lambda_q^{\text{massive}}.
-  \]</div>
-  <details class="more">
-    <summary>Наблюдаемые подписи и фальсификаторы</summary>
-    <div class="expander-body prose">
-      <ul>
-        <li>Сходимость фонового спектра к масштабо-свободной оболочке \(\propto k^{-1}\) при больших длинах волн.</li>
-        <li>В фотоноподобных режимах лабораторных 10→4-симуляций наибольшая \(\lambda_q\) и наименьшая \(\alpha\).</li>
-        <li><em>Фальсификация:</em> обнаружение активной поздневременной фазы без электромагнитных возбуждений при сохранении других секторов; систематическое нарушение \(dF=0\) под естественным сглаживанием.</li>
-      </ul>
-    </div>
-  </details>
-</div>
-</div> </div> <script> // Перепечатать формулы после раскрытия деталей document.querySelectorAll('details.more').forEach(d=>{ d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d])); }); </script>
-
+<script>
+/* Typeset only when an expander opens (prevents spinner loops) */
+document.querySelectorAll('details.more').forEach(d=>{
+  d.addEventListener('toggle', ()=>{
+    if (d.open && window.MathJax && MathJax.typeset) MathJax.typeset([d]);
+  });
+});
+</script>
 {% endblock %}

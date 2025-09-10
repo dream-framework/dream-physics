@@ -734,5 +734,31 @@
 
     <!-- your main JS (if any): -->
     <script src="{{ url_for('static', filename='js/main.js') }}?v=5"></script>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const cb = document.getElementById('specToggle');   // ← your checkbox id
+  const BODY_FLAG = 'show-spec';                       // ← the class your CSS uses
+  const KEY = 'spec:on';                               // ← localStorage key
+
+  // 1) Restore saved preference if present
+  const saved = localStorage.getItem(KEY);
+  if (saved !== null) {
+    const on = saved === '1';
+    document.body.classList.toggle(BODY_FLAG, on);
+    if (cb) cb.checked = on;
+  } else if (cb) {
+    // Otherwise sync current checkbox state to body
+    document.body.classList.toggle(BODY_FLAG, cb.checked);
+  }
+
+  // 2) React to user changes & persist
+  cb?.addEventListener('change', e => {
+    const on = e.target.checked;
+    document.body.classList.toggle(BODY_FLAG, on);
+    localStorage.setItem(KEY, on ? '1' : '0');
+  });
+});
+</script>
   </body>
 </html>
