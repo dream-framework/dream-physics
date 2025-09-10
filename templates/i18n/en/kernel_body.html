@@ -1,10 +1,9 @@
-
 {% block content %}
 <div class="container">
 
   <div class="card hero">
     <h1>Projection Kernel</h1>
-    <p class="kicker">Kernel‑agnostic posture with operational invariants: resolution \(\lambda_q\), locality radius, regularity/positivity, and effective spectral exponent \(D_{\mathrm{eff}}\).</p>
+    <p class="kicker">Kernel-agnostic posture with operational invariants (S2 central, S3 supportive): resolution \(\lambda_q\), locality radius, regularity/positivity, effective spectral exponent \(D_{\mathrm{eff}}\).</p>
     <p class="note">Math is hidden by default. Use the “Math” toggle in the header to reveal formulas.</p>
   </div>
 
@@ -12,8 +11,8 @@
 
     <!-- Definition -->
     <div class="card">
-      <h2>Definition (push‑forward)</h2>
-      <p>4D observables are push‑forwards of MM fields by a fixed, non‑invertible kernel with finite resolution:</p>
+      <h2>Definition (push-forward)</h2>
+      <p>4D observables are push-forwards of MM fields by a fixed, non-invertible kernel with finite resolution:</p>
       <div class="math-block">\[
         O(x)=\int_{\mathrm{MM}} K_{\lambda}(x;X)\,\Phi(X)\,d\mu_{\mathrm{MM}}(X),\qquad \lambda=\lambda_q.
       \]</div>
@@ -22,8 +21,8 @@
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
         <div class="expander-body prose">
           <p><strong>Linearity / boundedness.</strong> The induced operator \(\mathcal{K}_\lambda: L^2(\mathrm{MM})\to L^2(\mathbb{R}^{3,1})\) is assumed bounded.</p>
-          <p><strong>Normalization.</strong> It is convenient to choose \(\int K_{\lambda}(x;X)\,d\mu_{\mathrm{MM}}(X)=1\) so constants map to constants.</p>
-          <p><strong>Compatibility.</strong> All choices of volume form are equivalent provided \(K_{\lambda}\,d\mu_{\mathrm{MM}}\) is used consistently.</p>
+          <p><strong>Normalization.</strong> Choose \(\int K_{\lambda}(x;X)\,d\mu_{\mathrm{MM}}(X)=1\) so constants push-forward to constants.</p>
+          <p><strong>PSD / compatibility.</strong> We use positive-semidefinite kernels; statements are invariant under equivalent measures if \(K_{\lambda}\,d\mu_{\mathrm{MM}}\) is used consistently.</p>
         </div>
       </details>
     </div>
@@ -32,126 +31,141 @@
     <div class="card">
       <h2>Kernel invariants (operational)</h2>
       <ul>
-        <li><strong>Resolution</strong> \(\lambda_q\): critical fidelity scale for retention.</li>
-        <li><strong>Locality radius</strong>: how sharply MM points are tied to \(x\approx\pi(X)\).</li>
-        <li><strong>Regularity / positivity</strong>: well‑posed PSD operator; finite norms.</li>
-        <li><strong>Effective spectral exponent</strong> \(D_{\mathrm{eff}}\): controls mode counting and non‑harmonic ladders.</li>
+        <li><strong>Resolution</strong> \(\lambda_q\): the critical fidelity scale separating quantum-grade vs. coarse regimes (S2).</li>
+        <li><strong>Locality radius</strong>: how sharply MM points contribute for \(X\!\approx\!\pi^{-1}(x)\).</li>
+        <li><strong>Regularity / positivity</strong>: well-posed PSD operator; finite norms and stable quadratics.</li>
+        <li><strong>Effective spectral exponent</strong> \(D_{\mathrm{eff}}\): controls retained-mode counting and ranked spectra.</li>
       </ul>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
         <div class="expander-body prose">
-          <p><strong>Why invariants?</strong> They are the quantities that remain identifiable across admissible kernels and therefore anchor forecasts and falsification.</p>
+          <p><strong>Why invariants?</strong> They remain identifiable across admissible kernels and therefore anchor forecasts and falsification.</p>
         </div>
       </details>
     </div>
 
-    <!-- Retention -->
+    <!-- S2: Retention -->
     <div class="card">
-      <h2>Retention &amp; coherence</h2>
+      <h2>S2 — Retention &amp; coherence (universal law)</h2>
       <p>Fidelity to fine structure as a function of effective probe scale \(\lambda\):</p>
       <div class="math-block">\[
         \alpha(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big].
       \]</div>
-      <p>This yields two regimes and a <strong>coherence cliff</strong> near \(\lambda\approx\lambda_q\). Instruments scanning across the boundary should show a step‑like change in interference/coherence observables.</p>
+      <p>Two regimes with a <strong>coherence cliff</strong> near \(\lambda\!\approx\!\lambda_q\). Cross-platform scans should show a step-like change in interference/coherence. Readouts include HF-power \(R_{\mathrm{HF}}(\lambda)\) and structural correlation \(R_{\mathrm{struct}}(\lambda)=\mathrm{corr}^2(e_4|_{\lambda\to0},e_4|_\lambda)\).</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Log slope.</strong> \(\ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda - D_{\mathrm{eff}}\ln\lambda_q.\)</p>
+          <p><strong>Platform mapping.</strong> \(\lambda\) depends on modality (baseline, wavelength, coherence length); ratios to \(\lambda_q\) are invariant.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- S3: Focusing & CPI -->
+    <div class="card">
+      <h2>S3 — Structure focusing &amp; CPI (supports S2)</h2>
+      <p>Small projection-Jacobian stabilizes a web-like skeleton that outlives high-frequency detail; CPI quantifies local microstate budgets.</p>
+      <div class="math-block">\[
+        A(x)\ \sim\ \big\langle J_\pi^{-1}\big\rangle,\qquad
+        M(\lambda,\varepsilon;x)\ \sim\ A(x)\,\big(\tfrac{\lambda}{\varepsilon}\big)^{D_I},\qquad
+        \mathrm{CPI}(x)=\log_{10} M.
+      \]</div>
+      <p>Operationally, regions with higher \(A(x)\) show slower decay of \(R_{\mathrm{struct}}\) relative to \(R_{\mathrm{HF}}\), consistent with S2.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Coarea link.</strong> Focusing follows from the coarea formula; CPI packages mode-packing with scale and locality.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- Spectral exponent (ranked spectra) -->
+    <div class="card">
+      <h2>Effective spectral exponent \(D_{\mathrm{eff}}\)</h2>
+      <p>Encodes retained-mode growth and ranked spectra (context-free base):</p>
+      <div class="math-block">\[
+        N(\Omega)\sim\Omega^{D_{\mathrm{eff}}},\qquad
+        \rho(\Omega)\sim\Omega^{D_{\mathrm{eff}}-1},\qquad
+        \frac{\Omega_n}{\Omega_1}=n^{1/D_{\mathrm{eff}}}.
+      \]</div>
+      <p>Here \(N\) is cumulative count, \(\rho\) the density of retained modes, and the ranked-ratio law is invariant to the base scale. Use where applicable as a cross-domain fingerprint; do not treat a specific base as support.</p>
     </div>
 
     <!-- Gaussian proxy -->
     <div class="card">
       <h2>Didactic proxy (Gaussian)</h2>
-      <p>A convenient proxy satisfying locality and positivity is a Gaussian‑type kernel in normal coordinates:</p>
+      <p>A convenient proxy satisfying locality and positivity is a Gaussian-type kernel in normal coordinates:</p>
       <div class="math-block">\[
         K_{\lambda}(x;X)\propto\exp\!\Big(-\tfrac{\mathrm{dist}(X,\pi^{-1}(x))^2}{2\sigma^2}\Big),\qquad \sigma\sim\lambda.
       \]</div>
-      <p>Then \(O=K_{\lambda}\star\Phi\) is band‑limited; high‑frequency content is exponentially suppressed with index governed by \(\lambda/\lambda_q\), reproducing the fidelity law above.</p>
-      <p class="note">D.R.E.A.M remains kernel‑agnostic; this proxy is didactic only.</p>
-    </div>
-
-    <!-- Spectral exponent -->
-    <div class="card">
-      <h2>Effective spectral exponent \(D_{\mathrm{eff}}\)</h2>
-      <p>Encodes mode counting on the internal sector and implies non‑linear mass/frequency ladders:</p>
-      <div class="math-block">\[
-        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}},\qquad m_1\approx 65\,\mathrm{neV}\Rightarrow f_1\approx 15.717\,\mathrm{MHz}.
-      \]</div>
-      <p>Also informs entropy and cosmological scaling cross‑checks.</p>
+      <p>Then \(O=K_{\lambda}\star\Phi\) is band-limited; high-frequency content is exponentially suppressed with index governed by \(\lambda/\lambda_q\), reproducing the fidelity law above.</p>
+      <p class="note">D.R.E.A.M remains kernel-agnostic; this proxy is didactic only.</p>
     </div>
 
     <!-- Practical mapping -->
     <div class="card">
       <h2>Instrument mapping</h2>
       <ul>
-        <li><strong>\(\lambda\)</strong> is platform‑dependent (baseline, wavelength, coherence length); forecasts depend on \(\lambda/\lambda_q\).</li>
-        <li>Search windows: tens‑of‑neV haloscopes for the ALP base; pm‑scale scans for the coherence cliff; mHz templates for torsion/extra polarization.</li>
+        <li>\(\lambda\) is platform-dependent (baseline, wavelength, coherence length); forecasts depend on \(\lambda/\lambda_q\).</li>
+        <li>Scan across the cliff: interferometry/photonic lattices, NV centers, atom interferometers, superconducting circuits.</li>
+        <li>Read out both channels: \(R_{\mathrm{HF}}(\lambda)\) and \(R_{\mathrm{struct}}(\lambda)\) under the <em>same</em> \((\lambda_q,D_{\mathrm{eff}})\).</li>
+        <li>Map focusing metrics \(A(x)\), \(M(\lambda,\varepsilon;x)\), \(\mathrm{CPI}(x)\) and check the predicted separation of decay rates.</li>
+        <li>Symmetry/guardrail checks for kernel equivariance and PSD behavior (well-posedness).</li>
       </ul>
     </div>
 
-
-
   </div>
 
-      <!-- Illustration -->
-    <div class="card">
-      <h2>Illustration — toy kernel weave reality (10D -> 4D modeling in Python)</h2>
-      {% include 'partials/weave_embed.html' %}
-      {% include 'partials/weave_explainer.html' %}
-      
-    </div>
+  <!-- Illustration -->
+  <div class="card">
+    <h2>Illustration — toy kernel weave reality (10D → 4D modeling in Python)</h2>
+    {% include 'partials/weave_embed.html' %}
+    {% include 'partials/weave_explainer.html' %}
+  </div>
 </div>
+
 <style>
 /* Keep selected value readable at all times */
 #dataset{
-  color:#ffffff !important;              /* closed select text */
-  -webkit-text-fill-color:#ffffff;       /* Safari/Chromium quirk */
-  color-scheme: dark;                    /* hint OS to use dark popups */
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff;
+  color-scheme: dark;
 }
-
 /* Options in the popup */
 #dataset option{
   color:#e5e7eb;
   background:#0b1220;
 }
-
 /* The currently selected (highlighted) option */
 #dataset option:checked,
 #dataset option:focus,
 #dataset option:hover:checked{
   color:#ffffff !important;
-  background:#1f2937 !important;         /* dark highlight */
+  background:#1f2937 !important;
 }
-
-/* Legacy Edge/IE (if you need it) */
+/* Legacy Edge/IE */
 #dataset::-ms-value{ color:#ffffff; background:#0f172a; }
 
 /* --- Kernel toy selects: make popup readable --- */
-/* Apply to the Deff select; add other selects here if needed */
 #kw-deff{
-  background:#0f172a;               /* closed control on dark card */
-  color:#ffffff;                    /* closed label is white */
-  -webkit-text-fill-color:#ffffff;  /* Safari/Chromium quirk */
+  background:#0f172a;
+  color:#ffffff;
+  -webkit-text-fill-color:#ffffff;
   border:1px solid #334155;
   border-radius:10px;
   padding:8px 10px;
-
-  /* Key: tell the UA to render the dropdown in a LIGHT scheme
-     so option text is black by default. */
   color-scheme: light;
 }
-
-/* Popup list items */
 #kw-deff option{
-  background:#ffffff;               /* light menu background */
-  color:#0b0f14;                    /* non-selected = black text */
+  background:#ffffff;
+  color:#0b0f14;
 }
-
-/* Highlighted/selected row stays white-on-dark */
 #kw-deff option:checked,
 #kw-deff option:hover:checked,
 #kw-deff option:focus:checked{
-  background:#2563eb !important;    /* blue highlight */
-  color:#ffffff !important;         /* selected text = white */
+  background:#2563eb !important;
+  color:#ffffff !important;
 }
-
-/* Focus ring for keyboard users */
 #kw-deff:focus-visible{
   outline:2px solid #22d3ee;
   outline-offset:2px;
