@@ -101,11 +101,320 @@
     </div>
 
   </div>
-  <div class="card">
-  <h2>TopoZoo — particles as topology (π₁ vortices)</h2>
-  {% include 'partials/topology_vortices.html' %}
+
+<!-- TopoZoo — Compact Two-Pane Card (collapsed by default) -->
+<div class="card tz-acc-card" data-single="true">
+  <div class="tz-acc-head">
+    <div>
+      <h2 style="margin:0">Particles as topology - interactive plotters</h2>
+      <p class="muted" style="margin:.35rem 0 0">
+        Two ways to see how <b>twists in a field</b> act like particles:
+        <b>π₁ vortices</b> (make/annihilate ±1 pairs; vary the probe scale λ)
+        and the <b>Wilson loop</b> (wrap the core to read the class N).
+      </p>
+    </div>
+
+    <!-- Collapsed buttons -->
+    <div class="tz-acc-tabs" role="tablist" aria-label="Topology views">
+      <button class="tz-acc-toggle" role="tab" aria-controls="tz-pane-vort" aria-expanded="false">
+        π₁ Vortices <span class="tz-acc-chev" aria-hidden="true">▾</span>
+      </button>
+      <button class="tz-acc-toggle" role="tab" aria-controls="tz-pane-wilson" aria-expanded="false">
+        Wilson Loop <span class="tz-acc-chev" aria-hidden="true">▾</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pane: VORTICES (kept in DOM; starts collapsed) -->
+  <section id="tz-pane-vort" class="tz-acc-panel" role="tabpanel" aria-labelledby="tz-tab-vort" hidden>
+    {% include 'partials/topology_vortices.html' %}
+  </section>
+
+  <!-- Pane: WILSON (your existing markup moved here; starts collapsed) -->
+  <section id="tz-pane-wilson" class="tz-acc-panel" role="tabpanel" aria-labelledby="tz-tab-wilson" hidden>
+    <div class="row" style="align-items:center;gap:1rem">
+      <div class="col">
+        <h3 style="margin:0">Wilson Loop & Topological Class</h3>
+        <p class="muted" style="margin:.25rem 0 0">
+          Drag the loop. Slide the flux Φ/(2π). If (and only if) the loop <b>encloses</b> the core and Φ/(2π) is a
+          <b>whole number of turns</b>, a <b>CLASS&nbsp;N</b> emerges.
+        </p>
+      </div>
+      <div class="col" style="display:flex;gap:.5rem;justify-content:flex-end;flex-wrap:wrap">
+        <button id="wlp-auto" class="pill" style="cursor:pointer">Auto</button>
+        <button id="wlp-reset" class="pill" style="cursor:pointer;background:#eef6f6;border-color:#cce7e4;color:#0b5250">Reset</button>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="row" style="align-items:center;gap:1rem;margin-top:.75rem">
+      <label>Flux Φ (in units of 2π)
+        <input id="wlp-flux" type="range" min="-3" max="3" step="0.01" value="0.80">
+      </label>
+      <span class="pill">Φ / 2π = <b id="wlp-flux-label">0.80</b></span>
+      <label>Loop radius
+        <input id="wlp-radius" type="range" min="30" max="220" step="1" value="140">
+      </label>
+      <label><input id="wlp-quant" type="checkbox"> Quantize (snap to integers)</label>
+      <label><input id="wlp-field" type="checkbox" checked> Show background field</label>
+    </div>
+
+    <!-- Viz -->
+    <div id="wlp-viz" style="position:relative;height:48vh;min-height:360px;border-radius:12px;overflow:hidden;background:var(--card)">
+      <canvas id="wlp-canvas" style="width:100%;height:100%;display:block;border-radius:12px"></canvas>
+
+      <!-- CLASS badge -->
+      <div id="wlp-class" style="position:absolute;top:8px;right:8px;background:rgba(15,118,110,.92);color:#fff;
+           padding:.3rem .55rem;border-radius:999px;font-size:.85rem;display:none">CLASS N=0</div>
+
+      <!-- Coach -->
+      <div id="wlp-coach" style="position:absolute;left:8px;top:8px;background:rgba(255,255,255,.92);
+           color:var(--fg,#0b0f0b);border:1px solid #e5e7eb;padding:.45rem .6rem;border-radius:10px;
+           max-width:min(560px,75%);font-size:.92rem">
+        <b>Idea:</b> If the loop <i>wraps</i> the flux core, ∮A·dl = Φ (independent of radius).
+        The Wilson loop is W = e<sup>iΦ</sup>. When Φ/(2π) is an integer, W = 1 and <b>N</b> equals that integer.
+      </div>
+
+      <!-- HUD -->
+      <div id="wlp-hud" style="position:absolute;left:8px;bottom:8px;background:rgba(0,0,0,.45);color:#fff;
+           padding:.35rem .55rem;border-radius:10px;font-size:.9rem">
+        encloses=<b id="wlp-encl">no</b> · N=<b id="wlp-N">—</b> · ∮A·dl=<b id="wlp-int">0.000</b> · θ=<b id="wlp-ang">0.0°</b> · W=<b id="wlp-W">e^{iθ}</b>
+      </div>
+    </div>
+  </section>
 </div>
-</div>
+
+<style>
+  .tz-acc-card{ overflow:hidden; }
+  .tz-acc-head{ display:flex; gap:1rem; align-items:flex-end; justify-content:space-between; margin-bottom:.5rem; }
+  .tz-acc-tabs{ display:flex; gap:.4rem; padding:4px; border-radius:12px;
+                background:rgba(255,255,255,.04); border:1px solid var(--border,#334155); }
+  .tz-acc-toggle{
+    appearance:none; border:0; background:transparent; color:var(--fg,#e5e7eb);
+    padding:.38rem .75rem; border-radius:10px; font-weight:700; cursor:pointer;
+    display:inline-flex; align-items:center; gap:.5rem;
+  }
+  .tz-acc-toggle[aria-expanded="true"]{
+    background:var(--card,#0f172a);
+    box-shadow: inset 0 0 0 1px var(--border,#334155);
+  }
+  .tz-acc-chev{ transition:transform .18s ease; }
+  .tz-acc-toggle[aria-expanded="true"] .tz-acc-chev{ transform:rotate(180deg); }
+
+  /* Collapsed panels: keep width in layout off; reveal cleanly */
+  .tz-acc-panel[hidden]{ display:none !important; }
+
+  /* Vortices pane keeps your wide plot & tight controls once opened */
+  #tz-pane-vort .tz-row{ grid-template-columns: 1fr !important; }
+  #tz-pane-vort .tz-aside{ display:grid; grid-template-columns:minmax(280px,420px) 1fr; gap:12px; align-items:start; margin-top:12px; }
+  @media (max-width:860px){ #tz-pane-vort .tz-aside{ grid-template-columns:1fr; } }
+
+  /* Quieter sliders inside this card only */
+  .tz-acc-card input[type="range"]{ appearance:none; height:2px; background:var(--border,#334155); border-radius:2px; }
+  .tz-acc-card input[type="range"]::-webkit-slider-thumb{ appearance:none; width:12px; height:12px; border-radius:50%; background:var(--accent,#2dd4bf); border:1px solid #0b0f14; margin-top:-5px; }
+  .tz-acc-card input[type="range"]::-moz-range-thumb{ width:12px; height:12px; border-radius:50%; background:var(--accent,#2dd4bf); border:1px solid #0b0f14; }
+</style>
+
+<script>
+  // Accordion behavior: both start collapsed; open on click; close the other if data-single
+  (function(){
+    const CARD = document.currentScript.closest('.tz-acc-card') || document.querySelector('.tz-acc-card');
+    const single = CARD?.dataset?.single === 'true';
+    const toggles = Array.from(CARD.querySelectorAll('.tz-acc-toggle'));
+
+    function openPanel(btn){
+      const id = btn.getAttribute('aria-controls');
+      const panel = document.getElementById(id);
+      const willOpen = btn.getAttribute('aria-expanded') !== 'true';
+
+      if (single){
+        toggles.forEach(b => {
+          const pid = b.getAttribute('aria-controls');
+          const p = document.getElementById(pid);
+          b.setAttribute('aria-expanded','false');
+          p.hidden = true;
+        });
+      }
+
+      btn.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+      panel.hidden = !willOpen;
+
+      // Give charts/canvas a chance to measure and render
+      requestAnimationFrame(() => {
+        window.dispatchEvent(new Event('resize'));
+        // If you define a scoped initializer for Wilson, call it:
+        if (panel.id === 'tz-pane-wilson' && typeof window.initWilson === 'function') {
+          try { window.initWilson(panel); } catch(e){ console.warn('initWilson error:', e); }
+        }
+      });
+    }
+
+    toggles.forEach(b => b.addEventListener('click', () => openPanel(b)));
+    // Note: both remain collapsed on load by design.
+  })();
+</script>
+<script>
+(() => {
+  // ===== Palette (sync to site) =====
+  function cssVar(name){ const v=getComputedStyle(document.documentElement).getPropertyValue(name); return v && v.trim()? v.trim(): null; }
+  function pickAccentFromDOM() {
+    const probes = [
+      document.querySelector('nav a[href="/kernel"]'),
+      document.querySelector('nav a[href="/retention"]'),
+      document.querySelector('header a, nav a'),
+      document.querySelector('button, .btn, .pill'),
+      document.querySelector('a')
+    ].filter(Boolean);
+    for (const el of probes) {
+      const c = getComputedStyle(el).color;
+      if (c && c !== 'rgb(0, 0, 0)' && c !== 'rgb(255, 255, 255)') return c;
+    }
+    return '#0f766e';
+  }
+  const CLR_BG  = cssVar('--bg')        || cssVar('--background') || getComputedStyle(document.body).backgroundColor || '#ffffff';
+  const CLR_ACC = cssVar('--accent')    || cssVar('--brand') || cssVar('--primary') || pickAccentFromDOM();
+  const CLR_ACC2= cssVar('--accent-2')  || cssVar('--brand-2') || cssVar('--secondary') || CLR_ACC;
+
+  // ===== DOM =====
+  const canvas = document.getElementById('wlp-canvas');
+  const ctx    = canvas.getContext('2d');
+  const DPR    = Math.max(1, window.devicePixelRatio || 1);
+
+  const fluxS  = document.getElementById('wlp-flux');
+  const fluxL  = document.getElementById('wlp-flux-label');
+  const radS   = document.getElementById('wlp-radius');
+  const quantC = document.getElementById('wlp-quant');
+  const fieldC = document.getElementById('wlp-field');
+  const autoB  = document.getElementById('wlp-auto');
+  const resetB = document.getElementById('wlp-reset');
+
+  const badge  = document.getElementById('wlp-class');
+  const coach  = document.getElementById('wlp-coach');
+
+  const enclEl = document.getElementById('wlp-encl');
+  const N_el   = document.getElementById('wlp-N');
+  const Int_el = document.getElementById('wlp-int');
+  const Ang_el = document.getElementById('wlp-ang');
+  const W_el   = document.getElementById('wlp-W');
+
+  function resize(){ const r=canvas.getBoundingClientRect(); canvas.width=Math.floor(r.width*DPR); canvas.height=Math.floor(r.height*DPR); }
+  resize(); window.addEventListener('resize', resize);
+
+  // ===== Model =====
+  const TAU = Math.PI*2;
+  let auto = false, tPrev = performance.now(), phase = 0;
+
+  autoB.addEventListener('click', () => { auto = !auto; autoB.textContent = auto ? 'Stop' : 'Auto'; });
+  resetB.addEventListener('click', () => { fluxS.value='0.80'; radS.value='140'; center.x=cx; center.y=cy; });
+
+  // Draggable loop center
+  const center = {x: 0, y: 0}, drag = {on:false, dx:0, dy:0};
+  let cx=0, cy=0;
+  canvas.addEventListener('mousedown', (e) => {
+    const r = canvas.getBoundingClientRect();
+    const mx = (e.clientX - r.left)*DPR, my = (e.clientY - r.top)*DPR;
+    const d = Math.hypot(mx - center.x, my - center.y);
+    if (d < 24*DPR) { drag.on=true; drag.dx = center.x - mx; drag.dy = center.y - my; }
+  });
+  window.addEventListener('mouseup', ()=> drag.on=false);
+  window.addEventListener('mousemove', (e) => {
+    if (!drag.on) return;
+    const r = canvas.getBoundingClientRect();
+    center.x = (e.clientX - r.left)*DPR + drag.dx;
+    center.y = (e.clientY - r.top)*DPR + drag.dy;
+  });
+
+  function updateHUD(encloses, classN, phiEff){
+    enclEl.textContent = encloses ? 'yes' : 'no';
+    N_el.textContent   = classN !== null ? classN : '—';
+    Int_el.textContent = phiEff.toFixed(3);
+    const deg = (phiEff * 180/Math.PI).toFixed(1);
+    Ang_el.textContent = `${deg}°`;
+    W_el.textContent   = `e^{iθ}, θ=${deg}°`;
+  }
+
+  function drawField(){
+    if (!fieldC.checked) return;
+    const w=canvas.width, h=canvas.height; const step=28*DPR;
+    ctx.globalAlpha = 0.08; ctx.strokeStyle = CLR_ACC2; ctx.lineWidth = 1*DPR;
+    for (let y=step/2; y<h; y+=step){
+      for (let x=step/2; x<w; x+=step){
+        const dx = x - w/2, dy = y - h/2; const r = Math.hypot(dx,dy)+1e-6;
+        const ux = -dy/r, uy = dx/r; // e_theta
+        const len = 10*DPR;
+        ctx.beginPath(); ctx.moveTo(x-ux*len, y-uy*len); ctx.lineTo(x+ux*len, y+uy*len); ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function frame(now){
+    const dt = Math.min(0.06, (now - tPrev)/1000); tPrev = now;
+
+    // Read controls
+    let u = parseFloat(fluxS.value);           // Φ / 2π  (turns)
+    if (auto) { u += 0.25*dt * Math.sin(now*0.0008); fluxS.value = String(u); }
+    if (quantC.checked) u = Math.round(u);     // optional integer lock (pedagogical)
+
+    const R = parseFloat(radS.value)*DPR;      // loop radius in px
+    fluxL.textContent = (parseFloat(fluxS.value)).toFixed(2);
+
+    // Canvas prep
+    const w=canvas.width, h=canvas.height; cx = w/2; cy = h/2;
+    if (center.x===0 && center.y===0){ center.x=cx; center.y=cy; }
+
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = CLR_BG; ctx.fillRect(0,0,w,h);
+
+    // Background field + core
+    drawField();
+    ctx.fillStyle = CLR_ACC; ctx.globalAlpha = 0.95;
+    ctx.beginPath(); ctx.arc(cx, cy, 8*DPR, 0, TAU); ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Geometry & topology
+    const Lx = center.x, Ly = center.y;
+    const encloses = Math.hypot(Lx - cx, Ly - cy) < R;
+
+    // Effective phase only if loop encloses the core
+    const phi    = u * TAU;
+    const phiEff = encloses ? phi : 0;
+
+    // Class logic: only whole turns while enclosing
+    const CLASS_EPS = 0.02;                    // ±2% of a turn
+    const nearest   = Math.round(u);
+    const isClass   = encloses && Math.abs(u - nearest) < CLASS_EPS;
+    const classN    = isClass ? nearest : null;
+
+    // Wilson loop marker and loop ring
+    ctx.lineWidth = 2*DPR; ctx.globalAlpha = 0.9;
+    // pulse when class is “on”
+    const pulse = isClass ? (0.85 + 0.15*Math.sin(now*0.01)) : 1.0;
+    ctx.strokeStyle = encloses ? CLR_ACC : 'rgba(0,0,0,0.28)';
+    ctx.beginPath(); ctx.arc(Lx, Ly, R*pulse, 0, TAU); ctx.stroke();
+
+    // Moving marker around loop (phase accumulation)
+    phase += dt * 0.9; const theta = (phase % 1)*TAU;
+    const mx = Lx + R*Math.cos(theta), my = Ly + R*Math.sin(theta);
+    ctx.fillStyle = CLR_ACC; ctx.beginPath(); ctx.arc(mx, my, 4.5*DPR, 0, TAU); ctx.fill();
+
+    // Phase arrow (visualize θ on a small gauge near loop)
+    const ax = Lx + (R + 24*DPR), ay = Ly;
+    ctx.strokeStyle = CLR_ACC2; ctx.lineWidth = 2*DPR;
+    ctx.beginPath(); ctx.moveTo(ax, ay);
+    ctx.lineTo(ax + 36*DPR*Math.cos(phiEff), ay - 36*DPR*Math.sin(phiEff));
+    ctx.stroke();
+
+    // HUD + badge
+    updateHUD(encloses, classN, phiEff);
+    if (isClass) { badge.style.display='inline-flex'; badge.textContent=`CLASS N=${classN}`; }
+    else { badge.style.display='none'; }
+
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 
 <script>
 // Re-typeset math after an expander is opened
