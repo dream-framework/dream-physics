@@ -1,4 +1,3 @@
-
 {% block content %}
 <div class="container">
 
@@ -14,91 +13,104 @@
     <div class="card">
       <h2>Notation &amp; objects</h2>
       <ul>
-        <li><strong>Meta‑Manifold (MM):</strong> a compact, orientable, smooth 10‑manifold with metric \(g_{\mathrm{MM}}\) and volume form \(d\mu_{\mathrm{MM}}\).</li>
+        <li><strong>Meta-Manifold (MM):</strong> a compact, orientable, smooth 10-manifold with metric \(g_{\mathrm{MM}}\) and volume form \(d\mu_{\mathrm{MM}}\).</li>
         <li><strong>Projection map:</strong> \(\pi:\;\mathrm{MM}\to \mathbb{R}^{3,1}\) (topological surjection).</li>
         <li><strong>Kernel:</strong> \(K_{\lambda}(x;X)\ge 0\) with resolution parameter \(\lambda\) (our slice takes \(\lambda=\lambda_q\)).</li>
         <li><strong>Fields:</strong> MM fields \(\Phi\) (bundles suppressed); 4D observables \(O\).</li>
-        <li><strong>Invariants:</strong> \(\lambda_q\) (resolution), locality radius, regularity/positivity, effective spectral exponent \(D_{\mathrm{eff}}\).</li>
+        <li><strong>Invariants (empirical):</strong> \(\lambda_q\) (resolution), locality radius, regularity/positivity (PSD), effective spectral exponent \(D_{\mathrm{eff}}\).</li>
+        <li><strong>Focusing measures:</strong> projection-Jacobian average \(A(x)\!\sim\!\langle J_\pi^{-1}\rangle\); microstate multiplicity \(M(\lambda,\varepsilon;x)\); <em>Complexity/Projection Index</em> \(\mathrm{CPI}(x)=\log_{10} M\).</li>
       </ul>
     </div>
 
     <!-- Push-forward -->
     <div class="card">
-      <h2>Push‑forward definition</h2>
-      <p>4D observables are <em>push‑forwards</em> of MM fields via the kernel:</p>
-      <div class="math-block">
-        \[
+      <h2>Push-forward definition</h2>
+      <p>4D observables are <em>push-forwards</em> of MM fields via the kernel (finite resolution):</p>
+      <div class="math-block">\[
         O(x)=\int_{\mathrm{MM}} K_{\lambda}(x;X)\,\Phi(X)\,d\mu_{\mathrm{MM}}(X),\qquad \lambda=\lambda_q.
-        \]
-      </div>
+      \]</div>
       <p>Only <em>invariants</em> of the kernel class are empirical; the detailed functional form of \(K\) is not identified by data.</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">Read more</span></summary>
         <div class="expander-body prose">
-          <p><strong>Linearity and boundedness.</strong> For fixed \(x\), the map \(\Phi\mapsto O(x)\) is linear. We assume the operator \(\mathcal{K}_{\lambda}:\, L^2(\mathrm{MM})\to L^2(\mathbb{R}^{3,1})\) induced by \(K_{\lambda}\) is bounded.</p>
-          <p><strong>Normalization.</strong> It is convenient to choose \(\int K_{\lambda}(x;X)\,d\mu_{\mathrm{MM}}(X)=1\) so that constants push‑forward to constants.</p>
-          <p><strong>Measure compatibility.</strong> All statements are invariant under equivalent choices of volume forms, provided \(K_{\lambda}d\mu_{\mathrm{MM}}\) is used consistently.</p>
+          <p><strong>Linearity &amp; boundedness.</strong> \(\mathcal{K}_{\lambda}: L^2(\mathrm{MM})\to L^2(\mathbb{R}^{3,1})\) bounded, linear.</p>
+          <p><strong>Normalization.</strong> Choose \(\int K_{\lambda}(x;X)\,d\mu_{\mathrm{MM}}(X)=1\) so constants map to constants.</p>
+          <p><strong>PSD.</strong> Kernels are positive semidefinite as operators, ensuring stable quadratic forms.</p>
         </div>
       </details>
     </div>
 
     <!-- Guardrails -->
     <div class="card">
-      <h2>Kernel guardrails (well‑posedness)</h2>
+      <h2>Kernel guardrails (well-posedness)</h2>
       <div class="math-block">\[\textbf{K1 (normalization)}:\quad \int K_{\lambda}(x;X)\,d\mu_{\mathrm{MM}}(X) < \infty.\]</div>
-      <div class="math-block">\[\textbf{K2 (locality in projection)}:\quad K_{\lambda}(x;X)\text{ sharply peaks for }X\approx \pi^{-1}(x).\]</div>
-      <div class="math-block">\[\textbf{K3 (monotone fidelity)}:\quad \alpha(\lambda)\text{ decreases with }\lambda,\ \alpha(\lambda_q)\approx 1.\]</div>
+      <div class="math-block">\[\textbf{K2 (locality)}:\quad K_{\lambda}(x;X)\text{ sharply peaks for }X\approx \pi^{-1}(x).\]</div>
+      <div class="math-block">\[\textbf{K3 (monotone fidelity)}:\quad \partial_{\lambda}\alpha(\lambda)\le 0,\ \alpha(\lambda_q)\approx 1.\]</div>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">Read more</span></summary>
         <div class="expander-body prose">
-          <p><strong>Regularity/positivity.</strong> We work with kernels that are positive semidefinite as operators, ensuring non‑negative quadratic forms and stable numerics.</p>
-          <p><strong>Examples.</strong> Gaussian‑type kernels on normal coordinates are a didactic proxy. D.R.E.A.M remains kernel‑agnostic; only invariants are used in forecasts.</p>
+          <p><strong>Examples.</strong> Gaussian-like kernels in normal coordinates serve as didactic proxies; forecasts remain kernel-invariant.</p>
         </div>
       </details>
     </div>
 
-    <!-- Fidelity / Retention -->
+    <!-- S2: Fidelity / Retention -->
     <div class="card">
-      <h2>Fidelity &amp; retention law</h2>
-      <p>Fidelity \(\alpha(\lambda)\in[0,1]\) quantifies how much fine structure retains when viewed at effective scale \(\lambda\). A convenient invariant parametrization is</p>
-      <div class="math-block">
-        \[
+      <h2>S2 — Fidelity &amp; retention law (universal)</h2>
+      <p>Fidelity \(\alpha(\lambda)\in[0,1]\) quantifies retained fine structure at effective scale \(\lambda\). The invariant form is</p>
+      <div class="math-block">\[
         \alpha(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big].
-        \]
-      </div>
-      <p>Two regimes follow naturally: for \(\lambda\ll\lambda_q\) high‑fidelity (“quantum‑grade”) invariants retain; for \(\lambda\gg\lambda_q\) coarse‑grain dominates, producing a <em>coherence cliff</em> near \(\lambda\approx\lambda_q\).</p>
+      \]</div>
+      <p>Two regimes and a <em>coherence cliff</em> near \(\lambda\!\approx\!\lambda_q\): below—interference-grade invariants retain; above—classical coarse-grain dominates. Empirically read out via, e.g., \(R_{\mathrm{HF}}(\lambda)\) and \(R_{\mathrm{struct}}(\lambda)=\mathrm{corr}^2(e_4|_{\lambda\to0},e_4|_\lambda)\).</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">Read more</span></summary>
         <div class="expander-body prose">
-          <p><strong>Monotonicity.</strong> By construction the derivative \(\partial_{\lambda}\alpha(\lambda)\le 0\). Empirically, scans across \(\lambda_q\) should register a step‑like change in interference/coherence observables.</p>
-          <p><strong>Instrument mapping.</strong> The effective scale \(\lambda\) is platform‑dependent (baseline, wavelength, coherence length); only ratios to \(\lambda_q\) matter.</p>
+          <p><strong>Log-law readout.</strong> \(\ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda - D_{\mathrm{eff}}\ln\lambda_q\).</p>
+          <p><strong>Platform mapping.</strong> \(\lambda\) depends on modality (baseline, wavelength, coherence length); ratios to \(\lambda_q\) are invariant.</p>
         </div>
       </details>
     </div>
 
-    <!-- Spectral dimension & ladder -->
+    <!-- S3: Structure focusing & CPI -->
+    <div class="card">
+      <h2>S3 — Structure focusing &amp; CPI (supports S2)</h2>
+      <p>Small projection-Jacobian amplifies measure and stabilizes a web-like skeleton that outlives high-frequency detail; CPI quantifies local microstate budgets.</p>
+      <div class="math-block">\[
+        A(x)\ \sim\ \big\langle J_\pi^{-1}\big\rangle,\qquad
+        M(\lambda,\varepsilon;x)\ \sim\ A(x)\,\big(\tfrac{\lambda}{\varepsilon}\big)^{D_I},\qquad
+        \mathrm{CPI}(x)=\log_{10} M.
+      \]</div>
+      <p>Operationally: regions with higher \(A(x)\) exhibit slower decay of \(R_{\mathrm{struct}}\) relative to \(R_{\mathrm{HF}}\), consistent with the retention law.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">Read more</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Coarea link.</strong> Focusing follows from the coarea formula; CPI packages the mode-packing with scale and locality.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- Effective spectral exponent -->
     <div class="card">
       <h2>Effective spectral exponent \(D_{\mathrm{eff}}\)</h2>
-      <p>Instead of literal fractal manifolds, D.R.E.A.M packages spectral counting into an <em>effective exponent</em> \(D_{\mathrm{eff}}\). This controls mode growth and enters lab observables.</p>
+      <p>\(D_{\mathrm{eff}}\) packages asymptotic mode counting without committing to literal fractal geometry. It controls densities and ranked ratios across domains.</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">Read more</span></summary>
         <div class="expander-body prose">
-          <p><strong>Mass/frequency ladder.</strong> For a light axion‑like tower one expects non‑harmonic spacing</p>
-          <div class="math-block">\[\frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}},\qquad m_1\approx 65\,\mathrm{neV}\Rightarrow f_1\approx 15.717\,\mathrm{MHz}.\]</div>
-          <p><strong>Entropy &amp; density of states.</strong> The same exponent controls asymptotic counting in band‑limited projections and informs cosmological scaling cross‑checks.</p>
+          <p><strong>Density/Counting.</strong> Cumulative retained modes scale as \(N(\Omega)\!\sim\!\Omega^{D_{\mathrm{eff}}}\) with density \(\rho(\Omega)\!\sim\!\Omega^{D_{\mathrm{eff}}-1}\).</p>
+          <p><strong>Ranked-ratio law (context-free base).</strong> For ranked scales \(\{\Omega_n\}\): \(\Omega_n/\Omega_1 = n^{1/D_{\mathrm{eff}}}\). The <em>ratio</em> is invariant; the base \(\Omega_1\) is context-set.</p>
         </div>
       </details>
     </div>
 
     <!-- Action-level view -->
     <div class="card">
-      <h2>Action‑level view (sketch)</h2>
-      <p>Let \(S_{\mathrm{MM}}[\Phi, g_{\mathrm{MM}}]\) encode curvature and fields on MM. Projection induces an effective 4D action in terms of push‑forwards \(O\) and invariants of \(K\).</p>
+      <h2>Action-level view (sketch)</h2>
+      <p>Let \(S_{\mathrm{MM}}[\Phi, g_{\mathrm{MM}}]\) encode curvature and fields on MM. Projection induces an effective 4D action in terms of push-forwards \(O\) and kernel invariants.</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">Read more</span></summary>
         <div class="expander-body prose">
-          <p><strong>Variation.</strong> Stationarity on MM followed by push‑forward yields Euler–Lagrange‑type relations for \(O\). Kernel invariants appear as parameters, not as dynamical fields.</p>
-          <p class="note">The purpose of this section is bookkeeping, not micro‑modeling: forecasts are stated in invariant language so they do not depend on a specific kernel choice.</p>
+          <p><strong>Variation.</strong> Stationarity on MM then push-forward yields Euler–Lagrange-type relations for \(O\). Invariants act as parameters, not dynamical fields.</p>
+          <p class="note">Forecasts are expressed in invariant language and do not depend on a specific kernel form.</p>
         </div>
       </details>
     </div>
@@ -108,50 +120,52 @@
       <h2>Consistency checklist</h2>
       <ul>
         <li><strong>Locality in projection:</strong> \(K_{\lambda}(x;X)\) concentrated near \(X\approx\pi^{-1}(x)\).</li>
-        <li><strong>Integrability/PSD:</strong> bounded operator with non‑negative quadratic form.</li>
+        <li><strong>Integrability/PSD:</strong> bounded operator with non-negative quadratic form.</li>
         <li><strong>Normalization:</strong> constants map to constants.</li>
-        <li><strong>Monotone fidelity:</strong> \(\alpha(\lambda)\) non‑increasing; critical scale \(\lambda_q\).</li>
-        <li><strong>Gauge/topology interface:</strong> stable topological data on MM label 4D classes under projection.</li>
+        <li><strong>Monotone fidelity:</strong> \(\alpha(\lambda)\) non-increasing; critical scale \(\lambda_q\).</li>
+        <li><strong>Topology interface:</strong> stable topological data on MM label 4D classes under projection.</li>
+        <li><strong>Focusing metrics:</strong> \(A(x)\), \(M(\lambda,\varepsilon;x)\), \(\mathrm{CPI}(x)\) consistent with retention readouts.</li>
       </ul>
     </div>
 
     <!-- Worked micro example -->
     <div class="card">
-      <h2>Worked micro‑example (didactic)</h2>
+      <h2>Worked micro-example (didactic)</h2>
       <p>Take a scalar \(\Phi\) on MM and a Gaussian proxy kernel with locality radius \(\sigma\):</p>
-      <div class="math-block">
-        \[
+      <div class="math-block">\[
         K_{\lambda}(x;X)\propto\exp\!\Big(-\tfrac{\mathrm{dist}(X,\pi^{-1}(x))^2}{2\sigma^2}\Big),\quad \sigma\sim\lambda.
-        \]
-      </div>
-      <p>Then \(O=K_{\lambda}\star\Phi\) is a band‑limited observable whose high‑frequency content is exponentially suppressed; the suppression index is controlled by \(\lambda/\lambda_q\), which feeds directly into the fidelity law.</p>
+      \]</div>
+      <p>Then \(O=K_{\lambda}\star\Phi\) is band-limited; high-frequency content is exponentially suppressed with index set by \(\lambda/\lambda_q\), giving the retention law above.</p>
     </div>
 
     <!-- Falsification -->
     <div class="card">
       <h2>Falsification gates (math form)</h2>
       <ul>
-        <li><strong>Retention:</strong> repeated null of a transition in \(\partial_{\lambda}\alpha\) near the posited \(\lambda_q\) across platforms.</li>
-        <li><strong>Ladder:</strong> exclusion of the base mass window and the non‑harmonic ratios \(m_n/m_1=n^{1/D_{\mathrm{eff}}}\) at forecasted sensitivity.</li>
-        <li><strong>Tensor/torsion:</strong> null results for strains consistent with \(h_T\sim\epsilon_T\,GE/(c^4 r)\) at the modeled levels.</li>
+        <li><strong>S2 — Retention:</strong> repeated null of a transition in \(\partial_{\lambda}\alpha\) near the posited \(\lambda_q\) across independent platforms.</li>
+        <li><strong>Structure vs HF:</strong> absence of the predicted separation \(R_{\mathrm{struct}}\) vs \(R_{\mathrm{HF}}\) under the same \((\lambda_q,D_{\mathrm{eff}})\).</li>
+        <li><strong>Equivariance:</strong> symmetry-breaking artifacts attributable to \(K_{\lambda}\) (violating kernel guardrails).</li>
       </ul>
-      <p>The invariants \(\lambda_q\) and \(D_{\mathrm{eff}}\) are <em>parameters</em> of the projection, not tunable fudge factors.</p>
+      <p class="note">Ranked-ratio checks can support the picture when applicable, but <em>ALP base tests</em> are relegated to speculation (see below).</p>
     </div>
 
     <!-- Notes -->
     <div class="card">
       <h2>Notes</h2>
-      <p class="note">“Fractal” is used as an effective spectral exponent for mode counting (a well‑posed surrogate), not as a literal non‑integer manifold dimension.</p>
-      <p class="note">Wherever possible we phrase claims as relationships among invariants; the detailed kernel choice is an implementation detail.</p>
+      <p class="note">“Fractal” is used as an <em>effective</em> spectral exponent (well-posed surrogate), not as a literal non-integer manifold dimension.</p>
+      <p class="note">S1 (ALP base) is not used as support; S2 is the universal law, S3 strongly supports S2.</p>
+    </div>
+
+    <!-- Speculative: ALP ladder relegated -->
+    <div class="card speculative">
+      <h2>Speculative — ALP / non-harmonic ladder (relegated)</h2>
+      <p>Kept for completeness; not used to support the framework. If applicable, the ladder relation is</p>
+      <div class="math-block">\[
+        m_n = m_1\, n^{1/D_{\mathrm{eff}}}.
+      \]</div>
+      <p class="note">Hidden when the Speculative toggle is off.</p>
     </div>
 
   </div>
 </div>
-
-<script>
-// Re-typeset math after an expander is opened
-document.querySelectorAll('details.more').forEach(d=>{
-  d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d]));
-});
-</script>
 {% endblock %}
