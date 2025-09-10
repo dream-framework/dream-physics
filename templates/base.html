@@ -760,5 +760,35 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // A) Auto-close common delimiter mistakes inside wrappers
+  document.querySelectorAll('.math-block, .math-inline').forEach(el => {
+    let t = el.textContent;
+    if (/\\\[/.test(t) && !/\\\]/.test(t)) t = t.replace(/$/, '\n\\]');
+    if (/\\\(/.test(t) && !/\\\)/.test(t)) t = t.replace(/$/, '\\)');
+    if (t !== el.textContent) el.textContent = t;
+  });
+
+  // B) Initial typeset only when math is visible (avoids loops)
+  const typeset = nodes =>
+    (window.MathJax && MathJax.typeset) && MathJax.typeset(nodes || undefined);
+
+  if (document.body.classList.contains('show-math')) typeset();
+
+  // C) Re-typeset when "Math" toggle flips (if you have #mathToggle)
+  const mt = document.getElementById('mathToggle');
+  mt && mt.addEventListener('change', () => {
+    // give CSS a tick to unhide .math-block/.math-inline
+    setTimeout(() => typeset(), 0);
+  });
+
+  // D) Re-typeset on expander open (local scope only)
+  document.querySelectorAll('details.more').forEach(d => {
+    d.addEventListener('toggle', () => d.open && typeset([d]));
+  });
+});
+</script>
   </body>
 </html>
