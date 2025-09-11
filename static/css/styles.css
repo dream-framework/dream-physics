@@ -395,3 +395,23 @@ td .badge, th .badge { margin: 0 .15rem; }
 .badge.no-dot::before { display: none; }
 
 .oaicite,[data-oaicite]{ display:none !important; }
+
+/* When the "More (N)" cloud is opened, lay out its answers in a grid */
+.cloud .a.more-grid{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: .75rem;
+}
+
+/* Nested clouds inside the More grid should look like normal clouds */
+.cloud .a.more-grid .cloud{
+  margin: 0;
+  border: 1px solid rgba(42,47,90,.55);
+  border-radius: 12px;
+  padding: .6rem .8rem;
+  background: transparent;
+}
+.cloud .a.more-grid .cloud:hover{
+  background: rgba(26,31,69,.28);
+  border-color: rgba(42,47,90,.9);
+}

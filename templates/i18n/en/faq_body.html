@@ -4,181 +4,288 @@
   <div class="card hero">
     <h1>FAQ — as "Clouds"</h1>
     <p class="kicker">Tap a cloud to reveal an answer. Core science and speculative notes are clearly separated.</p>
-    <p class="note">This version forces the Speculative section to show on this page while keeping answers collapsed until you open a cloud.</p>
+    <p class="note">Content is auto-curated from the knowledge base; speculative items remain collapsed until opened.</p>
   </div>
 
-  <!-- LIGHTER CLOUD STYLE + SPEC VISIBILITY (page-only overrides) -->
+  <!-- Lightweight cloud visuals (page-only) -->
   <style>
-    /* Expansion behavior */
+    /* --- Base cloud/accordion --- */
     .cloud .a{display:none}
     .cloud[open] .a{display:block}
     .cloud > summary{list-style:none; cursor:pointer}
     .cloud > summary::-webkit-details-marker{display:none}
-
-    /* Minimal arrow indicator */
-    .cloud > summary::after{
-      content:"▾"; float:right;
-      transform:rotate(0deg); transition:transform .15s ease;
-      color:var(--muted); font-size:.9rem;
-    }
+    .cloud > summary::after{ content:"▾"; float:right; transform:rotate(0); transition:transform .15s ease; color:var(--muted); font-size:.9rem }
     .cloud[open] > summary::after{ transform:rotate(180deg) }
-
-    /* Lightweight visuals */
-    .clouds{gap:.75rem}
+    .clouds{gap:.75rem; display:grid}
     .cloud{
-      background:transparent !important;
-      border:1px solid rgba(42,47,90,.55) !important;
-      box-shadow:none !important;
-      border-radius:12px !important;
-      padding:.7rem .9rem !important;
-      transition:background .15s ease, border-color .15s ease;
+      background:transparent!important;
+      border:1px solid rgba(42,47,90,.55)!important;
+      box-shadow:none!important;
+      border-radius:12px!important;
+      padding:.7rem .9rem!important;
+      transition:background .15s, border-color .15s
     }
     .cloud:hover{ background:rgba(26,31,69,.28); border-color:rgba(42,47,90,.9) }
-    .cloud::before,.cloud::after{ display:none !important; content:none !important }
-
-    /* Type scale */
     .cloud .q{ font-weight:600; font-size:.96rem; color:var(--text) }
     .cloud .a{ font-size:.93rem; color:#cfd4ff }
 
-    /* --- PAGE-ONLY FIX: force speculative to be visible on this page --- */
-    /* If your global CSS sets .speculative {display:none}, it would hide the entire section.
-       We explicitly re-enable it here and only reveal answers on open. */
-    .card.speculative{ display:block !important }                 /* show the section card */
-    .cloud[open] .a.speculative{ display:block !important }       /* reveal speculative answers when opened */
+    /* Ensure Speculative section shows on this page even if globally hidden */
+    .card.speculative{ display:block!important }
+    .cloud[open] .a.speculative{ display:block!important }
+
+    /* ======================== OVERFLOW OVERRIDES =========================
+       Replace any previous .more-grid behavior with paged groups:
+       - Each page shows 2 rows × 3 columns (6 cards).
+       - Responsive: 3 cols ≥ 1100px, 2 cols ≥ 720px, 1 col on small screens.
+       ===================================================================*/
+    .cloud .a.more-grid{ display:none !important } /* hard-disable old style */
+
+    .cloud[open] .a.more-groups{
+      display:block !important;
+      padding: .25rem 0 0 0;
+    }
+
+    .more-nav{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:.5rem;
+      margin:.25rem 0 .6rem 0;
+      user-select:none;
+    }
+    .more-nav .btn{
+      appearance:none; border:1px solid rgba(42,47,90,.55);
+      background:transparent; color:var(--text);
+      border-radius:10px; padding:.35rem .6rem; font-size:.9rem;
+      cursor:pointer; line-height:1;
+      transition:background .15s, border-color .15s, opacity .15s;
+    }
+    .more-nav .btn:hover{ background:rgba(26,31,69,.28); border-color:rgba(42,47,90,.9) }
+    .more-nav .btn[disabled]{ opacity:.45; cursor:not-allowed }
+    .more-nav .count{ font-size:.9rem; color:var(--muted) }
+
+    .more-viewport{ position:relative }
+
+    .more-group{
+      /* 3 columns on wide, 2 on tablet, 1 on small */
+      display:grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap:.75rem;
+      align-items:start;
+    }
+    @media (max-width: 1099px){
+      .more-group{ grid-template-columns: repeat(2, minmax(200px, 1fr)); }
+    }
+    @media (max-width: 719px){
+      .more-group{ grid-template-columns: 1fr; }
+    }
+
+    /* Only one group visible at a time */
+    .more-group{ display:none }
+    .more-group.active{ display:grid }
+
+    /* Make each overflow item look like a mini cloud card */
+    .more-group .cloud{
+      margin:0;
+      border:1px solid rgba(42,47,90,.55)!important;
+      border-radius:12px!important;
+      padding:.6rem .8rem!important;
+      background:transparent!important;
+    }
+    .more-group .cloud:hover{
+      background: rgba(26,31,69,.28);
+      border-color: rgba(42,47,90,.9);
+    }
   </style>
 
-  <!-- FOUNDATIONS -->
-  <div class="card">
-    <h2>Foundations</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">Is 4D fundamental?</summary><div class="a core">No. In D.R.E.A.M, 4D observables are push‑forwards of 10D fields on a compact Meta‑Manifold (MM) via a fixed, non‑invertible kernel at finite resolution. "Fundamental" structure lives on MM; 4D is a projection.</div></details>
-      <details class="cloud"><summary class="q">What is the projection kernel?</summary><div class="a core">A linear map \(K_{\lambda}(x;X)\) tying MM points \(X\) to 4D points \(x\) at resolution \(\lambda\) (our slice uses \(\lambda_q\)). Observables: <div class="math-block">\[
-\begin{aligned}
-O(x)=\int_{\mathrm{MM}} &K_{\lambda}(x;X)\,\\
-&\Phi(X)\,d\mu_{\mathrm{MM}}(X).
-\end{aligned}
-\]</div></div></details>
-      <details class="cloud"><summary class="q">Why not measure the kernel directly?</summary><div class="a core">Multiple kernels with the same <em>invariants</em> yield indistinguishable observables at our resolution. Data constrain the invariants: resolution \(\lambda_q\), locality radius, regularity/positivity, effective spectral exponent \(D_{\mathrm{eff}}\).</div></details>
-      <details class="cloud"><summary class="q">Is MM inside our spacetime?</summary><div class="a core">No embedding is assumed. There is a surjection \(\pi:\mathrm{MM}\to\mathbb{R}^{3,1}\); 4D points are images of whole high‑D fibers \(\pi^{-1}(x)\). Metrics and lightcones live in 4D after projection.</div></details>
-      <details class="cloud"><summary class="q">What does "atemporal MM" mean?</summary><div class="a core">4D time is not a fundamental MM coordinate. The only \(t\)-dependence enters via the 4D argument of the push‑forward; introducing an MM‑time adds an unidentifiable clock.</div></details>
-      <details class="cloud"><summary class="q">Do we require a split \(U_4\times K_6\)?</summary><div class="a core">No. Axiom A3 ("all‑to‑four") avoids a global factorization; all ten coordinates compress directly into 4D observables.</div></details>
-    </div>
-  </div>
-
-  <!-- KERNEL & INVARIANTS -->
-  <div class="card">
-    <h2>Kernel &amp; invariants</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">Which quantities are invariant/empirical?</summary><div class="a core">Four: (i) resolution \(\lambda_q\); (ii) locality radius; (iii) regularity/positivity (PSD operator); (iv) effective spectral exponent \(D_{\mathrm{eff}}\).</div></details>
-      <details class="cloud"><summary class="q">How does fidelity depend on scale?</summary><div class="a core">Retention law <div class="math-block">\[\alpha(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big]\]</div> gives two regimes and a coherence cliff near \(\lambda\!\approx\!\lambda_q\).</div></details>
-      <details class="cloud"><summary class="q">What is \(D_{\mathrm{eff}}\)?</summary><div class="a core">An effective spectral exponent packaging mode counting on the internal sector. It governs non‑harmonic spacing in the axion‑like ladder and enters entropy/cosmology scalings.</div></details>
-      <details class="cloud"><summary class="q">Are "fractal" claims literal?</summary><div class="a core">No. "Fractal" is used as an <em>effective</em> spectral exponent; the working math stays on smooth surrogates.</div></details>
-      <details class="cloud"><summary class="q">Well‑posedness guardrails?</summary><div class="a core">Normalization, locality in projection, and monotone fidelity define a bounded PSD operator \(L^2(\mathrm{MM})\to L^2(\mathbb{R}^{3,1})\).</div></details>
-    </div>
-  </div>
-
-  <!-- MATH & TOPOLOGY -->
-  <div class="card">
-    <h2>Math &amp; topology</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">How do topological classes become particles?</summary><div class="a core">Stable MM data (\(\pi_3\), \(H^1\), Chern/Pontryagin) label particle/gauge <em>classes</em>. 4D instances are projections of those classes; quantized charges survive coarse‑graining.</div></details>
-      <details class="cloud"><summary class="q">Why charge quantization?</summary><div class="a core">Charges descend from integer classes on MM: <div class="math-block">\[Q_{\mathrm{U(1)}}=\frac{1}{2\pi}\oint A\in\mathbb{Z},\quad k=\frac{1}{8\pi^2}\int \mathrm{tr}(F\wedge F)\in\mathbb{Z}.\]</div></div></details>
-      <details class="cloud"><summary class="q">Do anomalies constrain projections?</summary><div class="a core">Yes—projected 4D content must be anomaly‑safe (including mixed gauge–gravitational). Integer indices (e.g., \(\mathrm{index}(\slashed{D})\)) act as consistency gates.</div></details>
-      <details class="cloud"><summary class="q">Selection rules?</summary><div class="a core">Class arithmetic (addition/subtraction) constrains allowed processes; forbidden decays stay forbidden.</div></details>
-    </div>
-  </div>
-
-  <!-- PREDICTIONS -->
-  <div class="card">
-    <h2>Predictions (tests)</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">ALP ladder?</summary><div class="a core">Non‑harmonic axion‑like tower with base \(m_1\!\approx\!65\,\mathrm{neV}\) (\(f_1\!\approx\!15.717\,\mathrm{MHz}\)) and ratios <div class="math-block">\[\tfrac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}\]</div>.</div></details>
-      <details class="cloud"><summary class="q">Coherence cliff?</summary><div class="a core">Step‑like change in interference/coherence as effective scale crosses \(\lambda_q\), governed by \(\alpha(\lambda)\).</div></details>
-      <details class="cloud"><summary class="q">Torsion/extra polarization?</summary><div class="a core">mHz‑band strains with template amplitude <div class="math-block">\[h_T\sim\epsilon_T\,\tfrac{G\,E}{c^4 r}\]</div> for large‑energy hubs.</div></details>
-      <details class="cloud"><summary class="q">Cosmology cross‑checks?</summary><div class="a core">Exponents from structure/entropy scaling should align with lab‑inferred \(D_{\mathrm{eff}}\); persistent mismatch weighs against the posture.</div></details>
-    </div>
-  </div>
-
-  <!-- FALSIFICATION -->
-  <div class="card">
-    <h2>Falsification</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">How is D.R.E.A.M falsifiable?</summary><div class="a core">Exclude the ALP base window <em>and</em> ratios at forecast sensitivity; see no retention transition near \(\lambda_q\) across platforms; null torsion at modeled levels.</div></details>
-      <details class="cloud"><summary class="q">What would not falsify it?</summary><div class="a core">Changing instrument details or kernel parametrizations that preserve the same invariants.</div></details>
-      <details class="cloud"><summary class="q">Why pre‑register?</summary><div class="a core">Fixes windows, couplings, and fail gates ahead of time—avoids a posteriori drift; makes nulls decisive.</div></details>
-    </div>
-  </div>
-
-  <!-- PHYSICAL PHENOMENA -->
-  <div class="card">
-    <h2>Physical Phenomena in D.R.E.A.M</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">What is gravity in D.R.E.A.M?</summary><div class="a core">Gravity emerges as the curvature of the 4D projection manifold, not as a fundamental force. The Einstein-Hilbert action is an effective description that arises from the projection of MM geometry. The gravitational constant G is a kernel parameter fixed by our particular projection.</div></details>
-      
-          <details class="cloud"><summary class="q">What is time in D.R.E.A.M?</summary><div class="a core">In D.R.E.A.M, time is not a fundamental dimension of the Meta-Manifold but emerges as a parameter of the projection. The MM itself is atemporal - all states coexist simultaneously. Our experience of temporal flow results from the sequential unfolding of these pre-encoded states through the kernel's projection process. Time is essentially path selection through the frozen landscape of MM states, with the apparent arrow of time emerging from the kernel's one-way compression from 10D to 4D.</div></details>
-    
-    <details class="cloud"><summary class="q">Are time machines or time travel possible in D.R.E.A.M?</summary><div class="a core">No, time travel is fundamentally impossible in the D.R.E.A.M framework. The projection from MM to 4D is non-invertible and operates at finite resolution, meaning the exact path through MM states cannot be reversed or retraced. The kernel's compression loses information (sub-λ detail is averaged out), making it impossible to reconstruct previous states with sufficient precision to "return" to them. This intrinsic irreversibility of the projection process ensures causality is preserved and prevents paradoxes.</div></details>
-      <details class="cloud"><summary class="q">How do stars form in D.R.E.A.M?</summary><div class="a core">Stars form at "focusing hubs" where the projection Jacobian J<sub>F</sub> → 0, causing energy density to concentrate:
-        <div class="math-block">\[\mu(x) = \int_{F^{-1}(x)} \frac{e_{10}(X)}{J_F(X)} d\Sigma_6(X)\]</div>
-        These high-CPI regions naturally accumulate matter and ignite fusion through gravitational compression.
-      </div></details>
-
-      <details class="cloud"><summary class="q">What are wave function collapse and decoherence in D.R.E.A.M?</summary><div class="a core">In D.R.E.A.M, wave function "collapse" is not a physical process but the selection of one outcome from the many pre-encoded in the MM, made manifest through the finite-resolution projection. Decoherence occurs when a quantum system's details exceed the kernel's resolution scale λ<sub>q</sub>, causing the loss of phase information. This emerges naturally from the projection's retention law:
-<div class="math-block">\[
-\alpha(\lambda) = \exp\left[-\left(\frac{\lambda}{\lambda_q}\right)^{D_{\text{eff}}}\right]
-\]</div>
-When λ > λ<sub>q</sub>, quantum superpositions cannot be maintained, and the system appears to collapse to a classical state. There is no need for consciousness or observers—just the inevitable information loss of the 10→4 compression.</div></details>
-      
-      <details class="cloud"><summary class="q">What are galaxies in D.R.E.A.M?</summary><div class="a core">Galaxies are large-scale focusing structures that form along persistent hubs and filaments in the projection. Their spiral arms, bulges, and dark matter halos reflect the underlying topological structure of the MM and the retention properties of the kernel at different scales.</div></details>
-      
-      <details class="cloud"><summary class="q">How do black holes form in D.R.E.A.M?</summary><div class="a core">Black holes represent extreme focusing events where J<sub>F</sub> → 0 to such a degree that the local CPI approaches infinity. The event horizon marks the boundary beyond which the projection becomes so compressed that information cannot escape within the resolution limits of our kernel. Singularities are artifacts of the projection, not physical realities in the MM.</div></details>
-      
-      <details class="cloud"><summary class="q">What is dark matter in D.R.E.A.M?</summary><div class="a core">Dark matter effects emerge from the non-uniform focusing of the projection. Regions with higher A(x) = ⟨1/J<sub>F</sub>⟩ values exhibit additional gravitational effects that appear as missing mass. This is not a particle but a manifestation of the uneven compression of higher-dimensional structure into 4D.</div></details>
-      
-      <details class="cloud"><summary class="q">What is dark energy in D.R.E.A.M?</summary><div class="a core">Dark energy represents the residual energy density from the MM ground state after projection and phase cancellation. The small positive value (meV<sup>4</sup> scale) naturally emerges from the suppression factor M<sup>-1/2</sup> where M ∼ (λ/ε)<sup>D<sub>I</sub></sup> is the microstate multiplicity.</div></details>
-      
-      <details class="cloud"><summary class="q">How does the quantum-classical transition occur?</summary><div class="a core">The transition emerges naturally from the finite resolution λ<sub>q</sub> of the projection kernel. Below λ<sub>q</sub>, quantum-grade invariants are preserved, manifesting as quantum behavior. Above λ<sub>q</sub>, coarse-graining dominates, yielding classical behavior. This explains why quantum effects are fragile while classical structures are robust.</div></details>
-    
-        <details class="cloud"><summary class="q">Are other projections possible?</summary><div class="a core">Yes, other projections are not only possible but inevitable within the MM's structure. The MM contains infinite potential projection pathways that could manifest as entirely different realities with:
-    <br><br>
-    • Different dimensional compressions (not necessarily 10→4)<br>
-    • Completely different sets of fundamental constants<br>
-    • Alternative particle content and physical laws<br>
-    • Radically different cosmological histories<br>
-    <br>
-    However, traversal between these projections is fundamentally impossible because:<br>
-    • Each projection is defined by a unique, fixed kernel that cannot be altered from within the projection<br>
-    • The kernel parameters (constants like c, ℏ, G) are immutable for a given projection<br>
-    • There is no "meta-space" from which to access other projections - our entire reality is confined to our specific projection<br>
-    • Different projections would have completely incommensurate causality structures and time concepts<br>
-    • The MM itself provides no mechanism for cross-projection communication or transition
-    </div></details>
-
-    <details class="cloud"><summary class="q">What is vacuum energy in D.R.E.A.M?</summary><div class="a core">Vacuum energy emerges as the effective 4D energy density resulting from the projection of the Meta-Membrane's ground state through the kernel \(K_\lambda\). It is greatly suppressed due to phase cancellation across the extra dimensions, naturally yielding the observed meV\(^4\) scale without fine-tuning. The cosmological constant is thus a kernel-derived parameter, not a fundamental energy.</div></details>
-    </div>
-  </div>
-
-  <!-- SPECULATIVE: Life, Sentience, Free Will, Culture, Death -->
-  <div class="card speculative">
-    <h2>Speculative — Life, Sentience, Free Will, Culture, Death</h2>
-    <div class="clouds">
-      <details class="cloud"><summary class="q">What is "life" in D.R.E.A.M?</summary><div class="a speculative">Long‑lived resonant attractors that recycle information efficiently within the fidelity window and maintain organization against decoherence.</div></details>
-      <details class="cloud"><summary class="q">How does sentience enter?</summary><div class="a speculative">Multi‑scale feedback loops whose internal models modulate their own projection conditions (attention/coherence budgets) within local bounds.</div></details>
-      <details class="cloud"><summary class="q">"Free will"?</summary><div class="a speculative">Path selection among pre‑encoded MM branches, constrained by kernel invariants and available coherence.</div></details>
-      <details class="cloud"><summary class="q">Death?</summary><div class="a speculative">Loss of a loop's ability to maintain coherence budgets; the attractor dissolves, leaving only coarse invariants in the environment.</div></details>
-      <details class="cloud"><summary class="q">Cultures?</summary><div class="a speculative">Collective loops can bias local projection conditions (shared attention/synchrony), modestly shifting which structures retain.</div></details>
-      <details class="cloud"><summary class="q">Dreams (sleep)?</summary><div class="a speculative">Low‑input regime where internal models re‑weight fragments of MM structure; neuromodulators tweak retention thresholds.</div></details>
-      <details class="cloud"><summary class="q">Ethics?</summary><div class="a speculative">If selves are resonant loops, actions that preserve or expand others' coherence budgets have moral weight.</div></details>
-      <details class="cloud"><summary class="q">Limits of speculation?</summary><div class="a speculative">Interpretive only; not required for tests. Science lives in invariant relations and falsification gates.</div></details>
-    </div>
-  </div>
+  <!-- Sections (same names as your existing cats) -->
+  <div class="card"><h2>Foundations</h2>            <div class="clouds" data-section="Foundations"></div></div>
+  <div class="card"><h2>Kernel &amp; Invariants</h2>  <div class="clouds" data-section="Kernel & Invariants"></div></div>
+  <div class="card"><h2>Math &amp; Topology</h2>      <div class="clouds" data-section="Math & Topology"></div></div>
+  <div class="card"><h2>Predictions (Tests)</h2>     <div class="clouds" data-section="Predictions"></div></div>
+  <div class="card"><h2>Falsification</h2>           <div class="clouds" data-section="Falsification"></div></div>
+  <div class="card speculative"><h2>Speculative</h2>  <div class="clouds" data-section="Speculative"></div></div>
 
 </div>
 
 <script>
-// Re-typeset math when a cloud opens
-document.querySelectorAll('details.cloud').forEach(d=>{
-  d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d]));
-});
+(function(){
+  // === CONFIG ===
+  const DEFAULT_URL = "/static/kb/parsed_faqs_en.json";
+  const KB_URL = window.FAQ_JSON_URL || DEFAULT_URL;
+
+  // Keep your existing section names
+  const SECTIONS = ["Foundations","Kernel & Invariants","Math & Topology","Predictions","Falsification","Speculative"];
+
+  // Cap per section (min,max)
+  const CAPS = { "Foundations":[5,7], "Kernel & Invariants":[5,7], "Math & Topology":[5,7], "Predictions":[5,7], "Falsification":[5,7], "Speculative":[5,7] };
+
+  // Helpers
+  const byNumberAsc = (a,b) => (a.number||0) - (b.number||0);
+  const sanitize = s => String(s==null?"":s);
+  const asHTML = s => sanitize(s).replace(/\n/g,"<br>");
+  const chunk = (arr, size) => {
+    const out = [];
+    for (let i=0; i<arr.length; i+=size) out.push(arr.slice(i, i+size));
+    return out;
+  };
+
+  function renderCloud(q, aHTML, status){
+    const det = document.createElement("details");
+    det.className = "cloud";
+    const sum = document.createElement("summary");
+    sum.className = "q";
+    sum.textContent = q;
+    const body = document.createElement("div");
+    body.className = "a " + (status === "spec" ? "speculative" : "core");
+    body.innerHTML = aHTML;
+    det.appendChild(sum); det.appendChild(body);
+    det.addEventListener("toggle", ()=> { if(det.open && window.MathJax?.typeset) MathJax.typeset([det]); });
+    return det;
+  }
+
+  // New: Paged overflow — 2 rows × 3 cols (6 cards per page)
+  function renderOverflow(items){
+    if(!items.length) return null;
+
+    const wrap = document.createElement("details");
+    wrap.className = "cloud";
+
+    const sum = document.createElement("summary");
+    sum.className = "q";
+    sum.textContent = `More (${items.length})`;
+
+    const inner = document.createElement("div");
+    inner.className = "a more-groups";
+
+    // Navigation
+    const nav = document.createElement("div");
+    nav.className = "more-nav";
+
+    const btnPrev = document.createElement("button");
+    btnPrev.type = "button";
+    btnPrev.className = "btn prev";
+    btnPrev.setAttribute("aria-label","Previous group");
+    btnPrev.textContent = "‹ Prev";
+
+    const count = document.createElement("span");
+    count.className = "count";
+
+    const btnNext = document.createElement("button");
+    btnNext.type = "button";
+    btnNext.className = "btn next";
+    btnNext.setAttribute("aria-label","Next group");
+    btnNext.textContent = "Next ›";
+
+    nav.appendChild(btnPrev);
+    nav.appendChild(count);
+    nav.appendChild(btnNext);
+
+    // Viewport holds the groups
+    const viewport = document.createElement("div");
+    viewport.className = "more-viewport";
+
+    // Build groups of 6
+    const groups = chunk(items, 6);
+    const groupNodes = groups.map((groupItems, idx) => {
+      const g = document.createElement("div");
+      g.className = "more-group" + (idx===0 ? " active" : "");
+      groupItems.forEach(it => g.appendChild(renderCloud(it.question, it.answerHTML, it._status)));
+      return g;
+    });
+    groupNodes.forEach(n => viewport.appendChild(n));
+
+    // State + actions
+    let active = 0;
+    function updateUI() {
+      groupNodes.forEach((n,i)=> n.classList.toggle("active", i===active));
+      count.textContent = `Group ${active+1} of ${groups.length}`;
+      btnPrev.disabled = (active===0);
+      btnNext.disabled = (active===groups.length-1);
+      // Typeset math for current group only
+      if (window.MathJax?.typeset) {
+        window.MathJax.typeset([groupNodes[active]]);
+      }
+    }
+
+    btnPrev.addEventListener("click", ()=>{ if(active>0){ active--; updateUI(); }});
+    btnNext.addEventListener("click", ()=>{ if(active<groups.length-1){ active++; updateUI(); }});
+
+    inner.appendChild(nav);
+    inner.appendChild(viewport);
+
+    wrap.appendChild(sum);
+    wrap.appendChild(inner);
+
+    // Typeset on first open; keep fast
+    wrap.addEventListener("toggle", ()=>{
+      if (wrap.open) updateUI();
+    });
+
+    // If only one group, hide nav (no paging necessary)
+    if (groups.length <= 1) nav.style.display = "none";
+
+    return wrap;
+  }
+
+  function inferStatusFromText(q, a){
+    const blob = `${q} ${a}`.toLowerCase();
+    return /\[speculative\]|\(speculative\)/.test(blob) ? "spec" : "core";
+  }
+
+  function bucketize(items){
+    const buckets = {};
+    SECTIONS.forEach(s => buckets[s] = []);
+    items.forEach(it => {
+      const sec = SECTIONS.includes(it.category) ? it.category : "Foundations";
+      buckets[sec].push(it);
+    });
+    return buckets;
+  }
+
+  fetch(KB_URL, { credentials: "same-origin" })
+    .then(r => { if(!r.ok) throw new Error(r.statusText); return r.json(); })
+    .then(payload => {
+      const list = Array.isArray(payload) ? payload
+                  : Array.isArray(payload.faqs) ? payload.faqs
+                  : [];
+
+      // Prepare items (keep old schema; derive status only for styling)
+      const items = list.map(row => ({
+        number: row.number,
+        question: sanitize(row.question),
+        answerHTML: asHTML(sanitize(row.answer)),
+        category: row.category || "Foundations",
+        _status: inferStatusFromText(row.question, row.answer)
+      }));
+
+      // Group and render
+      const buckets = bucketize(items);
+      SECTIONS.forEach(sec => {
+        const mount = document.querySelector(`.clouds[data-section="${sec}"]`);
+        if(!mount) return;
+        const sorted = (buckets[sec]||[]).sort(byNumberAsc);
+        const [minShow, maxShow] = CAPS[sec] || [5,7];
+        const n = Math.min(Math.max(minShow, 0), maxShow, sorted.length);
+        const head = sorted.slice(0, n);
+        const tail = sorted.slice(n);
+        head.forEach(it => mount.appendChild(renderCloud(it.question, it.answerHTML, it._status)));
+        const overflow = renderOverflow(tail);
+        if (overflow) mount.appendChild(overflow);
+      });
+
+      if (window.MathJax?.typeset) MathJax.typeset();
+    })
+    .catch(err => {
+      console.error(err);
+      const heroNote = document.querySelector(".card.hero .note");
+      if (heroNote){
+        const m = document.createElement("span");
+        m.style.display="block"; m.style.marginTop=".25rem";
+        m.textContent = "Could not load the knowledge base; showing static version.";
+        heroNote.appendChild(m);
+      }
+    });
+})();
 </script>
 {% endblock %}
