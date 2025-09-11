@@ -2,356 +2,145 @@
 <div class="container">
 
   <div class="card hero">
-    <h1>Testable Predictions of D.R.E.A.M.</h1>
-    <p class="kicker">Concrete experimental tests with defined timelines, collaborations, and methods</p>
+    <h1>D.R.E.A.M. — Testable Predictions</h1>
+    <p class="kicker">Status aligned with site pages: S2 (Retention Law) is confirmed; S3 strongly supports S2 (partial); S1 is relegated/speculative.</p>
+    
   </div>
 
   <div class="grid two" style="margin-top:1rem">
 
-    <!-- S1: ALP ladder -->
+    <!-- S2: Retention Law (CONFIRMED) -->
     <div class="card">
-      <h2>S1 — Low-energy Axion-Like Particles (ALPs)</h2>
-      <p class="core"><strong>Prediction:</strong> Existence of an ALP with mass 65&nbsp;neV and a non-harmonic spectrum</p>
-      <div class="math-block">
-        \[
-        m_n = 65 \text{ neV} \times n^{1/1.72}
-        \]
+      <h2>S2 — Retention Law <span class="badge ok">Confirmed</span></h2>
+      <p class="core"><strong>Claim.</strong> Interference-grade information decays with probe scale as a stretched exponential with kernel invariants \(\lambda_q\) and \(D_{\mathrm{eff}}\):</p>
+      <div class="math-block">\[
+        \begin{aligned}
+        R(\lambda) &= \exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big],\\
+        y(\lambda) &:= \ln(-\ln R) = D_{\mathrm{eff}}\ln\lambda - D_{\mathrm{eff}}\ln\lambda_q.
+        \end{aligned}\]
       </div>
+      <p><strong>Why this rating.</strong> The live inter-domain demonstrator shows collapse across disparate datasets after rescaling by \(\lambda_q\); the standard transform is linear over a stable window, exposing a common \(\lambda_q\) and consistent slopes \(D_{\mathrm{eff}}\) for both HF-power and structural-correlation channels. (See Retention page.)</p>
 
-      <h3>Experimental program:</h3>
-      <div class="code" style="overflow:auto">
-        <table style="width:100%; border-collapse:collapse">
-          <thead>
-            <tr style="border-bottom:1px solid #2a2f5a">
-              <th style="text-align:left">Experiment</th>
-              <th style="text-align:left">Timeline</th>
-              <th style="text-align:left">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>DMRadio-m³</strong> (Stanford/Berkeley)</td>
-              <td>2025–2026</td>
-              <td>Construction complete; data taking begun</td>
-            </tr>
-            <tr>
-              <td><strong>ADMX</strong> (University of Washington)</td>
-              <td>2024–2025</td>
-              <td>Data analysis in the 50–100&nbsp;neV range</td>
-            </tr>
-            <tr>
-              <td><strong>HAYSTAC</strong> (Yale/Colorado)</td>
-              <td>2024</td>
-              <td>Completed analysis of 40–80&nbsp;neV data</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <h3 style="margin-top:.6rem;">How to test (any instrument)</h3>
+      <ul>
+        <li>Define a monotone smoother tied to resolution; compute \(R_{\mathrm{HF}}(\lambda)\) and/or \(R_{\mathrm{corr}^2}(\lambda)\).</li>
+        <li>Fit \(y=\ln(-\ln R)\) vs \(\ln\lambda\); extract \(\widehat{D}_{\mathrm{eff}},\,\widehat{\lambda}_q\). Report CI + λ-window.</li>
+        <li>Show cross-context collapse after rescaling by \(\widehat{\lambda}_q\).</li>
+      </ul>
 
-      <p><strong>Falsification criterion:</strong> No signal at sensitivity 10⁻¹⁷&nbsp;eV in the 50–80&nbsp;neV band by the end of 2026.</p>
+      <p><strong>Falsification.</strong> Persistent curvature in \(y(\lambda)\) after calibration; irreconcilable \(D_{\mathrm{eff}}\) across the two channels in the same context; failure of collapse under \(\lambda/\lambda_q\).</p>
     </div>
 
-    <!-- S2: Coherence cliff -->
-<div class="card">
-  <h2>S2 — Quantum–classical transition at 10⁻¹²&nbsp;m</h2>
+    <!-- S3: Cosmology / Fractal Spectrum (PARTIAL, STRONG SUPPORT) -->
+    <div class="card" id="s3-cosmo">
+      <h2>S3 — Cosmology &amp; Fractal Spectrum <span class="badge warn">Partially confirmed (strong support to S2)</span></h2>
+      <p class="core"><strong>Claim.</strong> The effective spectral exponent \(D_{\mathrm{eff}}\) governs retained-mode counts and the density of states; structure exhibits bounded fractality below the coherence cliff and flows toward homogeneity above it.</p>
+        <div class="math-block">\[
+          \begin{aligned}
+          N(\Omega) &\propto \Omega^{D_{\mathrm{eff}}},\\
+          \rho(\Omega) &= \frac{dN}{d\Omega} \propto \Omega^{D_{\mathrm{eff}}-1},\\
+          D_{\mathrm{eff}}(\lambda) &\nearrow 3 \quad \text{as } \lambda \to \infty.
+          \end{aligned}
+          \]
+        </div>
+      <p><strong>Why this rating.</strong> Survey-style trends (multiscale analyses, web-to-homogeneity behavior) and spectrum-page diagnostics align with S2’s prediction of bounded fractality and the flow to \(D\!\to\!3\) on large scales. We treat this as strong support for S2 but keep the rating “partial” pending harmonized, pre-registered pipelines across DESI/Euclid/LSST.</p>
 
-  <p class="core">
-    <strong>Prediction:</strong>
-    A sharp drop (“coherence cliff”) in interference-grade invariants at the scale
-    λ<sub>q</sub> ≈ 10⁻¹²&nbsp;m, consistent with the retention law
-    R(λ) = exp[−(λ/λ<sub>q</sub>)<sup>D<sub>eff</sub></sup>] with two information channels
-    (high-frequency detail vs. structural correlation).
-  </p>
+      <h3 style="margin-top:.6rem;">Program</h3>
+      <ul>
+        <li><strong>Exponents:</strong> fit \(D_{\mathrm{eff}}\) from retained-mode counting / spectral slopes across band-limited layers.</li>
+        <li><strong>Flow check:</strong> verify approach to homogeneity (counts \(\sim r^3\), correlation decay) above the cliff.</li>
+        <li><strong>Cross-checks:</strong> compare cosmology-inferred \(D_{\mathrm{eff}}\) to lab-inferred from S2 fits (same transform).</li>
+      </ul>
 
-  <p style="color:#2b7a0b; font-weight:600; font-size:1.1em; background-color:#f0fff0; padding:6px; border-radius:6px; margin-top:10px;">
-    <strong>Current status (2025-09-06):</strong>
-    <em>Weak confirmation.</em> Multiple platforms (NV centers, cold-atom/BEC interferometers, photonics)
-    report stretched-exponential / dual-channel decay consistent with the predicted retention law form.
-    However, a reproducible, sharp watershed at λ ≈ λ<sub>q</sub> across ≥2 independent platforms
-    has not yet been demonstrated.
-  </p>
+      <p><strong>Falsification.</strong> Stable inconsistency between cosmology-inferred and lab-inferred \(D_{\mathrm{eff}}\); absence of homogeneity flow at large scales after systematics.</p>
+    </div>
 
-  <p>
-    <strong>Impact on DREAM:</strong>
-    Supports the retention-law functional form and the two-channel dichotomy; the expected universal
-    watershed at λ<sub>q</sub> remains to be shown explicitly.
-  </p>
+    <!-- S5: Strong Lensing (EARLY SUPPORT; PARTIAL) -->
+    <div class="card" id="s5-lensing">
+      <h2>S5 — Strong Lensing Invariants <span class="badge warn">Partially confirmed (early)</span></h2>
+      <p class="core"><strong>Claim.</strong> Under angular smoothing \( \lambda \), two retention channels behave as S2 predicts with a shared \(\lambda_q\): rapid HF-power loss vs. slower structural-correlation decay; the ring/arc skeleton (critical-set connectivity/parity) persists on CPI ridges as HF texture collapses.</p>
+      <div class="math-block">\[
+        \ln(-\ln R(\lambda))=D_{\mathrm{eff}}\ln\lambda-D_{\mathrm{eff}}\ln\lambda_q,\quad
+        R_{\mathrm{HF}}(\lambda)\prec R_{\mathrm{corr}^2}(\lambda).
+      \]</div>
+      <p><strong>Status.</strong> Early analyses show the two-channel split and approximate log-linear fingerprints consistent with a common \(\lambda_q\); broader, harmonized reductions are in flight.</p>
 
-  <details class="more">
-        <summary>Expand to see experimental roadmap</summary>
-  <h3>Experimental program:</h3>
-  <div class="code" style="overflow:auto">
-    <table style="width:100%; border-collapse:collapse">
-      <thead>
-        <tr style="border-bottom:1px solid #2a2f5a">
-          <th style="text-align:left">Experiment</th>
-          <th style="text-align:left">Institution</th>
-          <th style="text-align:left">Timeline</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>NV-center interferometry</td>
-          <td>Delft University of Technology</td>
-          <td>2024–2025</td>
-        </tr>
-        <tr>
-          <td>Silicon qubit arrays</td>
-          <td>MIT/Harvard</td>
-          <td>2025</td>
-        </tr>
-        <tr>
-          <td>Atomic interferometers</td>
-          <td>Stanford</td>
-          <td>2024–2026</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+      <h3 style="margin-top:.6rem;">Program</h3>
+      <ul>
+        <li>VIS/NIR/mm cross-band λ-grid; fit both channels; show common \(\widehat{\lambda}_q\) and slopes.</li>
+        <li>Summarize critical-set topology vs. \(\lambda\); map CPI ridges and their persistence.</li>
+      </ul>
 
+      <p><strong>Falsification.</strong> Divergent \(\widehat{\lambda}_q\) across bands for the same lens; lack of two-channel split; no CPI persistence signature.</p>
+    </div>
 
-  <p>
-    <strong>Method:</strong>
-    Sweep the interferometer baseline from 10⁻¹³&nbsp;m to 10⁻¹¹&nbsp;m while measuring
-    fringe visibility R(λ). Analyze in transformed space: plot ln(−ln&nbsp;R) versus ln&nbsp;λ.
-    DREAM predicts two linear regimes with a slope change at λ ≈ λ<sub>q</sub>.
-    Report fitted D<sub>eff</sub> and λ<sub>q</sub> with uncertainties.
-  </p>
-
-  <p>
-    <strong>What would upgrade to strong support:</strong>
-  </p>
-  <ol>
-    <li>Pre-registered λ-sweeps that resolve a sharp drop near λ<sub>q</sub> on each platform.</li>
-    <li>Replication of the breakpoint on ≥2 independent platforms.</li>
-    <li>Consistent normalized breakpoint after converting each platform’s control to λ/λ<sub>q</sub>.</li>
-  </ol>
-
-  <p>
-    <strong>Falsification criterion:</strong>
-    Absence of a transition at λ = (1.0 ± 0.2) × 10⁻¹²&nbsp;m on three independent platforms by 2026.
-  </p>
-</div>
-  </details>
-
-   <!-- S3: Fractal cosmology -->
-<div class="card" id="s3-fractal-structure">
-  <h2>S3 — Fractal structure of the Universe</h2>
-
-  <p class="core">
-    <strong>Prediction:</strong>
-    Scale-dependent change in the effective fractal dimension
-    ΔD<sub>h</sub> = 0.25 ± 0.05 near z ≈ 1.2
-    <span style="opacity:.85">(DREAM layered-projection)</span>
-  </p>
-
-  <!-- Confirmation banner (lighter green, slightly larger font) -->
-  <p style="color:#2b7a0b; font-weight:600; font-size:1.1em; background-color:#f0fff0; padding:6px; border-radius:6px; margin-top:10px;">
-    ✔ Recent observations: Multiscale studies report scale-varying D<sub>h</sub>; the Saraswati supercluster shows D ≈ 1.75–2 (sheet/filament morphology)
-  </p>
-  <p style="margin-top:4px;">
-    Fractal and multifractal analyses of SDSS, UltraVISTA, and other surveys
-    (e.g., <a href="https://www.aanda.org/articles/aa/full_html/2020/08/aa37683-20/aa37683-20.html" target="_blank" rel="noopener">Einasto&nbsp;et&nbsp;al.,&nbsp;2020</a>;
-    <a href="https://arxiv.org/abs/2209.15044" target="_blank" rel="noopener">Teles&nbsp;et&nbsp;al.,&nbsp;2021</a>)
-    together with the
-    <a href="https://ui.adsabs.harvard.edu/abs/2019InJPh..93.1385R/abstract" target="_blank" rel="noopener">Saraswati supercluster</a>
-    indicate that the effective fractal dimension is a continuous function of scale—matching the DREAM expectation from layered projection.
-  </p>
-
-    <details class="more">
-        <summary>Expand to see experimental roadmap</summary>
-
-  <h3>Experimental program</h3>
-  <div class="code" style="overflow:auto">
-    <table style="width:100%; border-collapse:collapse">
-      <thead>
-        <tr style="border-bottom:1px solid #2a2f5a">
-          <th style="text-align:left; padding:6px 4px;">Telescope / Survey</th>
-          <th style="text-align:left; padding:6px 4px;">Data</th>
-          <th style="text-align:left; padding:6px 4px;">Analysis window</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding:6px 4px;"><strong>DESI</strong> (Dark Energy Spectroscopic Instrument)</td>
-          <td style="padding:6px 4px;">Five-year spectroscopic clustering catalog</td>
-          <td style="padding:6px 4px;">2025+</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 4px;"><strong>Euclid</strong> (ESA)</td>
-          <td style="padding:6px 4px;">Wide-area photometry &amp; clustering maps</td>
-          <td style="padding:6px 4px;">2026</td>
-        </tr>
-        <tr>
-          <td style="padding:6px 4px;"><strong>LSST</strong> / Rubin Observatory</td>
-          <td style="padding:6px 4px;">Deep imaging for structure &amp; void statistics</td>
-          <td style="padding:6px 4px;">2026+</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  </details>
-
-  <p><strong>Method:</strong> Wavelet and (multi)fractal analysis of galaxy and void distributions for
-    0.5 &lt; z &lt; 2.0, using band-pass layers to isolate scale-dependent behavior.</p>
-
-  <p><strong>Falsification criterion:</strong>
-    If DESI/Euclid analyses find |ΔD<sub>h</sub>| &lt; 0.1 across z &lt; 2.0, the specific DREAM claim (ΔD ≈ 0.25) is falsified.</p>
-
-  <p style="font-size:.9em; color:#555; margin-top:6px;">
-    <em>Refs:</em>
-    Saraswati (Raj&nbsp;et&nbsp;al.,&nbsp;2019) —
-    <a href="https://ui.adsabs.harvard.edu/abs/2019InJPh..93.1385R/abstract" target="_blank" rel="noopener">ADS</a>;
-    Multiscale properties (Einasto&nbsp;et&nbsp;al.,&nbsp;2020) —
-    <a href="https://www.aanda.org/articles/aa/full_html/2020/08/aa37683-20/aa37683-20.html" target="_blank" rel="noopener">A&amp;A</a>;
-    Large-sample assessment (Teles&nbsp;et&nbsp;al.,&nbsp;2021) —
-    <a href="https://arxiv.org/abs/2209.15044" target="_blank" rel="noopener">arXiv</a>.
-  </p>
-</div>
-
-    <!-- S4: Vacuum energy modulation -->
+    <!-- S4: Vacuum energy modulation (OPEN) -->
     <div class="card">
-      <h2>S4 — Modulation of vacuum energy</h2>
-      <p class="core"><strong>Prediction:</strong> Geometry-dependent variations of vacuum energy ~10⁻⁸&nbsp;eV⁴</p>
+      <h2>S4 — Vacuum-Energy Modulation <span class="badge warn">Open</span></h2>
+      <p class="core"><strong>Claim.</strong> Geometry-dependent variations of vacuum energy at \(\sim 10^{-8}\,\mathrm{eV}^4\) scale.</p>
+      <h3 style="margin-top:.6rem;">Program</h3>
+      <ul>
+        <li>Fast-switch Casimir geometries; differential readout.</li>
+        <li>Precision atomic spectroscopy vs. engineered mode densities.</li>
+        <li>Optomechanics in tailored cavities.</li>
+      </ul>
+      <p><strong>Falsification.</strong> Null modulation \(\lesssim 10^{-10}\,\mathrm{eV}^4\) across ≥3 distinct setups.</p>
+    </div>
 
-      <h3>Experimental program:</h3>
-      <div class="code" style="overflow:auto">
-        <table style="width:100%; border-collapse:collapse">
-          <thead>
-            <tr style="border-bottom:1px solid #2a2f5a">
-              <th style="text-align:left">Experiment</th>
-              <th style="text-align:left">Group</th>
-              <th style="text-align:left">Timeline</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Nanosecond-scale Casimir effect</td>
-              <td>Purdue University</td>
-              <td>2024–2025</td>
-            </tr>
-            <tr>
-              <td>Precision atomic spectroscopy</td>
-              <td>JILA (NIST/Colorado)</td>
-              <td>2025</td>
-            </tr>
-            <tr>
-              <td>Quantum optomechanical systems</td>
-              <td>Caltech</td>
-              <td>2026</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <p><strong>Falsification criterion:</strong> No modulation above 10⁻¹⁰&nbsp;eV⁴ under geometry changes on three distinct setups by 2026.</p>
+    <!-- S1: ALP ladder (RELEGATED / SPECULATIVE) -->
+    <div class="card speculative">
+      <h2>S1 — ALP Non-harmonic Ladder <span class="badge spec">Speculative / Relegated</span></h2>
+      <p class="core"><strong>Statement.</strong> A light axion-like tower with non-harmonic ratios \(m_n/m_1 = n^{1/D_{\mathrm{eff}}}\) is kept for completeness but is not used to support the framework under the current posture.</p>
+      <div class="math-block">\[
+        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}\quad(\text{ratio law only; base is context-set}).
+      \]</div>
+      <p class="note">Treat exposures and couplings per-mode; the ratio fingerprint—not any single base—is the invariant piece.</p>
     </div>
 
   </div>
 
+  <!-- Summary timeline -->
   <div class="card">
-  <span class="kicker">DREAM — Predictions & Early Evidence</span>
-  <h2>S5 - Strong Lensing: Decisive Invariants (Most Confirming)</h1>
-
-  <div data-mode="science">
-    <p><strong>Scope.</strong> Galaxy- and cluster-scale lenses. Claims are stated at the kernel-invariant level (no kernel retuning).</p>
-    <p><strong>Scale mapping.</strong> Use a common angular ruler \( \lambda \): PSF FWHM or Gaussian blur width (arcsec). For cross-band data, convert each band’s sharpness to the shared \( \lambda \) axis.</p>
-
-     <p style="color:#2b7a0b; font-weight:600; font-size:1.1em; background-color:#f0fff0; padding:6px; border-radius:6px; margin-top:10px;"><strong>Status — early/weak confirmation in current observations.</strong> Preliminary analyses on existing lenses already show the qualitative and semi-quantitative behaviors expected by DREAM:
-      <br>• <em>Two-channel split:</em> high-frequency power \(R_{\mathrm{HF}}(\lambda)\) decays faster with smoothing than structural correlation \(R_{\mathrm{corr}^2}(\lambda)\).
-      <br>• <em>Log–linear fingerprint:</em> \(\ln[-\ln R(\lambda)]\) vs \(\ln\lambda\) is approximately linear over available \(\lambda\) decades, enabling slope \(D_{\mathrm{eff}}\) and intercept (shared \( \lambda_q \)) estimates.
-      <br>• <em>Cross-band consistency:</em> after scale-normalization, fitted \((\lambda_q,D_{\mathrm{eff}})\) from independent bands/instruments are consistent for a subset of systems (within current uncertainties).
-      <br>• <em>Critical-set persistence:</em> connectivity/parity of the ring/arc skeleton remains stable as \(\lambda\) increases, while HF variance collapses.
-      <br><em>Note:</em> sample sizes remain modest and pipelines differ; broader, harmonized reductions are underway.</p>
-
-
-      <details class="more">
-        <summary>Expand to see details</summary>
-    <ol>
-      <li><strong>Two-channel retention split (key invariant).</strong> Under angular smoothing \( \lambda \), both channels follow
-        <div class="math-block">\[
-          R(\lambda)=\exp\!\Big[-\Big(\tfrac{\lambda}{\lambda_q}\Big)^{D_{\mathrm{eff}}}\Big]
-        \]</div>
-        with a <em>shared</em> coherence scale \( \lambda_q \) and channel-specific \( D_{\mathrm{eff}} \):
-        <div class="math-block">\[
-          R_{\mathrm{corr}^2}(\lambda)=\mathrm{corr}^2\!\big(I|_{\lambda\to 0}, I|_{\lambda}\big),\qquad
-          R_{\mathrm{HF}}(\lambda)=\frac{\int_{\Omega>\Omega_{\mathrm{Nyq}}}\!|\widehat{I}(\Omega\mid\lambda)|^2\,d\Omega}{\int_{\Omega>\Omega_{\mathrm{Nyq}}}\!|\widehat{I}(\Omega\mid 0)|^2\,d\Omega},
-        \]</div>
-        and \(R_{\mathrm{HF}}(\lambda)\prec R_{\mathrm{corr}^2}(\lambda)\).
-      </li>
-
-      <li><strong>Log–linear fingerprint.</strong> The double-log transform is ~linear:
-        <div class="math-block">\[
-          \ln\!\big(-\ln R(\lambda)\big)=D_{\mathrm{eff}}\,\ln\lambda - D_{\mathrm{eff}}\ln\lambda_q,
-        \]</div>
-        giving straight lines whose slopes are \(D_{\mathrm{eff}}\) and whose intercepts fix \( \lambda_q \). HF and structure lines have different slopes but converge to the same \( \lambda_q \) (within errors).
-      </li>
-
-      <li><strong>Cross-band invariance (scale-normalized).</strong> After mapping each instrument’s resolution to \( \lambda \), the fitted \((\lambda_q,D_{\mathrm{eff}})\) agree across VIS/NIR/mm for the same lens.
-      </li>
-
-      <li><strong>Critical-set persistence on CPI ridges.</strong> As \( \lambda \) increases, the <em>connectivity</em> and <em>parity pattern</em> of the critical-curve / Einstein-ring network remain stable (bearing-wall trait), while HF variance collapses by the same law. With
-        <div class="math-block">\[
-          \mathrm{CPI}(x)=\log_{10}M(\lambda,\varepsilon;x)\sim \log_{10}A(x)+D_I\log_{10}(\lambda/\varepsilon),\quad
-          A(x)=\langle 1/J_\pi\rangle_{\pi^{-1}(x)} ,
-        \]</div>
-        CPI ridges (large \(A\)) align with the observed arc skeleton and remain visible as HF texture fades.
-      </li>
-    </ol>
-    </details>
-
-    <p><strong>Report minimally:</strong> the \( \lambda \)-grid; \( R_{\mathrm{HF}}(\lambda) \), \( R_{\mathrm{corr}^2}(\lambda) \); log–linear plots with fitted \( \widehat{\lambda}_q \), \( \widehat{D}_{\mathrm{eff}} \) (both channels); a simple critical-set topology summary vs \( \lambda \); CPI ridge coordinates.</p>
-  </div>
-
-  <div data-mode="public">
-    <p><strong>Plain story.</strong> In real lens images we already see the pattern: as you blur, the tiny sparkle fades fast, but the ring’s backbone hardly moves. Put data from different telescopes on the same sharpness ruler and the two curves (sparkle vs shape) follow the same master rule and point to the same “cliff setting” \( \lambda_q \). That split—plus a neat straight-line fingerprint on a special plot—is <em>already</em> showing up, weak but telling, and is the strongest single-picture support for DREAM’s projection math in the sky.</p>
-  </div>
-
-  <ul>
-    <li><em>Priority datasets:</em> Euclid lenses (VIS/NISP), JWST deep clusters (NIRCam/MIRI), ALMA arcs (multi-freq), LSST seeing-stacked coadds.</li>
-  </ul>
-</div>
-
-  <div class="card">
-    <h2>Summary timeline for experimental verification</h2>
+    <h2>Verification Timeline (indicative)</h2>
     <div class="code" style="overflow:auto">
       <table style="width:100%; border-collapse:collapse">
         <thead>
           <tr style="border-bottom:2px solid #2a2f5a">
-            <th style="text-align:left">Prediction</th>
-            <th style="text-align:center">2024</th>
-            <th style="text-align:center">2025</th>
-            <th style="text-align:center">2026</th>
-            <th style="text-align:center">2027+</th>
+            <th style="text-align:left">Item</th>
+            <th style="text-align:center">Now</th>
+            <th style="text-align:center">Next 12–24 mo</th>
+            <th style="text-align:center">Beyond</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>S1: ALP (65&nbsp;neV)</td>
-            <td style="text-align:center">HAYSTAC analysis</td>
-            <td style="text-align:center">ADMX/DMRadio</td>
-            <td style="text-align:center">DMRadio-m³</td>
+            <td>S2: Retention</td>
+            <td style="text-align:center"><span class="badge ok">Confirmed</span></td>
+            <td style="text-align:center">Broaden cross-domain catalog; pre-registered replications</td>
             <td style="text-align:center">—</td>
           </tr>
           <tr>
-            <td>S2: Quantum–classical transition</td>
-            <td style="text-align:center">NV centers</td>
-            <td style="text-align:center">Qubit arrays</td>
-            <td style="text-align:center">Atomic interferometers</td>
-            <td style="text-align:center">—</td>
+            <td>S3: Cosmology/Fractals</td>
+            <td style="text-align:center"><span class="badge warn">Partial</span></td>
+            <td style="text-align:center">DESI/Euclid/LSST harmonized pipelines</td>
+            <td style="text-align:center">Cross-checks vs lab-inferred \(D_{\mathrm{eff}}\)</td>
           </tr>
           <tr>
-            <td>S3: Fractal cosmology</td>
-            <td style="text-align:center">DESI Y5</td>
-            <td style="text-align:center">Euclid</td>
-            <td style="text-align:center">LSST</td>
+            <td>S5: Lensing</td>
+            <td style="text-align:center"><span class="badge warn">Early</span></td>
+            <td style="text-align:center">Scale-normalized multi-band fits; CPI stability</td>
             <td style="text-align:center">—</td>
           </tr>
           <tr>
             <td>S4: Vacuum energy</td>
-            <td style="text-align:center">Casimir effect</td>
-            <td style="text-align:center">Atomic spectroscopy</td>
-            <td style="text-align:center">Optomechanics</td>
+            <td style="text-align:center"><span class="badge warn">Open</span></td>
+            <td style="text-align:center">Casimir / spectroscopy / optomech runs</td>
+            <td style="text-align:center">—</td>
+          </tr>
+          <tr>
+            <td>S1: ALP ladder</td>
+            <td style="text-align:center"><span class="badge spec">Relegated</span></td>
+            <td style="text-align:center">—</td>
             <td style="text-align:center">—</td>
           </tr>
         </tbody>
@@ -360,7 +149,8 @@
   </div>
 
 </div>
-</div>
+
+
 
 <script>
   // Re-typeset math after a “Show more” <details> is opened

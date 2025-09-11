@@ -1,4 +1,68 @@
 # -*- coding: utf-8 -*-
+# --- Autoinstall bootstrap (drop-in) ---------------------------------
+import sys, subprocess, importlib, os, ensurepip
+
+def _pip_install(pkgs):
+    """
+    Try to install pkgs with pip. Falls back to --user if needed.
+    Set AUTO_INSTALL=0 to disable. Set AUTO_PIP_VERBOSE=1 for pip output.
+    """
+    if os.getenv("AUTO_INSTALL", "1") != "1":
+        return
+    # Make sure pip exists
+    try:
+        import pip  # noqa: F401
+    except Exception:
+        try:
+            ensurepip.bootstrap()
+        except Exception:
+            pass
+
+    base_cmd = [sys.executable, "-m", "pip", "install"]
+    if os.getenv("AUTO_PIP_VERBOSE", "0") != "1":
+        base_cmd.append("-q")
+
+    tries = [
+        base_cmd + pkgs,                         # normal
+        base_cmd + ["--user"] + pkgs,            # user site
+    ]
+
+    # Debian/Ubuntu with PEP 668 "externally-managed" environments may require this flag
+    if os.getenv("ALLOW_BREAK_SYSTEM_PACKAGES", "0") == "1":
+        tries.append(base_cmd + ["--break-system-packages"] + pkgs)
+
+    last_err = None
+    for cmd in tries:
+        try:
+            subprocess.check_call(cmd)
+            return
+        except Exception as e:
+            last_err = e
+    raise RuntimeError(f"Automatic pip install failed for {pkgs}: {last_err}")
+
+def _ensure(mod_name: str, pip_name: str):
+    try:
+        importlib.import_module(mod_name)
+    except Exception:
+        _pip_install([pip_name])
+        importlib.invalidate_caches()
+        importlib.import_module(mod_name)
+
+# Map import name -> pip package name
+_required = [
+    ("flask", "flask"),
+    ("flask_cors", "flask-cors"),
+    ("dotenv", "python-dotenv"),
+    ("jinja2", "Jinja2"),
+    # NOTE: weave_blueprint is your local module; we don't auto-install it.
+    # Optional: if you later need groq or other libs, add them here.
+]
+
+for mod, pip_pkg in _required:
+    _ensure(mod, pip_pkg)
+# ---------------------------------------------------------------------
+
+# -*- coding: utf-8 -*-
 
 import os
 import re

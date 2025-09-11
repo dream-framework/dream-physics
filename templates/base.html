@@ -6,16 +6,24 @@
     <title>{{ title or _('meta.title') }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- MathJax -->
-    <script>
-      window.MathJax = {
-        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
-        svg: { fontCache: 'global' },
-        options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
-      };
-    </script>
-    <script id="mathjax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  
+<!-- MathJax v3 — site-wide config (must be BEFORE the loader script) -->
+<!-- MathJax v3 — single, SVG renderer -->
+<!-- MathJax v3 — single, SVG renderer -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(','\\)'], ['$', '$']],
+      displayMath: [['\\[','\\]'], ['$$','$$']],
+      processEscapes: true,
+      packages: {'[+]': ['ams']}
+    },
+    chtml: { linebreaks:{automatic:true, width:'container'}, displayAlign:'center', displayIndent:'0' },
+    svg:   { linebreaks:{automatic:true, width:'container'}, displayAlign:'center', displayIndent:'0' },
+    options: { skipHtmlTags:['script','noscript','style','textarea','pre','code'] }
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     {% include "_analytics.html" %}
 
     <style>
@@ -190,6 +198,23 @@
       /* ===== Fractal controls (hidden; params hardcoded below) ===== */
       #mb-controls{ display:none !important; }
 
+      /* Make grid/flex children allowed to shrink (prevents overflow by “min-content”) */
+.grid > *, .row > *, .card { min-width: 0; }
+
+/* Keep MathJax inside cards */
+.mjx-container { max-width: 100% !important; }
+
+/* SVG output: scale with container */
+.mjx-container[jax="SVG"] svg { max-width: 100% !important; height: auto !important; }
+
+/* Display math: tidy spacing & alignment */
+.mjx-container[jax="SVG"][display="true"] { display:block; text-align:left; margin:.35rem 0; }
+
+/* Neutralize any inherited nowraps */
+.mjx-container, .mjx-container * { white-space: normal !important; }
+
+/* If a parent forces overflow, contain it visually */
+.card { overflow: hidden; }
       
     </style>
   </head>

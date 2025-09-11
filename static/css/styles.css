@@ -223,3 +223,44 @@ body.is-article :is(.article-shell,#article-root) :where(.card,.panel,.section,.
 body.is-article :is(.article-shell,#article-root) h2{ font-size:20px; line-height:1.35; margin:22px 0 8px; font-weight:800; }
 body.is-article :is(.article-shell,#article-root) h3{ font-size:18px; line-height:1.35; margin:16px 0 6px;  font-weight:700; }
 body.is-article :is(.article-shell,#article-root) p { margin:10px 0; line-height:1.65; }
+
+/* ===== HERO: stay grid-wide, even after late CSS loads ===== */
+
+/* Make grid tracks robust against intrinsic min-widths (e.g., MathJax) */
+.grid.two   { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid       { align-items: stretch; }
+
+/* If hero is inside any grid, span all columns and stretch */
+.grid > .card.hero {
+  grid-column: 1 / -1 !important;
+  justify-self: stretch !important;
+}
+
+/* Nuke late width caps/centering that some themes add */
+.card.hero {
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Center display math in cards */
+.card mjx-container[jax="CHTML"][display="true"],
+.card mjx-container[jax="SVG"][display="true"]{
+  display:block;
+  text-align:center !important;   /* center the inline-block math */
+  margin:.45rem auto !important;  /* center the box itself */
+  overflow:visible;                /* avoid right-edge clipping */
+}
+
+/* (Optional) also force inline math onto its own line, but only inside cards */
+.card mjx-container[jax="CHTML"][display="false"],
+.card mjx-container[jax="SVG"][display="false"]{
+  display:block;                   /* break line */
+  text-align:center !important;
+  margin:.35rem auto !important;
+}
+
+/* If you wrap formulas with .math-block, keep it neutral */
+.math-block{ margin:.45rem 0; }
