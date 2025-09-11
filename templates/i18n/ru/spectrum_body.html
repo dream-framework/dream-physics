@@ -1,165 +1,172 @@
 {% block content %}
 <div class="container">
 
+  <div class="grid two" style="margin-top:1rem">
+    <!-- HERO в сетке (без сдвигов макета) -->
     <div class="card hero">
-        <h1>Фрактальный спектр и «лестница масс»</h1>
-        <p class="kicker">Эффективный спектральный показатель \(D_{\mathrm{eff}}\) управляет счётом мод, плотностью состояний и негармонической аксионоподобной «лестницей». Прогнозы опираются только на инварианты ядра.</p>
-        <p class="note">Математические блоки уважают ваш переключатель «Математика». Откройте небольшие раскрывающиеся блоки для выводов и ремарок.</p>
+      <h1>Фрактальный спектр и D<sub>eff</sub></h1>
+      <p class="kicker">Эффективный спектральный показатель \(D_{\mathrm{eff}}\) задаёт счёт мод и плотность состояний. Прогнозы опираются только на инварианты ядра.</p>
+      <p class="note">Блоки формул уважают переключатель «Math». Разворачивайте мини-капсулы для выводов и ремарок.</p>
+    </div> 
+
+    <!-- Интуиция -->
+    <div class="card">
+      <h2>Интуиция</h2>
+      <p class="core">Мы сжимаем 10-мерный Meta-Manifold (MM) в 4D конечным по разрешению ядром. Сжатие оставляет <em>спектральный отпечаток</em>, который кратко кодируется показателем \(D_{\mathrm{eff}}\): он управляет тем, сколько мод «доживает» до заданной шкалы и как располагаются соседние массы/частоты.</p>
+      <p>Вместо буквального «фрактального многообразия» мы используем эффективный параметр \(D_{\mathrm{eff}}\), который появляется в лабораторных спектрах, энтропийном масштабировании и космологических кросс-проверках.</p>
     </div>
 
-    <div class="grid two" style="margin-top:1rem">
-
-        <!-- Intuition -->
-        <div class="card">
-            <h2>Интуиция</h2>
-            <p class="core">D.R.E.A.M сжимает 10-мерное Мета-многообразие (MM) в 4D посредством ядра с конечным разрешением. Это сжатие оставляет <em>спектральный отпечаток</em>, суммируемый эффективным показателем \(D_{\mathrm{eff}}\): он задаёт, сколько мод сохраняется к данному масштабу, и как расположены соседние массы/частоты.</p>
-            <p>Вместо постулирования буквального «фрактального» многообразия мы упаковываем наблюдаемые следствия в \(D_{\mathrm{eff}}\), который входит в лабораторные спектры, масштабирование энтропии и космологические перекрёстные проверки.</p>
+    <!-- Эффективный показатель -->
+    <div class="card">
+      <h2>Эффективный спектральный показатель \(D_{\mathrm{eff}}\)</h2>
+      <p>Кумулятивный счёт мод ниже отсечки \(\Omega\) ведёт себя как</p>
+      <div class="math-block">
+        \[
+        N(\Omega)\;\propto\;\Omega^{\,D_{\mathrm{eff}}}
+        \quad\Rightarrow\quad
+        \rho(\Omega)=\tfrac{dN}{d\Omega}\propto\Omega^{\,D_{\mathrm{eff}}-1}.
+        \]
+      </div>
+      <p>Тот же показатель естественно возникает в ограниченных по полосе проекциях, создаваемых ядром конечного разрешения.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Почему «эффективный»?</strong> Формально мы работаем на гладких суррогатах, но наблюдаемые моды ведут себя <em>как если бы</em> их счёт задавался этим показателем; это удобная лабораторная ручка.</p>
+          <p><strong>Связь с удержанием.</strong> Закон удержания <span class="math-inline">\(\alpha(\lambda)=\exp[-(\lambda/\lambda_q)^{D_{\mathrm{eff}}}]\)</span> использует тот же показатель; вместе \(\alpha\) и \(N\) говорят, какие структуры переживают наблюдательную шкалу.</p>
         </div>
-
-        <!-- Effective spectral exponent -->
-        <div class="card">
-            <h2>Эффективный спектральный показатель \(D_{\mathrm{eff}}\)</h2>
-            <p>Накопленный счёт мод ниже отсечки \(\Omega\) масштабируется как</p>
-            <div class="math-block">
-                \[
-                N(\Omega)\;\propto\;\Omega^{\,D_{\mathrm{eff}}}\quad\Rightarrow\quad\rho(\Omega)=\tfrac{dN}{d\Omega}\propto\Omega^{\,D_{\mathrm{eff}}-1}.
-                \]
-            </div>
-            <p>Здесь \(\rho\) — плотность состояний. Тот же показатель возникает в полосо-ограниченных проекциях, производимых ядром конечного разрешения.</p>
-            <details class="more">
-                <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-                <div class="expander-body prose">
-                    <p><strong>Почему «эффективный»?</strong> Рабочая математика остаётся на гладких суррогатах, но наблюдательно удержанные моды ведут себя <em>как если бы</em> подчинялись этому показателю; это лаконичная лабораторная ручка.</p>
-                    <p><strong>Связка с четкость.</strong> Закон удержания <span class="math-inline">\(\alpha(\lambda)=\exp[-(\lambda/\lambda_q)^{D_{\mathrm{eff}}}]\)</span> использует тот же показатель; вместе \(\alpha\) и \(N\) определяют, какие структуры выживают при данном масштабе зонда.</p>
-                </div>
-            </details>
-        </div>
-
-        <!-- Ladder -->
-        <div class="card">
-            <h2>Негармоническая «лестница» масс/частот</h2>
-            <p class="core">Лёгкая аксионоподобная «башня» демонстрирует <em>негармоническую</em> разбивку, управляемую \(D_{\mathrm{eff}}\):</p>
-            <div class="math-block">
-                \[
-                \frac{m_n}{m_1}=n^{\,1/D_{\mathrm{eff}}},\qquad m_1\approx 65\,\mathrm{neV}\ \Rightarrow\ f_1\approx 15.717\,\mathrm{MHz}.
-                \]
-            </div>
-            <p>Эти числа фиксируют конкретные окна для галоскопов и отличают «лестницу» D.R.E.A.M от линейных KK-спектров.</p>
-            <details class="more">
-                <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-                <div class="expander-body prose">
-                    <p><strong>Поведение интервалов.</strong> При \(D_{\mathrm{eff}}>1\) отношение \(m_{n+1}/m_n\) убывает с \(n\), «сжимая» лестницу; при \(D_{\mathrm{eff}}<1\) интервалы растут быстрее гармоники.</p>
-                    <p><strong>Связи (couplings).</strong> Зависимые от мод связи могут варьировать вдоль башни; в прогнозах лучше указывать экспозицию по каждой моде, а не единую универсальную связь.</p>
-                </div>
-            </details>
-        </div>
-
-        <!-- Instrument mapping -->
-        <div class="card">
-            <h2>Картирование на инструменты</h2>
-            <ul>
-                <li><strong>Галоскопы:</strong> центрируйте поиски вокруг \(m_1\sim 65\,\mathrm{neV}\) (\(f_1\approx15.717\,\mathrm{MHz}\)); проверяйте отношения \(n^{1/D_{\mathrm{eff}}}\) для следующих ступеней.</li>
-                <li><strong>Интерферометрия/фотоника:</strong> используйте «обрыв» удержания возле \(\lambda_q\), чтобы совместно с спектральными подгонками ограничивать \(D_{\mathrm{eff}}\).</li>
-                <li><strong>Космические интерферометры:</strong> скрещивайте шаблоны торсиона/доп. поляризации с тем же показателем там, где уместно.</li>
-            </ul>
-            <p class="note">Сообщайте и базовую экспозицию (для первой ступени), и предположения по модам; ключевой дискриминатор D.R.E.A.M — это <em>закон отношений</em>, а не только попадание в базу.</p>
-        </div>
-
-        <!-- Density of states & entropy -->
-        <div class="card">
-            <h2>Плотность состояний и энтропия</h2>
-            <p>Асимптотически число полосо-ограниченных степеней свободы в области размера \(R\) масштабируется как</p>
-            <div class="math-block">
-                \[
-                \mathcal{N}(R)\;\sim\;\big(\tfrac{R}{\lambda_q}\big)^{\!D_{\mathrm{eff}}},
-                \]
-            </div>
-            <p>намечая эффективное масштабирование энтропии при фиксированной полосе. Это даёт космологические и структурные перекрёстные проверки по обзорам и фоновым спектрам.</p>
-        </div>
-
-        <!-- Cosmology cross-checks -->
-        <div class="card">
-            <h2>Космология и проверки структуры</h2>
-            <ul>
-                <li>Сравнивайте показатели, извлечённые из крупномасштабной структуры/фоновых спектров, с лабораторным \(D_{\mathrm{eff}}\).</li>
-                <li>Тренды энтропии и корреляционной длины должны согласовываться с масштабированием \(\mathcal{N}(R)\).</li>
-                <li>Стойкие расхождения между космологией и лабораторными подгонками дают рычаг для фальсификации.</li>
-            </ul>
-        </div>
-
-        <!-- Worked capsule -->
-        <div class="card">
-            <h2>Проработанная капсула (дидактика)</h2>
-            <p>Предположим \(N(\Omega)\propto \Omega^{\,D_{\mathrm{eff}}}\). Если граничные условия выбирают дискретные моды с монотонными индексами \(n\), то \(n\sim N(m_n)\Rightarrow m_n\propto n^{1/D_{\mathrm{eff}}}\), что и даёт закон «лестницы» выше.</p>
-            <details class="more">
-                <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-                <div class="expander-body prose">
-                    <p><strong>Неопределённости.</strong> Реальные приборы имеют конечные полосы, потери и форм-факторы связи. Подгоняйте базу и отношения совместно с «нечистотами»; закон отношений остаётся резким дискриминатором.</p>
-                </div>
-            </details>
-        </div>
-
-        <!-- Falsification -->
-        <div class="card">
-            <h2>Крючки фальсификации</h2>
-            <ul>
-                <li>Исключить базовое окно \(m_1\approx 65\,\mathrm{neV}\) <em>и</em> негармонические отношения на прогнозной чувствительности → «лестница» отвергается.</li>
-                <li>Платформы не показывают переход удержания возле заявленного \(\lambda_q\) → закон когерентности рушится (а с ним и ключевая связка с \(D_{\mathrm{eff}}\)).</li>
-                <li>Космологические показатели устойчиво несовместимы с лабораторным \(D_{\mathrm{eff}}\) после учёта систематики → перекрёстная проверка провалена.</li>
-            </ul>
-            <p class="note">Эти «ворота» ссылаются только на инварианты (\(\lambda_q, D_{\mathrm{eff}}\)), а не на конкретную формулу ядра.</p>
-        </div>
-
-        <!-- Speculative note -->
-        <div class="card speculative">
-            <h2 class="kicker">Интерпретативная заметка (спекулятивно)</h2>
-            <p>\(D_{\mathrm{eff}}\) можно читать как отпечаток глубоких организационных регулярностей на MM, переживающих проекцию. Это взгляд, а не требование для лабораторных прогнозов.</p>
-        </div>
-
+      </details>
     </div>
+
+    <!-- Ранжированные спектры (инвариантная форма) -->
+    <div class="card">
+      <h2>Ранжированные спектры (инвариантная форма)</h2>
+      <p class="core">Из \(N(\Omega)\!\propto\!\Omega^{D_{\mathrm{eff}}}\) следует <em>закон отношений</em> для ранжированного набора шкал \(\{\Omega_n\}\):</p>
+      <div class="math-block">
+        \[
+        \frac{\Omega_n}{\Omega_1}\;=\;n^{\,1/D_{\mathrm{eff}}}.
+        \]
+      </div>
+      <p>Закон относится к <em>отношениям</em>, а не к базовой шкале \(\Omega_1\): это и есть переносимый «отпечаток» \(D_{\mathrm{eff}}\) между площадками.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Сжатие/растяжение ступеней.</strong> При \(D_{\mathrm{eff}}>1\) отношение \(\Omega_{n+1}/\Omega_n\) убывает с \(n\) (лестница сжимается); при \(D_{\mathrm{eff}}<1\) — наоборот.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- Картирование на приборы -->
+    <div class="card">
+      <h2>Картирование на приборы</h2>
+      <ul>
+        <li><strong>Интерферометрия/фотоника:</strong> скан по «обрыву согласованности» около \(\lambda_q\) даёт пару \((\lambda_q, D_{\mathrm{eff}})\) совместно со спектральной подгонкой.</li>
+        <li><strong>Космос/гравио/крутильные каналы:</strong> при необходимости увязывайте шаблоны с тем же \(D_{\mathrm{eff}}\).</li>
+        <li><strong>Отчётность:</strong> помимо базовой чувствительности сообщайте допущения по модам — дискриминатором остаётся <em>закон отношений</em>.</li>
+      </ul>
+    </div>
+
+    <!-- Плотность состояний и «энтропия» -->
+    <div class="card">
+      <h2>Плотность состояний и «энтропия»</h2>
+      <p>Асимптотически число ограниченных по полосе степеней свободы в области размера \(R\) масштабируется как</p>
+      <div class="math-block">
+        \[
+        \mathcal{N}(R)\;\sim\;\Big(\tfrac{R}{\lambda_q}\Big)^{\!D_{\mathrm{eff}}}.
+        \]
+      </div>
+      <p>Это даёт энтропийные и корреляционные тренды, пригодные для кросс-проверок по крупномасштабной структуре и фоновой спектроскопии.</p>
+    </div>
+
+    <!-- Космологические кросс-чеки -->
+    <div class="card">
+      <h2>Космологические кросс-проверки</h2>
+      <ul>
+        <li>Сопоставьте \(D_{\mathrm{eff}}\) из LSS/фоновых спектров с лабораторными подгонками.</li>
+        <li>Тренды энтропии и длины корреляции должны быть согласованы со шкалированием \(\mathcal{N}(R)\).</li>
+        <li>Стойкие расхождения после учёта систематик — рычаг для опровержения.</li>
+      </ul>
+    </div>
+
+    <!-- Рабочая капсула -->
+    <div class="card">
+      <h2>Рабочая капсула (дидактика)</h2>
+      <p>Если \(N(\Omega)\propto \Omega^{D_{\mathrm{eff}}}\), а граничные условия выбирают дискретные моды с индексом \(n\), то \(n\sim N(m_n)\Rightarrow m_n\propto n^{1/D_{\mathrm{eff}}}\), что и даёт закон отношений выше.</p>
+      <details class="more">
+        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
+        <div class="expander-body prose">
+          <p><strong>Практика.</strong> Реальные спектры — с конечной полосой, потерями и форм-факторами связи. Фитируйте базу и отношения совместно; именно соотношения дают наилучший тест.</p>
+        </div>
+      </details>
+    </div>
+
+    <!-- Крючки для опровержения -->
+    <div class="card">
+      <h2>Крючки для опровержения</h2>
+      <ul>
+        <li>Отсутствие перехода удержания около заявленной \(\lambda_q\) на разных платформах рушит закон согласованности и связку с \(D_{\mathrm{eff}}\).</li>
+        <li>Устойчивая несовместимость космологических и лабораторных оценок \(D_{\mathrm{eff}}\) после систематик — отказ.</li>
+      </ul>
+      <p class="note">Эти проверки используют только инварианты (\(\lambda_q, D_{\mathrm{eff}}\)), а не конкретную форму ядра.</p>
+    </div>
+
+    <!-- Спекулятивно: ALP-лестница с базой -->
+    <div class="card speculative">
+      <h2 class="kicker">ALP-«лестница» (спекулятивно)</h2>
+      <p>Если читать \(\Omega\) как массу/частоту аксионоподобной башни, то</p>
+      <div class="math-block">
+        \[
+        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}},\qquad
+        \text{база } m_1 \text{ задаётся контекстом поиска.}
+        \]
+      </div>
+      <p class="note">Используйте <em>отношения</em> как инвариант; выбор базового окна — предмет конкретного эксперимента.</p>
+    </div>
+  </div>
 </div>
 
-<!-- Карточка: Фрактальный спектр — Полёт в реальном пространстве (S2, RU) -->
+<!-- S2-флайт: от «фрактального» к однородному -->
 <div class="card" style="overflow:hidden">
   <div class="row" style="align-items:center; gap:1rem">
     <div class="col">
-      <h2 style="margin:0">Фрактал → Однородность (полет в реальном пространстве)</h2>
+      <h2 style="margin:0">От «фрактального» к однородному (реальный пролёт)</h2>
       <p class="muted" style="margin:.25rem 0 0">
-        Двигайте <strong>масштаб зонда</strong>, чтобы увидеть, как мелкие детали гаснут по закону удержания. 
-        Стартуем с <em>малых расстояний</em> (пк/кпк) и выходим к Мпк/Гпк. Вы «летите» сквозь поле.
+        Двигайте <strong>шкалу зонда</strong>: мелкая структура гаснет по закону удержания. Старт с
+        <em>меньших расстояний</em> (пк/кпк) и выход к Мпк/Гпк. Вы «летите» сквозь поле.
       </p>
     </div>
     <div class="col" style="display:flex; gap:.5rem; justify-content:flex-end; flex-wrap:wrap">
-      <button id="fsx-tour" class="pill" style="cursor:pointer">Запустить авто‑тур</button>
+      <button id="fsx-tour" class="pill" style="cursor:pointer">Запустить авто-тур</button>
       <button id="fsx-reset" class="pill" style="cursor:pointer; background:#eef6f6; border-color:#cce7e4; color:#0b5250">Сброс</button>
     </div>
   </div>
 
-  <!-- Панель управления -->
+  <!-- Пульт -->
   <div class="row" style="align-items:center; gap:1rem; margin-top:.75rem">
-    <label>Масштаб зонда λ
-      <input id="fsx-lambda" type="range" min="-2" max="6" step="0.01" value="-0.5" title="log10 шкала: −2 → 6 (0.01 кпк → 1 Гпк)">
+    <label>Шкала зонда λ
+      <input id="fsx-lambda" type="range" min="-2" max="6" step="0.01" value="-0.5"
+             title="log10-шкала: −2 → 6 (0.01 кпк → 1 Гпк)">
     </label>
     <span class="pill">λ = <b id="fsx-lam-label">0.32 кпк</b></span>
     <label>Скорость полёта
       <input id="fsx-speed" type="range" min="0" max="1" step="0.01" value="0.35">
     </label>
-    <label><input id="fsx-showR" type="checkbox" checked> Показывать затухание (Retention)</label>
+    <label><input id="fsx-showR" type="checkbox" checked> Показать затухание удержания</label>
   </div>
+
   <div class="muted" style="display:flex; justify-content:space-between; font-size:.82rem; margin:.25rem 0 .25rem">
-    <span>0,01 кпк</span><span>0,1 кпк</span><span>1 кпк</span><span>10 кпк</span><span>100 кпк</span><span>1 Мпк</span><span>10 Мпк</span><span>100 Мпк</span><span>1 Гпк</span>
+    <span>0.01 кпк</span><span>0.1 кпк</span><span>1 кпк</span><span>10 кпк</span><span>100 кпк</span><span>1 Мпк</span><span>10 Мпк</span><span>100 Мпк</span><span>1 Гпк</span>
   </div>
 
   <!-- Визуализация -->
   <div id="fsx-viz" style="position:relative; height:56vh; min-height:420px; border-radius:12px; overflow:hidden; background:var(--card)">
     <canvas id="fsx-canvas" style="width:100%; height:100%; display:block; border-radius:12px"></canvas>
 
-    <!-- Коуч-подсказка -->
+    <!-- подсказывающий блок -->
     <div id="fsx-coach" style="position:absolute; left:8px; top:8px; background:rgba(255,255,255,.92);
          color:var(--fg,#0b0b0c); border:1px solid #e5e7eb; padding:.45rem .6rem; border-radius:10px;
          max-width:min(520px,70%); font-size:.92rem"></div>
 
-    <!-- Бейдж горизонта -->
+    <!-- бейдж горизонта -->
     <div id="fsx-badge" style="position:absolute; top:8px; right:8px; background:rgba(15,118,110,.92); color:#fff;
          padding:.3rem .55rem; border-radius:999px; font-size:.85rem">
       Горизонт размытия λ<sub>q</sub> = <span id="fsx-lq">100 Мпк</span>
@@ -168,18 +175,38 @@
     <!-- HUD -->
     <div id="fsx-hud" style="position:absolute; left:8px; bottom:8px; background:rgba(0,0,0,.45); color:#fff;
          padding:.35rem .55rem; border-radius:10px; font-size:.9rem">
-      λ=<b id="fsx-hud-lam">0.32 кпк</b> · D<sub>эфф</sub>(λ)=<b id="fsx-hud-de">2.00</b> · R(λ)=<b id="fsx-hud-r">0.98000</b>
+      λ=<b id="fsx-hud-lam">0.32 кпк</b> · D<sub>eff</sub>(λ)=<b id="fsx-hud-de">2.00</b> · R(λ)=<b id="fsx-hud-r">0.98000</b>
     </div>
   </div>
 
   <p class="muted" style="margin:.6rem 0 0">
-    Учебная линия: наблюдаемая Вселенная — это размытая проекция; закон удержания (S2) описывает, как с ростом масштаба затухают контраст и корреляции.
+    Учебная мысль: наблюдаемая Вселенная — размытая проекция; закон удержания управляет тем, как исчезают контраст и корреляции при росте масштаба.
   </p>
 </div>
 
+<style>
+  /* Минимум стилей для предсказуемости */
+  .grid.two > .card.hero { grid-column: 1 / -1; }
+
+  /* Спекулятивное: ВЫКЛ по умолчанию; ВКЛ через body.spec-on */
+  .speculative { display: none; }
+  body.spec-on .card.speculative { display: block; }
+  body.spec-on .speculative:not(.card) { display: inline; }
+</style>
+
+<script>
+  // Уважать глобальный переключатель «Speculative»
+  document.addEventListener('DOMContentLoaded', () => {
+    const t = document.getElementById('speculativeToggle');
+    const apply = () => document.body.classList.toggle('spec-on', !!(t && t.checked));
+    apply();
+    t && t.addEventListener('change', apply);
+  });
+</script>
+
 <script>
 (() => {
-  // ===== Палитра (синхронизация с сайтом) =====
+  // ===== Палитра (авто-синхрон с сайтом) =====
   function cssVar(name){ const v=getComputedStyle(document.documentElement).getPropertyValue(name); return v && v.trim()? v.trim(): null; }
   function pickAccentFromDOM() {
     const probes = [
@@ -201,6 +228,7 @@
 
   // ===== DOM =====
   const canvas = document.getElementById('fsx-canvas');
+  const viz    = document.getElementById('fsx-viz');
   const ctx    = canvas.getContext('2d');
   const DPR    = Math.max(1, window.devicePixelRatio || 1);
 
@@ -221,14 +249,14 @@
 
   // ===== Модель (S2) =====
   const LAMBDA_Q = 100; // Мпк
-  function Deff(lamMpc){ // 1.75 -> 3.0 по мере роста масштаба
+  function Deff(lamMpc){ // 1.75 -> 3.0 по масштабу
     const D0=1.75, Dmax=3.0, a=1.35;
     const x = Math.max(lamMpc,0)/(LAMBDA_Q||1);
     return D0 + (Dmax-D0)*(1 - Math.exp(-Math.pow(x,a)));
   }
   function R(lamMpc, De){
     const x = Math.max(lamMpc,0)/(LAMBDA_Q||1);
-    return Math.exp(-Math.pow(x,De)); // чистый S2
+    return Math.exp(-Math.pow(x,De)); // чистая S2
   }
   function prettyLoss(Rv){
     const loss = 1 - Rv;
@@ -239,16 +267,16 @@
   }
   function lamFromSlider(log10kpc){ return Math.pow(10, log10kpc)/1000; } // Мпк
 
-  // ===== RNG и поле =====
+  // ===== RNG & поле =====
   function rng(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t^=t+Math.imul(t^t>>>7,61|t); return ((t^t>>>14)>>>0)/4294967296; }; }
   const rand=rng(0xD1EA_D5);
 
   const Z_NEAR=5, Z_FAR=2000, R_MAX=650;
-  const POINTS=[], N_POINTS=11000; // мягче сетка
+  const POINTS=[], N_POINTS=11000;
   for(let i=0;i<N_POINTS;i++){
     const z=Z_NEAR + rand()*(Z_FAR-Z_NEAR);
-    const band=rand(); // 0..1 — тонкие→крупные
-    const De_local = 1.85 + 1.0*band; // умеренная «паутина»
+    const band=rand(); // 0..1 fine->coarse
+    const De_local = 1.85 + 1.0*band;
     const r = Math.pow(rand(), 1/De_local) * R_MAX * (0.8 + 0.2*rand());
     const th = 2*Math.PI*rand();
     POINTS.push({x:r*Math.cos(th), y:r*Math.sin(th), z, band});
@@ -263,7 +291,7 @@
 
   // ===== Полёт и UI =====
   let camZ=Z_NEAR, tPrev=performance.now(), tAnim=0, auto=false, autoDir=+1;
-  btnTour.addEventListener('click', ()=>{ auto=!auto; btnTour.textContent = auto? 'Остановить авто‑тур' : 'Запустить авто‑тур'; });
+  btnTour.addEventListener('click', ()=>{ auto=!auto; btnTour.textContent = auto? 'Остановить авто-тур' : 'Запустить авто-тур'; });
   btnReset.addEventListener('click', ()=>{ camZ=Z_NEAR; sLambda.value = -0.5; });
   sLambda.addEventListener('input', ()=> updateHUD());
 
@@ -279,24 +307,24 @@
     hudDe.textContent  = De.toFixed(2);
     hudR.textContent   = showR.checked ? Ret.toFixed(5) : '—';
 
-    // Простая «живая» подсказка
+    // Текст-подсказка
     const lossTxt = prettyLoss(Ret);
     let msg = '';
-    if (lamMpc < 0.001)       msg = `Внутри суб‑кпк области. Мелкие зерна яркие. R≈<b>${Ret.toFixed(5)}</b> (потеря ${lossTxt}).`;
-    else if (lamMpc < 0.05)   msg = `Кпк‑масштабы: тонкие нити заметны; самая мелкая «пыль» гаснет первой. R≈<b>${Ret.toFixed(4)}</b> (потеря ${lossTxt}).`;
-    else if (lamMpc < 0.5)    msg = `10–500 кпк: каркас сохраняется; дымка растёт. R≈<b>${Ret.toFixed(4)}</b> (потеря ${lossTxt}).`;
-    else if (lamMpc < 5)      msg = `Кластерный режим: остаётся «скелет». R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
-    else if (lamMpc < 50)     msg = `Суперскопления (фрактально‑похоже, D≈${De.toFixed(2)}). R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
-    else if (lamMpc < 150)    msg = `У горизонта размытия: перекорреляции почти исчезли. R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
-    else                      msg = `Выше горизонта: однородность (D→3). R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
+    if (lamMpc < 0.001)       msg = `Внутри суб-кпк. Мелкая «зернистость» яркая. R≈<b>${Ret.toFixed(5)}</b> (потеря ${lossTxt}).`;
+    else if (lamMpc < 0.05)   msg = `Шкалы кпк: нитевидные структуры проявлены; пыль уходит первой. R≈<b>${Ret.toFixed(4)}</b> (потеря ${lossTxt}).`;
+    else if (lamMpc < 0.5)    msg = `10–500 кпк: «паутинка» держится, растёт дымка. R≈<b>${Ret.toFixed(4)}</b> (потеря ${lossTxt}).`;
+    else if (lamMpc < 5)      msg = `Кластерный режим: хребет ещё виден. R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
+    else if (lamMpc < 50)     msg = `Сверхскопления (паутинно, D≈${De.toFixed(2)}). R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
+    else if (lamMpc < 150)    msg = `У горизонта размытия: корреляции почти ушли. R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
+    else                      msg = `За горизонтом: однородность (D→3). R≈<b>${Ret.toFixed(3)}</b> (потеря ${lossTxt}).`;
     coach.innerHTML = msg;
   }
 
-  // ===== Анимация =====
+  // ===== Рендер-цикл =====
   function frame(now){
     const dt = Math.min(0.06, (now - tPrev)/1000); tPrev=now; tAnim += dt;
 
-    // Авто‑тур: плавно водим лог‑λ
+    // Авто-тур: sweep по log-λ
     if (auto){
       let v=0.15; let val=parseFloat(sLambda.value);
       val += autoDir*v*dt; if (val>6){ val=6; autoDir=-1; } if (val<-2){ val=-2; autoDir=+1; }
@@ -304,7 +332,7 @@
     }
     updateHUD();
 
-    // Движение камеры
+    // Камера
     const speed = 12 + 520*parseFloat(sSpeed.value);
     camZ += speed*dt; if (camZ > Z_FAR) camZ = Z_NEAR;
 
@@ -313,13 +341,13 @@
     ctx.fillStyle = CLR_BG; ctx.fillRect(0,0,canvas.width,canvas.height);
     const w=canvas.width, h=canvas.height, cx=w/2, cy=h/2, fov=640;
 
-    // Полезные локали
+    // Локальные
     const logLam = parseFloat(sLambda.value);
     const lamMpc = lamFromSlider(logLam);
     const De     = Deff(lamMpc);
     const Ret    = R(lamMpc, De);
 
-    // Движущиеся «строки» (ощущение полёта)
+    // Шлейфы движения
     ctx.globalAlpha = 0.18 + 0.55*parseFloat(sSpeed.value);
     ctx.strokeStyle = CLR_ACC2; ctx.lineWidth = 1.5*DPR;
     for(const s of STREAKS){
@@ -329,7 +357,7 @@
       ctx.beginPath(); ctx.moveTo(px*DPR,(py+len)*DPR); ctx.lineTo(px*DPR,(py-len)*DPR); ctx.stroke();
     }
 
-    // Точки с затуханием S2 (тонкие полосы гаснут быстрее при росте λ)
+    // Точки с затуханием S2
     for(const p of POINTS){
       let z=p.z - camZ; if(z<1){ z += (Z_FAR-Z_NEAR); p.z=z+camZ; }
       const zp=z+1, px=cx+(p.x*fov/zp), py=cy+(p.y*fov/zp);
@@ -349,21 +377,20 @@
       ctx.beginPath(); ctx.arc(px*DPR, py*DPR, size*DPR*(0.85+0.35*alpha), 0, Math.PI*2); ctx.fill();
     }
 
-    // Туман → однородность
+    // «Туман» → однородность
     const fog = Math.min(0.6, (lamMpc/LAMBDA_Q)*0.8);
     if (fog>0){ ctx.globalAlpha = fog; ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,w,h); }
 
     requestAnimationFrame(frame);
   }
-  updateHUD();
-  requestAnimationFrame(frame);
+  (function boot(){ updateHUD(); requestAnimationFrame(frame); })();
 })();
 </script>
 
 <script>
-// Повторно отрисовать математику после раскрытия «Показать подробнее»
-document.querySelectorAll('details.more').forEach(d=>{
-  d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d]));
-});
+  // MathJax: типографика только при раскрытии капсул
+  document.querySelectorAll('details.more').forEach(d=>{
+    d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d]));
+  });
 </script>
 {% endblock %}

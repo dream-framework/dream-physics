@@ -1,52 +1,56 @@
-
 {% block content %}
 <div class="container">
 
-  <div class="card hero">
-    <h1>Fractal Spectrum &amp; Mass Ladder</h1>
-    <p class="kicker">Effective spectral exponent \(D_{\mathrm{eff}}\) controls mode counting, density of states, and the non‑harmonic axion‑like ladder. Forecasts use only kernel invariants.</p>
-    <p class="note">Math blocks respect your Math toggle. Open the small expanders for derivations and side notes.</p>
-  </div>
-
   <div class="grid two" style="margin-top:1rem">
+    <!-- HERO in-grid (no layout shifts) -->
+    <div class="card hero">
+  <h1>Fractal Spectrum & D<sub>eff</sub></h1>
+  <p class="kicker">The effective spectral exponent \(D_{\mathrm{eff}}\) controls mode counting and density of states. Forecasts rely only on kernel invariants.</p>
+  <p class="note">Math is hidden by default. Use the “Math” toggle to reveal formulas.</p>
+</div>
 
     <!-- Intuition -->
     <div class="card">
       <h2>Intuition</h2>
-      <p class="core">D.R.E.A.M compresses a 10D Meta‑Manifold (MM) into 4D with a finite‑resolution kernel. The compression leaves a <em>spectral footprint</em> summarized by an effective exponent \(D_{\mathrm{eff}}\): it governs how many modes survive up to a scale and how nearby masses/frequencies are spaced.</p>
-      <p>Instead of postulating a literal fractal manifold, we package the observable consequences in \(D_{\mathrm{eff}}\), which enters lab spectra, entropy scaling, and cosmological cross‑checks.</p>
+      <p class="core">We compress a 10D Meta-Manifold (MM) into 4D with a finite-resolution kernel. That compression leaves a <em>spectral footprint</em> summarized by \(D_{\mathrm{eff}}\): it governs how many modes survive up to a given scale and how nearby masses/frequencies are spaced.</p>
+      <p>Instead of positing a literal “fractal manifold,” we package observable consequences in \(D_{\mathrm{eff}}\), which appears in lab spectra, entropy-like scaling, and cosmology cross-checks.</p>
     </div>
 
-    <!-- Effective spectral exponent -->
+    <!-- Effective exponent -->
     <div class="card">
       <h2>Effective spectral exponent \(D_{\mathrm{eff}}\)</h2>
       <p>The cumulative mode count below a cutoff \(\Omega\) scales as</p>
-      <div class="math-block">\[
-        N(\Omega)\;\propto\;\Omega^{\,D_{\mathrm{eff}}}\quad\Rightarrow\quad\rho(\Omega)=\tfrac{dN}{d\Omega}\propto\Omega^{\,D_{\mathrm{eff}}-1}.
-      \]</div>
-      <p>Here \(\rho\) is the density of states. The same exponent appears in band‑limited projections produced by the finite‑resolution kernel.</p>
+      <div class="math-block">
+        \[
+        N(\Omega)\;\propto\;\Omega^{\,D_{\mathrm{eff}}}
+        \quad\Rightarrow\quad
+        \rho(\Omega)=\tfrac{dN}{d\Omega}\propto\Omega^{\,D_{\mathrm{eff}}-1}.
+        \]
+      </div>
+      <p>Here \(\rho\) is the density of states. The same exponent naturally appears in band-limited projections created by a finite-resolution kernel.</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
         <div class="expander-body prose">
-          <p><strong>Why an “effective” exponent?</strong> We keep the working math on smooth surrogates, but observationally the retained modes behave <em>as if</em> they followed this exponent; it is the succinct lab handle.</p>
-          <p><strong>Interplay with fidelity.</strong> The retention law <span class="math-inline">\(\alpha(\lambda)=\exp[-(\lambda/\lambda_q)^{D_{\mathrm{eff}}}]\)</span> uses the same exponent; together, \(\alpha\) and \(N\) determine which structures survive at a given probe scale.</p>
+          <p><strong>Why “effective”?</strong> Formally we work on smooth surrogates, yet the retained modes behave <em>as if</em> their counting followed this exponent; it’s the succinct lab handle.</p>
+          <p><strong>Link to retention.</strong> The retention law <span class="math-inline">\(\alpha(\lambda)=\exp[-(\lambda/\lambda_q)^{D_{\mathrm{eff}}}]\)</span> uses the same exponent; together \(\alpha\) and \(N\) decide what structure survives at a given probe scale.</p>
         </div>
       </details>
     </div>
 
-    <!-- Ladder -->
+    <!-- Ranked spectra (invariant form) -->
     <div class="card">
-      <h2>Non‑harmonic mass/frequency ladder</h2>
-      <p class="core">A light axion‑like tower exhibits <em>non‑harmonic</em> spacing governed by \(D_{\mathrm{eff}}\):</p>
-      <div class="math-block">\[
-        \frac{m_n}{m_1}=n^{\,1/D_{\mathrm{eff}}},\qquad m_1\approx 65\,\mathrm{neV}\ \Rightarrow\ f_1\approx 15.717\,\mathrm{MHz}.
-      \]</div>
-      <p>These numbers fix concrete windows for haloscopes and distinguish D.R.E.A.M’s ladder from linear KK spectra.</p>
+      <h2>Ranked spectra (invariant form)</h2>
+      <p class="core">From \(N(\Omega)\!\propto\!\Omega^{D_{\mathrm{eff}}}\) one gets a cross-domain <em>ratio law</em> for the ranked set \(\{\Omega_n\}\):</p>
+      <div class="math-block">
+        \[
+        \frac{\Omega_n}{\Omega_1}\;=\;n^{\,1/D_{\mathrm{eff}}}.
+        \]
+      </div>
+      <p>The law is about <em>ratios</em>, not the base \(\Omega_1\). That’s the portable fingerprint of \(D_{\mathrm{eff}}\) across platforms.</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
         <div class="expander-body prose">
-          <p><strong>Spacing behavior.</strong> For \(D_{\mathrm{eff}}>1\) the ratio \(m_{n+1}/m_n\) decreases with \(n\), producing a compressed ladder; for \(D_{\mathrm{eff}}<1\) it spreads faster than harmonic.</p>
-          <p><strong>Couplings.</strong> Mode‑dependent couplings can vary across the tower; forecasts should report exposure assumptions per mode rather than a single universal coupling.</p>
+          <p><strong>Step compression/spread.</strong> If \(D_{\mathrm{eff}}>1\), \(\Omega_{n+1}/\Omega_n\) decreases with \(n\) (compressed ladder); if \(D_{\mathrm{eff}}<1\), it spreads faster than harmonic.</p>
         </div>
       </details>
     </div>
@@ -55,62 +59,68 @@
     <div class="card">
       <h2>Instrument mapping</h2>
       <ul>
-        <li><strong>Haloscopes:</strong> center searches around \(m_1\sim 65\,\mathrm{neV}\) (\(f_1\approx15.717\,\mathrm{MHz}\)); check ratios \(n^{1/D_{\mathrm{eff}}}\) for the next rungs.</li>
-        <li><strong>Interferometry/photonic platforms:</strong> use the retention cliff near \(\lambda_q\) to bracket \(D_{\mathrm{eff}}\) jointly with spectral fits.</li>
-        <li><strong>Space‑based interferometers:</strong> cross‑link torsion/extra‑polarization templates with the same exponent where relevant.</li>
+        <li><strong>Interferometry/photonic:</strong> scan across the <em>coherence cliff</em> near \(\lambda_q\) to constrain \((\lambda_q, D_{\mathrm{eff}})\) jointly with spectral fits.</li>
+        <li><strong>Space/grav/torsion channels:</strong> where relevant, tie templates to the same \(D_{\mathrm{eff}}\).</li>
+        <li><strong>Reporting:</strong> alongside base exposure, state per-mode assumptions; the <em>ratio law</em> is the key discriminator.</li>
       </ul>
-      <p class="note">Report both base exposure (for the first rung) and per‑mode assumptions; D.R.E.A.M’s key discriminator is the <em>ratio law</em>, not just the base hit.</p>
     </div>
 
     <!-- Density of states & entropy -->
     <div class="card">
-      <h2>Density of states &amp; entropy</h2>
-      <p>Asymptotically, the number of band‑limited degrees of freedom in a region of size \(R\) scales like</p>
-      <div class="math-block">\[
-        \mathcal{N}(R)\;\sim\;\big(\tfrac{R}{\lambda_q}\big)^{\!D_{\mathrm{eff}}},
-      \]</div>
-      <p>suggesting an effective entropy scaling at fixed bandwidth. This provides cosmological and structural cross‑checks against surveys and background spectra.</p>
+      <h2>Density of states & “entropy”</h2>
+      <p>Asymptotically, the number of band-limited degrees of freedom in a region of size \(R\) scales like</p>
+      <div class="math-block">
+        \[
+        \mathcal{N}(R)\;\sim\;\Big(\tfrac{R}{\lambda_q}\Big)^{\!D_{\mathrm{eff}}}.
+        \]
+      </div>
+      <p>This yields entropy- and correlation-length trends, useful for cross-checks with large-scale structure and background spectra.</p>
     </div>
 
     <!-- Cosmology cross-checks -->
     <div class="card">
-      <h2>Cosmology &amp; structure cross‑checks</h2>
+      <h2>Cosmology cross-checks</h2>
       <ul>
-        <li>Compare exponents inferred from large‑scale structure / background spectra to lab‑inferred \(D_{\mathrm{eff}}\).</li>
-        <li>Entropy and correlation‑length trends should be consistent with the \(\mathcal{N}(R)\) scaling.</li>
-        <li>Divergences between cosmology and lab fits provide leverage for falsification.</li>
+        <li>Compare \(D_{\mathrm{eff}}\) inferred from LSS/background spectra to lab fits.</li>
+        <li>Entropy and correlation-length trends should follow the \(\mathcal{N}(R)\) scaling.</li>
+        <li>Stable discrepancies after systematics provide leverage for falsification.</li>
       </ul>
     </div>
 
     <!-- Worked capsule -->
     <div class="card">
       <h2>Worked capsule (didactic)</h2>
-      <p>Assume cumulative count \(N(\Omega)\propto \Omega^{\,D_{\mathrm{eff}}}\). If boundary conditions select discrete modes with monotone indices \(n\), then \(n\sim N(m_n)\Rightarrow m_n\propto n^{1/D_{\mathrm{eff}}}\), yielding the ladder law above.</p>
+      <p>If \(N(\Omega)\propto \Omega^{D_{\mathrm{eff}}}\) and boundary conditions select discrete modes with monotone index \(n\), then \(n\sim N(m_n)\Rightarrow m_n\propto n^{1/D_{\mathrm{eff}}}\), i.e., the ratio law above.</p>
       <details class="more">
         <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
         <div class="expander-body prose">
-          <p><strong>Uncertainties.</strong> Real instruments see finite bandwidths, losses, and coupling form‑factors. Fit base and ratios jointly with nuisance parameters; the ratio‑law remains the sharp discriminator.</p>
+          <p><strong>Practice.</strong> Real spectra have finite bandwidth, losses, and coupling form-factors. Fit base and ratios jointly with nuisance parameters; the ratio law remains the sharp test.</p>
         </div>
       </details>
     </div>
 
-    <!-- Falsification -->
+    <!-- Falsification hooks -->
     <div class="card">
       <h2>Falsification hooks</h2>
       <ul>
-        <li>Exclude the base window \(m_1\approx 65\,\mathrm{neV}\) <em>and</em> the non‑harmonic ratios at forecast sensitivity → the ladder claim fails.</li>
-        <li>Instruments across platforms show no retention transition near the posited \(\lambda_q\) → the coherence law fails (and with it a key link to \(D_{\mathrm{eff}}\)).</li>
-        <li>Cosmological exponents remain stably inconsistent with lab‑inferred \(D_{\mathrm{eff}}\) after systematics → cross‑check fails.</li>
+        <li>No retention transition near the posited \(\lambda_q\) across platforms ⇒ the coherence law fails (and with it a key link to \(D_{\mathrm{eff}}\)).</li>
+        <li>Cosmology- vs lab-inferred \(D_{\mathrm{eff}}\) remain consistently inconsistent after systematics ⇒ cross-check fails.</li>
       </ul>
-      <p class="note">These gates reference only invariants (\(\lambda_q, D_{\mathrm{eff}}\)), not a specific kernel formula.</p>
+      <p class="note">These gates use only invariants (\(\lambda_q, D_{\mathrm{eff}}\)), not any particular kernel formula.</p>
     </div>
 
-    <!-- Speculative note (optional section; hidden by default in your site) -->
+    <!-- Speculative: ALP ladder with base -->
     <div class="card speculative">
-      <h2 class="kicker">Interpretive note (speculative)</h2>
-      <p>One may read \(D_{\mathrm{eff}}\) as the footprint of deeper organizational regularities on MM that survive projection. This is a lens, not a requirement for the lab forecasts.</p>
+      <h2 class="kicker">ALP ladder (speculative)</h2>
+      <p>If one reads \(\Omega\) as mass/frequency of an axion-like tower, then</p>
+      <div class="math-block">
+        \[
+        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}},\qquad
+        \text{the base } m_1 \text{ is experiment-specific.}
+        \]
+      </div>
+      <p class="note">Use <em>ratios</em> as the invariant; the base window is a search choice.</p>
     </div>
-
   </div>
 </div>
 
@@ -130,11 +140,11 @@
     </div>
   </div>
 
-  <!-- Controls row -->
+  <!-- Controls -->
   <div class="row" style="align-items:center; gap:1rem; margin-top:.75rem">
     <label>Probe scale λ
       <input id="fsx-lambda" type="range" min="-2" max="6" step="0.01" value="-0.5"
-       title="log10 шкала: −2 → 6 (0.01 кпк → 1 Гпк)">
+             title="log10 scale: −2 → 6 (0.01 kpc → 1 Gpc)">
     </label>
     <span class="pill">λ = <b id="fsx-lam-label">0.32 kpc</b></span>
     <label>Flight speed
@@ -150,7 +160,7 @@
   <div id="fsx-viz" style="position:relative; height:56vh; min-height:420px; border-radius:12px; overflow:hidden; background:var(--card)">
     <canvas id="fsx-canvas" style="width:100%; height:100%; display:block; border-radius:12px"></canvas>
 
-    <!-- top-left coach -->
+    <!-- coach -->
     <div id="fsx-coach" style="position:absolute; left:8px; top:8px; background:rgba(255,255,255,.92);
          color:var(--fg,#0b0b0c); border:1px solid #e5e7eb; padding:.45rem .6rem; border-radius:10px;
          max-width:min(520px,70%); font-size:.92rem"></div>
@@ -172,6 +182,26 @@
     Teaching line: the universe you measure is a blurred projection; the retention law governs how contrast and correlation fade with scale.
   </p>
 </div>
+
+<style>
+  /* Minimal, deterministic */
+  .grid.two > .card.hero { grid-column: 1 / -1; }
+
+  /* Speculative: OFF by default; ON via body.spec-on */
+  .speculative { display: none; }
+  body.spec-on .card.speculative { display: block; }
+  body.spec-on .speculative:not(.card) { display: inline; }
+</style>
+
+<script>
+  // Respect the global “Speculative” toggle
+  document.addEventListener('DOMContentLoaded', () => {
+    const t = document.getElementById('speculativeToggle');
+    const apply = () => document.body.classList.toggle('spec-on', !!(t && t.checked));
+    apply();
+    t && t.addEventListener('change', apply);
+  });
+</script>
 
 <script>
 (() => {
@@ -236,12 +266,12 @@
   }
   function lamFromSlider(log10kpc){ return Math.pow(10, log10kpc)/1000; } // Mpc
 
-  // ===== RNG & Field =====
+  // ===== RNG & field =====
   function rng(seed){ return function(){ seed|=0; seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t^=t+Math.imul(t^t>>>7,61|t); return ((t^t>>>14)>>>0)/4294967296; }; }
   const rand=rng(0xD1EA_D5);
 
   const Z_NEAR=5, Z_FAR=2000, R_MAX=650;
-  const POINTS=[], N_POINTS=11000; // tuned lower for softer web
+  const POINTS=[], N_POINTS=11000;
   for(let i=0;i<N_POINTS;i++){
     const z=Z_NEAR + rand()*(Z_FAR-Z_NEAR);
     const band=rand(); // 0..1 fine->coarse band
@@ -279,7 +309,7 @@
     // Plain-English coach
     const lossTxt = prettyLoss(Ret);
     let msg = '';
-    if (lamMpc < 0.001)       msg = `Inside sub-kpc patch. Fine grains vivid. R≈<b>${Ret.toFixed(5)}</b> (loss ${lossTxt}).`;
+    if (lamMpc < 0.001)       msg = `Inside sub-kpc patch. Fine grain vivid. R≈<b>${Ret.toFixed(5)}</b> (loss ${lossTxt}).`;
     else if (lamMpc < 0.05)   msg = `kpc scales: thin threads pop; tiny dust fades first. R≈<b>${Ret.toFixed(4)}</b> (loss ${lossTxt}).`;
     else if (lamMpc < 0.5)    msg = `10–500 kpc: web persists; haze grows. R≈<b>${Ret.toFixed(4)}</b> (loss ${lossTxt}).`;
     else if (lamMpc < 5)      msg = `Cluster regime: backbone remains. R≈<b>${Ret.toFixed(3)}</b> (loss ${lossTxt}).`;
@@ -293,7 +323,7 @@
   function frame(now){
     const dt = Math.min(0.06, (now - tPrev)/1000); tPrev=now; tAnim += dt;
 
-    // Auto tour sweeps log-λ
+    // Auto-tour: sweep log-λ
     if (auto){
       let v=0.15; let val=parseFloat(sLambda.value);
       val += autoDir*v*dt; if (val>6){ val=6; autoDir=-1; } if (val<-2){ val=-2; autoDir=+1; }
@@ -301,7 +331,7 @@
     }
     updateHUD();
 
-    // Camera move
+    // Camera
     const speed = 12 + 520*parseFloat(sSpeed.value);
     camZ += speed*dt; if (camZ > Z_FAR) camZ = Z_NEAR;
 
@@ -310,7 +340,7 @@
     ctx.fillStyle = CLR_BG; ctx.fillRect(0,0,canvas.width,canvas.height);
     const w=canvas.width, h=canvas.height, cx=w/2, cy=h/2, fov=640;
 
-    // Useful locals
+    // Locals
     const logLam = parseFloat(sLambda.value);
     const lamMpc = lamFromSlider(logLam);
     const De     = Deff(lamMpc);
@@ -326,13 +356,12 @@
       ctx.beginPath(); ctx.moveTo(px*DPR,(py+len)*DPR); ctx.lineTo(px*DPR,(py-len)*DPR); ctx.stroke();
     }
 
-    // Point cloud with S2 fading by band (fine bands fade faster as λ grows)
+    // Point cloud with S2 fading
     for(const p of POINTS){
       let z=p.z - camZ; if(z<1){ z += (Z_FAR-Z_NEAR); p.z=z+camZ; }
       const zp=z+1, px=cx+(p.x*fov/zp), py=cy+(p.y*fov/zp);
       if (px<-50||px>w+50||py<-50||py>h+50) continue;
 
-      // band scaling & filament softening
       const bandScale = p.band<0.33? 2.2 : p.band<0.66? 1.0 : 0.6;
       const De_local  = Deff(lamMpc*0.9);
       const baseAlpha = showR.checked ? Math.exp(-Math.pow((lamMpc*bandScale)/LAMBDA_Q, De_local)) : 1.0;
@@ -353,15 +382,14 @@
 
     requestAnimationFrame(frame);
   }
-  updateHUD();
-  requestAnimationFrame(frame);
+  (function boot(){ updateHUD(); requestAnimationFrame(frame); })();
 })();
 </script>
 
 <script>
-// Re-typeset math after an expander is opened
-document.querySelectorAll('details.more').forEach(d=>{
-  d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d]));
-});
+  // MathJax: typeset only when a capsule opens
+  document.querySelectorAll('details.more').forEach(d=>{
+    d.addEventListener('toggle', ()=> d.open && window.MathJax?.typeset && MathJax.typeset([d]));
+  });
 </script>
 {% endblock %}
