@@ -1,11 +1,8 @@
 {% block content %}
 
 <style>
-  /* HERO spans the grid — no width hacks, no CLS */
   .grid.two > .card.hero { grid-column: 1 / -1; }
-
-  /* Speculative visibility: minimal and deterministic */
-  .speculative { display: none; }                 /* default OFF */
+  .speculative { display: none; }
   body.spec-on .card.speculative { display: block; }
   body.spec-on .speculative:not(.card) { display: inline; }
 </style>
@@ -23,150 +20,118 @@ document.addEventListener('DOMContentLoaded', () => {
 
   <div class="grid two" style="margin-top:1rem">
 
-    <!-- HERO moved inside the grid so it matches other cards and doesn't shift -->
+    <!-- HERO -->
     <div class="card hero">
       <h1>Main Theorems</h1>
-      <p class="kicker">The principal results derived from the core axioms, expressed as testable relationships among <em>invariants</em>.</p>
-      <p class="note">Each theorem comes with a brief derivation/proof sketch and operational readouts. Math is hidden by default—use the “Math” toggle in the header.</p>
+      <p class="kicker">Key results derived from DREAM axioms, formulated as testable relationships between invariants.</p>
+      <p class="note">
+        Math hidden by default — toggle “Math” in header. Status:
+        <span class="badge ok sm">Confirmed</span>
+        <span class="badge warn sm">Partial</span>
+        <span class="badge spec sm">Speculative</span>.
+      </p>
     </div>
 
-    <!-- Capsule list of theorems -->
+    <!-- Capsule -->
     <div class="card">
-      <h2>Capsule — the main theorems</h2>
+      <h2>Capsule — theorem list</h2>
       <ol>
-        <li><strong>T1 — Topological Quantization</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Confirmed</span></li>
-        <li><strong>T2 — Symmetry Projection (Noether under push-forward)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></li>
-        <li><strong>T3 — Coherence Threshold (Retention Law)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Confirmed</span></li>
-        <li><strong>T4 — Structure Focusing &amp; CPI (Support to S2)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></li>
-        <li><strong>T5 — Dimensional Flow to Homogeneity</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></li>
-        <li><strong>T6 — Cross-domain Ranked-Spectrum Ratio Law</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></li>
+        <li><strong>T1 — Topological Quantization</strong> <span class="badge ok sm">Confirmed</span></li>
+        <li><strong>T2 — Symmetry Projection (Noether under push-forward)</strong> <span class="badge warn sm">Partial</span></li>
+        <li><strong>T3 — Coherence Threshold (Retention Law)</strong> <span class="badge ok sm">Confirmed</span></li>
+        <li><strong>T4 — Structure Focusing &amp; CPI</strong> <span class="badge warn sm">Partial</span></li>
+        <li><strong>T5 — Dimensional Flow to Homogeneity</strong> <span class="badge warn sm">Partial</span></li>
+        <li><strong>T6 — Cross-domain Ranked-Spectrum Ratio Law</strong> <span class="badge warn sm">Partial</span></li>
       </ol>
-      <p class="note">Former “ALP ladder” tied to S1 is relegated below as <em>speculative</em> (kept for completeness, hidden when the Speculative toggle is off).</p>
+      <p class="note">
+        S2 (Retention Law) is foundation. S1 (“ALP ladder / dust”) is relegated and shown only as speculative.
+      </p>
     </div>
 
     <!-- T1 -->
     <div class="card">
-      <h2>T1 — Topological Quantization <span class="badge" style="background-color:#2ecc71;color:#fff;">Confirmed</span></h2>
-      <p class="core">Stable integer invariants on the compact Meta-Manifold label discrete 4D classes; charges and indices are quantized under projection.</p>
+      <h2>T1 — Topological Quantization <span class="badge ok sm">Confirmed</span></h2>
+      <p class="core">Integer-valued topological invariants on the compact Meta-Manifold label discrete 4D classes; charges and indices remain quantized after projection.</p>
       <div class="math-block">\[
         Q_{\mathrm{U(1)}}=\frac{1}{2\pi}\oint A\in\mathbb{Z},\qquad 
         k=\frac{1}{8\pi^2}\int \operatorname{tr}(F\wedge F)\in\mathbb{Z}.
       \]</div>
-      <p><strong>Operational readouts.</strong> Integer charges and instanton numbers; selection rules from class arithmetic; anomaly cancellation as a consistency constraint.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Sketch.</strong> On a compact smooth base, integer topological data persist under continuous deformations and survive push-forward; discrete 4D observables follow from A5.</p>
-        </div>
-      </details>
+      <p><strong>Operational.</strong> Discrete charges and instantons; selection rules; anomaly cancellation.</p>
     </div>
 
     <!-- T2 -->
     <div class="card">
-      <h2>T2 — Symmetry Projection (Noether under push-forward) <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></h2>
-      <p class="core">With kernel equivariance, Noether currents commute with projection: continuous 10D symmetries yield conserved 4D quantities.</p>
+      <h2>T2 — Symmetry Projection <span class="badge warn sm">Partial</span></h2>
+      <p class="core">If the kernel is equivariant, Noether currents commute with projection: continuous 10D symmetries yield conserved 4D quantities.</p>
       <div class="math-block">\[
-        K_\lambda(g\!\cdot\!x;g\!\cdot\!X)=K_\lambda(x;X)\quad\Longrightarrow\quad
-        \delta O(x)=\!\int K_\lambda\,\delta\Phi\,d\mu_{\mathrm{MM}}=0\ \Rightarrow\ \partial_\mu J^\mu=0.
+        K_\lambda(gx;gX)=K_\lambda(x;X)\ \Rightarrow\ \partial_\mu J^\mu=0.
       \]</div>
-      <p><strong>Operational readouts.</strong> Check conservation to machine precision; search for symmetry-breaking artifacts that would falsify kernel equivariance.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Sketch.</strong> If 10D fields are invariant and \(K_\lambda\) respects the symmetry, the projected observable is invariant; Noether in 4D yields the conserved current.</p>
-        </div>
-      </details>
+      <p><strong>Operational.</strong> Test conservation to high precision; search for symmetry-breaking artifacts.</p>
     </div>
 
     <!-- T3 -->
     <div class="card">
-      <h2>T3 — Coherence Threshold (Retention Law) <span class="badge" style="background-color:#2ecc71;color:#fff;">Confirmed</span></h2>
-      <p class="core">A coherence scale \( \lambda_q \) separates regimes: below, interference-grade invariants retain; above, coarse-graining dominates.</p>
+      <h2>T3 — Coherence Threshold (Retention Law) <span class="badge ok sm">Confirmed</span></h2>
+      <p class="core">A coherence scale \(\lambda_q\) separates regimes: below, interference-grade invariants persist; above, coarse-graining dominates.</p>
       <div class="math-block">\[
-        R(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big],\qquad
-        \ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda-D_{\mathrm{eff}}\ln\lambda_q.
+        R(\lambda)=\exp[-(\tfrac{\lambda}{\lambda_q})^{D_{\mathrm{eff}}}],\quad
+        y=\ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda-D_{\mathrm{eff}}\ln\lambda_q.
       \]</div>
-      <p><strong>Operational readouts.</strong> Two channels follow the same law with their own \( \lambda_q,D_{\mathrm{eff}} \): HF power \(R_{\mathrm{HF}}(\lambda)\) and structural correlation \(R_{\mathrm{struct}}(\lambda)=\mathrm{corr}^2(e_4|_{\lambda\to0},e_4|_\lambda)\).</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Sketch.</strong> Finite-resolution push-forward sums \(\sim(\lambda/\lambda_q)^{D_{\mathrm{eff}}}\) incoherent micro-cells; exponential fidelity in that count yields the stretched-exponential retention law.</p>
-        </div>
-      </details>
+      <p><strong>Operational.</strong> Two channels with shared \(\lambda_q\): HF power \(R_{\mathrm{HF}}(\lambda)\) and structural correlation \(R_{\mathrm{corr}^2}(\lambda)\).</p>
     </div>
 
     <!-- T4 -->
     <div class="card">
-      <h2>T4 — Structure Focusing &amp; CPI (Support to S2) <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></h2>
-      <p class="core">Small fiber Jacobian produces hubs/filaments that persist under smoothing; CPI quantifies the local microstate budget and predicts where structure survives longest.</p>
+      <h2>T4 — Structure Focusing &amp; CPI <span class="badge warn sm">Partial</span></h2>
+      <p class="core">Small fiber Jacobians produce hubs/filaments persisting under smoothing; CPI quantifies local microstate budgets and predicts where structure survives longer.</p>
       <div class="math-block">\[
-        A(x)\ \sim\ \big\langle J_\pi^{-1}\big\rangle,\qquad
-        M(\lambda,\varepsilon;x)\ \sim\ A(x)\,\big(\tfrac{\lambda}{\varepsilon}\big)^{D_I},\quad
-        \mathrm{CPI}(x)=\log_{10} M.
+        A(x)\sim\langle J_F^{-1}\rangle,\quad
+        M(\lambda,\varepsilon;x)\sim A(x)(\tfrac{\lambda}{\varepsilon})^{D_I},\quad
+        \mathrm{CPI}=\log_{10} M.
       \]</div>
-      <p><strong>Operational readouts.</strong> Elevated retention in high-\(A(x)\) regions; slower decay of \(R_{\mathrm{struct}}\) vs \(R_{\mathrm{HF}}\) consistent with web-like skeleton persistence.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Sketch.</strong> Coarea amplifies density where \(J_\pi\) is small; CPI formalizes mode-packing with scale. Together with T3, explains why structure fades more slowly than HF content.</p>
-        </div>
-      </details>
+      <p><strong>Operational.</strong> Elevated retention in high-\(A(x)\) regions; slower decay of structure vs HF detail.</p>
     </div>
 
     <!-- T5 -->
     <div class="card">
-      <h2>T5 — Dimensional Flow to Homogeneity <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></h2>
-      <p class="core">Under S2, the effective dimension inferred from structure flows toward \(3\) on large scales: fractal-like signatures are finite-range (sub-\( \lambda_q \)) only; homogeneity emerges above.</p>
+      <h2>T5 — Dimensional Flow to Homogeneity <span class="badge warn sm">Partial</span></h2>
+      <p class="core">Under retention, effective dimension flows toward 3 on large scales: fractal signatures are finite-range only; homogeneity emerges above the cliff.</p>
       <div class="math-block">\[
-        D_{\mathrm{eff}}(\lambda)\ \nearrow\ 3\quad\text{as}\ \lambda\to\infty.
-      </div>
-      <p><strong>Operational readouts.</strong> Log-log counts approach \(3\)-D scaling beyond the retention cliff; cross-scale correlations vanish as predicted by T3.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Sketch.</strong> The stretched-exponential suppression of HF detail and correlations implies an approach to 3D coarse geometry, reconciling web-like sub-\( \lambda_q \) structure with large-scale homogeneity.</p>
-        </div>
-      </details>
+        D_{\mathrm{eff}}(\lambda)\nearrow 3\quad \text{as }\lambda\to\infty.
+      \]</div>
+      <p><strong>Operational.</strong> Counts approach cubic scaling beyond the cliff; cross-scale correlations vanish.</p>
     </div>
 
     <!-- T6 -->
     <div class="card">
-      <h2>T6 — Cross-domain Ranked-Spectrum Ratio Law <span class="badge" style="background-color:#2ecc71;color:#fff;">Partially confirmed</span></h2>
-      <p class="core">The cumulative retained modes scale as \(N(\Omega)\!\sim\!\Omega^{D_{\mathrm{eff}}}\); ranked energies/masses obey the ratio law independent of base:</p>
+      <h2>T6 — Cross-domain Ranked-Spectrum Ratio Law <span class="badge warn sm">Partial</span></h2>
+      <p class="core">Cumulative retained modes scale as \(N(\Omega)\sim\Omega^{D_{\mathrm{eff}}}\); ranked energies/masses obey ratio laws (base context-specific, ratios invariant).</p>
       <div class="math-block">\[
-        N(\Omega)\sim\Omega^{D_{\mathrm{eff}}},\quad \rho(\Omega)\sim\Omega^{D_{\mathrm{eff}}-1},\qquad
+        N(\Omega)\propto\Omega^{D_{\mathrm{eff}}},\quad
+        \rho(\Omega)\propto\Omega^{D_{\mathrm{eff}}-1},\quad
         \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}.
       \]</div>
-      <p><strong>Operational readouts.</strong> Fit \(D_{\mathrm{eff}}\) from retained-mode counts and check the ranked-ratio prediction where applicable (note: base \(m_1\) is context-set; the <em>ratio</em> is the invariant part).</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Sketch.</strong> Density of states with effective dimension \(D_{\mathrm{eff}}\) leads to \(N\!\propto\!\Omega^{D_{\mathrm{eff}}}\); inverting gives ranked scales \(\propto n^{1/D_{\mathrm{eff}}}\).</p>
-        </div>
-      </details>
+      <p><strong>Operational.</strong> Fit \(D_{\mathrm{eff}}\) from retained-mode counts/spectral slopes; check ranked-ratio predictions where ladders apply.</p>
     </div>
 
-    <!-- Relegated S1 item (kept for completeness) -->
+    <!-- Relegated -->
     <div class="card speculative">
-      <h2>ALP / non-harmonic ladder (relegated)</h2>
-      <p class="core">Under the current posture, S1 (ALP/dust) is assumed null below the cliff and is not used to support the framework; the ladder relation is shown only as a speculative extension.</p>
+      <h2>ALP / non-harmonic ladder <span class="badge spec sm">Speculative</span></h2>
+      <p class="core">S1 is null under current posture; the ladder relation is shown for completeness only, not as foundation.</p>
       <div class="math-block">\[
-        m_n = m_1\, n^{1/D_{\mathrm{eff}}}.
+        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}.
       \]</div>
-      <p class="note">Hidden when the Speculative toggle is off.</p>
     </div>
 
-    <!-- Interpretive note -->
     <div class="card speculative">
       <h2 class="kicker">Interpretive note (speculative)</h2>
-      <p>Think of T3–T5 as the “how blur eats detail” trilogy: retention sets the law, focusing explains the skeleton that outlives HF content, and dimensional flow explains why the universe looks homogeneous at the largest scales.</p>
+      <p>T3–T5 form the “blur trilogy”: retention sets the law, focusing explains skeleton persistence, and dimensional flow explains the approach to homogeneity.</p>
     </div>
 
   </div>
 </div>
 
 <script>
-/* Typeset only when an expander opens (prevents spinner loops) */
 document.querySelectorAll('details.more').forEach(d=>{
   d.addEventListener('toggle', ()=>{
     if (d.open && window.MathJax && MathJax.typeset) MathJax.typeset([d]);

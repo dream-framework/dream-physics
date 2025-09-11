@@ -393,3 +393,5 @@ td .badge, th .badge { margin: 0 .15rem; }
   background: currentColor; opacity: .75;
 }
 .badge.no-dot::before { display: none; }
+
+.oaicite,[data-oaicite]{ display:none !important; }

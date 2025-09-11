@@ -1,11 +1,8 @@
-{% block content %} 
+{% block content %}
 
 <style>
-  /* HERO spans the grid — no width hacks, no CLS */
   .grid.two > .card.hero { grid-column: 1 / -1; }
-
-  /* Speculative visibility: minimal and deterministic */
-  .speculative { display: none; }                 /* default OFF */
+  .speculative { display: none; }
   body.spec-on .card.speculative { display: block; }
   body.spec-on .speculative:not(.card) { display: inline; }
 </style>
@@ -26,147 +23,142 @@ document.addEventListener('DOMContentLoaded', () => {
     <!-- HERO -->
     <div class="card hero">
       <h1>Основные теоремы</h1>
-      <p class="kicker">Главные результаты, выводимые из базовых аксиом, как тестируемые связи между <em>инвариантами</em>.</p>
-      <p class="note">Для каждой теоремы приведены краткая идея доказательства и операционные метрики. Математика скрыта по умолчанию — используйте переключатель «Math» в шапке.</p>
+      <p class="kicker">Главные результаты, выведенные из аксиом, выражены как проверяемые соотношения между <em>инвариантами</em>.</p>
+      <p class="note">
+        Формулы скрыты по умолчанию — включите глобальный тумблер «Math» в шапке. Статусы:
+        <span class="badge ok sm">Подтверждено</span>
+        <span class="badge warn sm">Частично</span>
+        <span class="badge spec sm">Спекулятивно</span>.
+      </p>
     </div>
 
-    <!-- Capsule list of theorems -->
+    <!-- Capsule -->
     <div class="card">
       <h2>Капсула — основные теоремы</h2>
       <ol>
-        <li><strong>T1 — Топологическое квантование</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></li>
-        <li><strong>T2 — Проекция симметрий (Нётер при проталкивании)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
-        <li><strong>T3 — Порог когерентности (закон удержания)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></li>
-        <li><strong>T4 — Фокусировка структуры и CPI (поддержка S2)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
-        <li><strong>T5 — Размерностное течение к однородности</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
-        <li><strong>T6 — Междоменный закон ранжированных спектров (отношений)</strong> <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></li>
+        <li><strong>T1 — Топологическая квантизация</strong> <span class="badge ok sm">Подтверждено</span></li>
+        <li><strong>T2 — Проекция симметрий (Нётер под push-forward)</strong> <span class="badge warn sm">Частично</span></li>
+        <li><strong>T3 — Порог когерентности (Закон удержания)</strong> <span class="badge ok sm">Подтверждено</span></li>
+        <li><strong>T4 — Фокусировка структуры и CPI</strong> <span class="badge warn sm">Частично</span></li>
+        <li><strong>T5 — Поток размерности к однородности</strong> <span class="badge warn sm">Частично</span></li>
+        <li><strong>T6 — Междоменный закон ранжированных спектров</strong> <span class="badge warn sm">Частично</span></li>
       </ol>
-      <p class="note">Бывшая «лестница ALP», связанная с S1, переведена ниже в раздел <em>спекулятивно</em> (для полноты; скрывается, когда выключен переключатель «Спекулятивно»).</p>
+      <p class="note">
+        S2 (Закон удержания) — фундамент <span class="badge ok sm">Подтверждено</span>.
+        S1 (лестница/пыль) <span class="badge spec sm">Релегировано</span> и оставлено ниже лишь для полноты.
+      </p>
     </div>
 
     <!-- T1 -->
     <div class="card">
-      <h2>T1 — Топологическое квантование <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></h2>
-      <p class="core">Устойчивые целочисленные инварианты на компактном Метамногообразии размечают дискретные 4D-классы; заряды и индексы квантуются при проекции.</p>
+      <h2>T1 — Топологическая квантизация <span class="badge ok sm">Подтверждено</span></h2>
+      <p class="core">Целые топологические инварианты на компактном MM маркируют дискретные 4D-классы; заряды и индексы остаются квантизованными после проекции.</p>
       <div class="math-block">\[
-        Q_{\mathrm{U(1)}}=\frac{1}{2\pi}\oint A\in\mathbb{Z},\qquad 
-        k=\frac{1}{8\pi^2}\int \operatorname{tr}(F\wedge F)\in\mathbb{Z}.
+        Q_{\mathrm{U(1)}}=\tfrac{1}{2\pi}\oint A\in\mathbb{Z},\qquad 
+        k=\tfrac{1}{8\pi^2}\int \operatorname{tr}(F\wedge F)\in\mathbb{Z}.
       \]</div>
-      <p><strong>Операционные метрики.</strong> Целочисленные заряды и числа инстантонов; правила отбора из арифметики классов; требование компенсации аномалий как условие согласованности.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Эскиз.</strong> На гладкой компактной базе целочисленные топологические данные сохраняются при непрерывных деформациях и переживают проталкивание; дискретные 4D-наблюдаемые следуют из A5.</p>
-        </div>
-      </details>
+      <p><strong>Операционные выводы.</strong> Целочисленные заряды и инстантонные числа; правила отбора; согласование аномалий.</p>
     </div>
 
     <!-- T2 -->
     <div class="card">
-      <h2>T2 — Проекция симметрий (Нётер при проталкивании) <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
-      <p class="core">При эквивариантном ядре токи Нётера «коммутируют» с проекцией: непрерывные 10D-симметрии дают сохраняющиеся 4D-величины.</p>
+      <h2>T2 — Проекция симметрий (Нётер) <span class="badge warn sm">Частично</span></h2>
+      <p class="core">При эквивариантности ядра токи Нётера коммутируют с проекцией: непрерывные 10D-симметрии → сохраняемые 4D-величины.</p>
       <div class="math-block">\[
-        K_\lambda(g\!\cdot\!x;g\!\cdot\!X)=K_\lambda(x;X)\quad\Longrightarrow\quad
-        \delta O(x)=\!\int K_\lambda\,\delta\Phi\,d\mu_{\mathrm{MM}}=0\ \Rightarrow\ \partial_\mu J^\mu=0.
+        K_\lambda(gx;gX)=K_\lambda(x;X)\ \Rightarrow\ \partial_\mu J^\mu=0.
       \]</div>
-      <p><strong>Операционные метрики.</strong> Проверка законов сохранения с машинной точностью; поиск артефактов, нарушающих эквивариантность ядра.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Эскиз.</strong> Если 10D-поля инвариантны и \(K_\lambda\) уважает симметрию, то и 4D-наблюдаемая инвариантна; теорема Нётера даёт сохранение тока.</p>
-        </div>
-      </details>
+      <p><strong>Операционные выводы.</strong> Проверка сохранения до машинной точности; поиск нарушений эквивариантности ядра.</p>
     </div>
 
     <!-- T3 -->
     <div class="card">
-      <h2>T3 — Порог когерентности (закон удержания) <span class="badge" style="background-color:#2ecc71;color:#fff;">Подтверждено</span></h2>
-      <p class="core">Существует шкала когерентности \( \lambda_q \), разделяющая режимы: ниже сохраняются интерференционные инварианты, выше доминирует грубое усреднение.</p>
+      <h2>T3 — Порог когерентности (Закон удержания) <span class="badge ok sm">Подтверждено</span></h2>
+      <p class="core">Существует масштаб когерентности \(\lambda_q\), ниже которого интерференционные инварианты сохраняются, а выше доминирует усреднение.</p>
       <div class="math-block">\[
-        R(\lambda)=\exp\!\Big[-\big(\tfrac{\lambda}{\lambda_q}\big)^{D_{\mathrm{eff}}}\Big],\qquad
-        \ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda-D_{\mathrm{eff}}\ln\lambda_q.
+        R(\lambda)=\exp[-(\tfrac{\lambda}{\lambda_q})^{D_{\mathrm{eff}}}],\qquad
+        y=\ln(-\ln R)=D_{\mathrm{eff}}\ln\lambda-D_{\mathrm{eff}}\ln\lambda_q.
       \]</div>
-      <p><strong>Операционные метрики.</strong> Два канала следуют одному закону с собственными \( \lambda_q,D_{\mathrm{eff}} \): ВЧ-мощность \(R_{\mathrm{HF}}(\lambda)\) и структурная корреляция \(R_{\mathrm{struct}}(\lambda)=\mathrm{corr}^2(e_4|_{\lambda\to0},e_4|_\lambda)\).</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Эскиз.</strong> Конечное разрешение суммирует \(\sim(\lambda/\lambda_q)^{D_{\mathrm{eff}}}\) некогерентных микрокомпонент; экспоненциальная «верность» по их числу даёт растянутую экспоненту удержания.</p>
-        </div>
-      </details>
+      <p><strong>Операционные выводы.</strong> Два канала (HF и corr²) подчиняются одной форме закона с общим \(\lambda_q\), но разными наклонами.</p>
     </div>
 
     <!-- T4 -->
     <div class="card">
-      <h2>T4 — Фокусировка структуры и CPI (поддержка S2) <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
-      <p class="core">Малый якобиан волокна порождает «узлы/нити», переживающие сглаживание; CPI количествует локальный бюджет микросостояний и предсказывает, где структура живёт дольше всего.</p>
+      <h2>T4 — Фокусировка структуры и CPI <span class="badge warn sm">Частично</span></h2>
+      <p class="core">Малые якобианы порождают хабы/филаменты, устойчивые к сглаживанию; CPI оценивает локальный бюджет микросостояний.</p>
       <div class="math-block">\[
-        A(x)\ \sim\ \big\langle J_\pi^{-1}\big\rangle,\qquad
-        M(\lambda,\varepsilon;x)\ \sim\ A(x)\,\big(\tfrac{\lambda}{\varepsilon}\big)^{D_I},\quad
-        \mathrm{CPI}(x)=\log_{10} M.
+        A(x)\sim\langle J_F^{-1}\rangle,\quad
+        M(\lambda,\varepsilon;x)\sim A(x)(\tfrac{\lambda}{\varepsilon})^{D_I},\quad
+        \mathrm{CPI}=\log_{10} M.
       \]</div>
-      <p><strong>Операционные метрики.</strong> Повышенное удержание в областях с большим \(A(x)\); более медленный спад \(R_{\mathrm{struct}}\) по сравнению с \(R_{\mathrm{HF}}\), согласующийся с долговечностью «скелета».</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Эскиз.</strong> Коареа-формула усиливает плотность там, где мал \(J_\pi\); CPI описывает уплотнение мод с масштабом. В связке с T3 объясняет, почему структура убывает медленнее ВЧ-контента.</p>
-        </div>
-      </details>
+      <p><strong>Операционные выводы.</strong> Повышенное удержание в областях с высоким A(x); более медленное затухание структурных корреляций.</p>
     </div>
 
     <!-- T5 -->
     <div class="card">
-      <h2>T5 — Размерностное течение к однородности <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
-      <p class="core">При S2 эффективная размерность, извлекаемая из структуры, стремится к \(3\) на больших масштабах: «фрактальные» признаки — только в окне ниже \( \lambda_q \); выше проявляется однородность.</p>
+      <h2>T5 — Поток размерности к однородности <span class="badge warn sm">Частично</span></h2>
+      <p class="core">Под действием S2 эффективная размерность стремится к 3 на больших масштабах; фрактальные признаки ограничены под-\(\lambda_q\) диапазоном.</p>
       <div class="math-block">\[
-        D_{\mathrm{eff}}(\lambda)\ \nearrow\ 3\quad\text{при}\ \lambda\to\infty.
-      </div>
-      <p><strong>Операционные метрики.</strong> На лог-лог подсчётах появляется \(3\)D-скейлинг за «обрывом»; межмасштабные корреляции исчезают в соответствии с T3.</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Эскиз.</strong> Растянутая экспонента подавляет ВЧ-деталь и корреляции, что ведёт к 3D-грубой геометрии, согласуя «паутинную» суб-\( \lambda_q \) структуру с крупномасштабной однородностью.</p>
-        </div>
-      </details>
+        D_{\mathrm{eff}}(\lambda)\nearrow 3 \quad \text{при }\lambda\to\infty.
+      \]</div>
+      <p><strong>Операционные выводы.</strong> Подсчёты → кубическая зависимость за пределом «обрыва»; корреляции исчезают.</p>
     </div>
 
     <!-- T6 -->
     <div class="card">
-      <h2>T6 — Междоменный закон ранжированных спектров (отношений) <span class="badge" style="background-color:#2ecc71;color:#fff;">Частично подтверждено</span></h2>
-      <p class="core">Кумулятивное число сохраняемых мод масштабируется как \(N(\Omega)\!\sim\!\Omega^{D_{\mathrm{eff}}}\); ранжированные энергии/массы obey закон отношений, независимый от базы:</p>
+      <h2>T6 — Междоменный закон спектров <span class="badge warn sm">Частично</span></h2>
+      <p class="core">Число сохраняемых мод растёт как \(N(\Omega)\!\sim\!\Omega^{D_{\mathrm{eff}}}\); для дискретных рядов действует закон отношений (база контекстна). Отдельно от S1.</p>
       <div class="math-block">\[
-        N(\Omega)\sim\Omega^{D_{\mathrm{eff}}},\quad \rho(\Omega)\sim\Omega^{D_{\mathrm{eff}}-1},\qquad
-        \frac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}.
+        N(\Omega)\propto\Omega^{D_{\mathrm{eff}}},\quad
+        \rho(\Omega)\propto\Omega^{D_{\mathrm{eff}}-1},\quad
+        \tfrac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}.
       \]</div>
-      <p><strong>Операционные метрики.</strong> Оценка \(D_{\mathrm{eff}}\) по счёту сохраняемых мод и проверка предсказания по ранг-отношениям там, где применимо (база \(m_1\) контекстна; инвариант — <em>отношение</em>).</p>
-      <details class="more">
-        <summary aria-label="{{ _('ui.read_more') }}"><span class="sr-only">{{ _('ui.read_more') }}</span></summary>
-        <div class="expander-body prose">
-          <p><strong>Эскиз.</strong> Плотность состояний с эффективной размерностью \(D_{\mathrm{eff}}\) даёт \(N\!\propto\!\Omega^{D_{\mathrm{eff}}}\); обращение ведёт к ранг-масштабам \(\propto n^{1/D_{\mathrm{eff}}}\).</p>
-        </div>
-      </details>
+      <p><strong>Операционные выводы.</strong> Подгонка \(D_{\mathrm{eff}}\) по подсчётам/наклонам; проверка закона отношений там, где применим.</p>
     </div>
 
-    <!-- Relegated S1 item (kept for completeness) -->
+    <!-- S1 (relegated) -->
     <div class="card speculative">
-      <h2>ALP / негармоническая «лестница» (переведено)</h2>
-      <p class="core">В текущей постановке S1 (ALP/«пыль») считается нулевой ниже «обрыва» и не используется для опоры каркаса; соотношение «лестницы» сохранено лишь как спекулятивное расширение.</p>
+      <h2>ALP / негармоническая лестница <span class="badge spec sm">Спекулятивно</span></h2>
+      <p class="core">
+        В текущей позиции S1 считается нулевым: пыль/лестница не восстанавливаются ниже \(\lambda_q\).
+        Соотношение приведено только как дополнение.
+      </p>
       <div class="math-block">\[
-        m_n = m_1\, n^{1/D_{\mathrm{eff}}}.
+        \tfrac{m_n}{m_1}=n^{1/D_{\mathrm{eff}}}.
       \]</div>
-      <p class="note">Скрывается, когда «Спекулятивно» выключено.</p>
     </div>
 
     <!-- Interpretive note -->
     <div class="card speculative">
       <h2 class="kicker">Интерпретационная заметка (спекулятивно)</h2>
-      <p>Думайте о T3–T5 как о триаде «как размывание съедает деталь»: T3 задаёт закон удержания, T4 объясняет долговечность «скелета» относительно ВЧ-контента, T5 — почему на крупнейших масштабах возникает однородность.</p>
+      <p>T3–T5 образуют «трилогию о том, как размывание съедает детали»: закон удержания задаёт форму, фокусировка объясняет скелет, а поток размерности объясняет выход к однородности.</p>
     </div>
 
   </div>
 </div>
 
 <script>
-/* Typeset only when an expander opens (prevents spinner loops) */
+(function(){
+  const patterns = [
+    /【\d+†source】/g,                     // chat-style file cites
+    /contentReference\|oaicite:\d+\s*\{[^}]*\}/g, // oaicite blocks
+    /\{index=\d+\}/g                      // stray index braces
+  ];
+  function clean(node){
+    node.childNodes.forEach(n=>{
+      if(n.nodeType===3){                 // text node
+        let t = n.nodeValue;
+        patterns.forEach(rx => t = t.replace(rx,''));
+        if(t !== n.nodeValue) n.nodeValue = t;
+      } else if(n.nodeType===1){          // element
+        clean(n);
+      }
+    });
+  }
+  document.addEventListener('DOMContentLoaded', ()=> clean(document.body));
+})();
+</script>
+
+<script>
 document.querySelectorAll('details.more').forEach(d=>{
   d.addEventListener('toggle', ()=>{
     if (d.open && window.MathJax && MathJax.typeset) MathJax.typeset([d]);
