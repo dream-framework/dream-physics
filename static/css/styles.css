@@ -264,3 +264,132 @@ body.is-article :is(.article-shell,#article-root) p { margin:10px 0; line-height
 
 /* If you wrap formulas with .math-block, keep it neutral */
 .math-block{ margin:.45rem 0; }
+
+
+/* ===========================
+   Badges (global)
+   =========================== */
+
+/* Theme tokens */
+:root {
+  --badge-bg:        #EEF2FF; /* default bg */
+  --badge-fg:        #1E2A78; /* default text */
+
+  --badge-ok-bg:     #E6F6EE;
+  --badge-ok-fg:     #0F6B3E;
+
+  --badge-warn-bg:   #FFF4E5;
+  --badge-warn-fg:   #8A4B00;
+
+  --badge-spec-bg:   #F3E8FF;
+  --badge-spec-fg:   #5B21B6;
+
+  --badge-ring:      rgba(0,0,0,.06);
+  --badge-shadow:    0 1px 0 rgba(0,0,0,.05);
+  --badge-radius:    999px;
+  --badge-weight:    600;
+
+  --badge-pad-x:     .55rem;
+  --badge-pad-y:     .20rem;
+  --badge-gap:       .35rem;
+  --badge-font:      .80rem;      /* base size */
+  --badge-letter:    .02em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --badge-bg:        #28304A;
+    --badge-fg:        #E6ECFF;
+
+    --badge-ok-bg:     #123B2A;
+    --badge-ok-fg:     #C7F7E0;
+
+    --badge-warn-bg:   #3D2A13;
+    --badge-warn-fg:   #FFE2BD;
+
+    --badge-spec-bg:   #2B2040;
+    --badge-spec-fg:   #E9D5FF;
+
+    --badge-ring:      rgba(255,255,255,.10);
+    --badge-shadow:    none;
+  }
+}
+
+/* Base badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--badge-gap);
+  padding: var(--badge-pad-y) var(--badge-pad-x);
+  border-radius: var(--badge-radius);
+  font-size: var(--badge-font);
+  font-weight: var(--badge-weight);
+  line-height: 1;
+  letter-spacing: var(--badge-letter);
+  color: var(--badge-fg);
+  background: var(--badge-bg);
+  box-shadow: var(--badge-shadow);
+  border: 1px solid var(--badge-ring);
+  vertical-align: middle;
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* Variants */
+.badge.ok   { background: var(--badge-ok-bg);   color: var(--badge-ok-fg);   }
+.badge.warn { background: var(--badge-warn-bg); color: var(--badge-warn-fg); }
+.badge.spec { background: var(--badge-spec-bg); color: var(--badge-spec-fg); }
+
+/* Optional outline style (e.g., .badge.warn.outline) */
+.badge.outline {
+  background: transparent !important;
+  box-shadow: none;
+}
+.badge.ok.outline   { color: var(--badge-ok-fg);   border-color: color-mix(in oklab, var(--badge-ok-fg), transparent 70%); }
+.badge.warn.outline { color: var(--badge-warn-fg); border-color: color-mix(in oklab, var(--badge-warn-fg), transparent 70%); }
+.badge.spec.outline { color: var(--badge-spec-fg); border-color: color-mix(in oklab, var(--badge-spec-fg), transparent 70%); }
+
+/* Size modifiers */
+.badge.sm { --badge-pad-x:.45rem; --badge-pad-y:.15rem; --badge-font:.72rem; }
+.badge.lg { --badge-pad-x:.70rem; --badge-pad-y:.28rem; --badge-font:.92rem; }
+
+/* Icon slot (if you drop <svg> or <i> inside) */
+.badge > svg, .badge > i {
+  width: 1em; height: 1em; flex: 0 0 auto;
+}
+
+/* Inline in headings: preserve rhythm without shifting line height */
+h1 .badge, h2 .badge, h3 .badge {
+  position: relative; top: -.04em;
+  margin-left: .5rem;
+}
+
+/* Table cells: keep badges tidy */
+td .badge, th .badge { margin: 0 .15rem; }
+
+/* Reduced motion: no transitions to respect user setting */
+@media (prefers-reduced-motion: reduce) {
+  .badge { transition: none !important; }
+}
+
+/* Print: remove shadows, keep strong borders */
+@media print {
+  .badge {
+    box-shadow: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Utility: stacked list of badges */
+.badges {
+  display: flex; flex-wrap: wrap; gap: .35rem;
+}
+
+/* Optional: status dots (use with .badge) */
+.badge::before {
+  content: '';
+  width: .5em; height: .5em; border-radius: 999px; display: inline-block;
+  background: currentColor; opacity: .75;
+}
+.badge.no-dot::before { display: none; }
