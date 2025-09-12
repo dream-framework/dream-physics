@@ -1,4 +1,29 @@
 {% block content %}
+
+<head>
+<!-- MathJax config + loader -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$','$'],['\\(','\\)']],
+      displayMath: [['$$','$$'],['\\[','\\]']],
+      processEscapes: true,
+      processEnvironments: true
+    },
+    options: {
+      skipHtmlTags: ['script','noscript','style','textarea','pre','code']
+    },
+    startup: { typeset: false },
+    chtml: { linebreaks: { automatic: true, width: 'container' } }  // allow wraps in long formulas
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  /* keep MathJax tidy and inline */
+  .q .mjx-container, .a .mjx-container { word-break: normal; overflow-wrap: normal; }
+  .a .mjx-container[jax="CHTML"][display="true"] { display: inline !important; } /* force display math inline */
+</style>
+</head>
 <div class="container">
 
   <div class="card hero">
@@ -35,7 +60,7 @@
     }
     .cloud:hover{ background:rgba(26,31,69,.28); border-color:rgba(42,47,90,.9) }
     .cloud .q{ font-weight:600; font-size:.96rem; color:var(--text); overflow-wrap:anywhere } /* FIX: wrap long titles */
-    .cloud .a{ font-size:.93rem; color:#cfd4ff }
+    .cloud .a{ font-size:.93rem; color:#cfd4ff; white-space: normal; overflow-wrap:anywhere } /* ⬅ one-line flow with wrapping */
 
     /* Always show Speculative section on this page */
     .card.speculative{ display:block!important }
@@ -98,16 +123,23 @@
   <div class="card speculative"><h2>Speculative</h2>  <div class="clouds" data-section="Speculative"></div></div>
 
 </div>
-
 <script>
 (function(){
-  /* MathJax (safe auto-load) */
-  if (!window.MathJax) {
-    window.MathJax = {
-      tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']], processEscapes:true, processEnvironments:true },
-      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+  /* ---- robust typeset ---- */
+  function typesetNow(target){
+    const run = () => {
+      if (MathJax.typesetPromise) return MathJax.typesetPromise(target ? [target] : undefined).catch(console.error);
+      if (MathJax.typeset) return MathJax.typeset(target ? [target] : undefined);
     };
-    const s=document.createElement('script'); s.async=true; s.src='https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js'; document.head.appendChild(s);
+    if (window.MathJax?.typesetPromise) return run();
+    if (window.MathJax?.startup?.promise) return MathJax.startup.promise.then(run);
+    let tries = 0;
+    const id = setInterval(() => {
+      if (window.MathJax?.typesetPromise || ++tries > 60) {
+        clearInterval(id);
+        if (window.MathJax?.typesetPromise) run();
+      }
+    }, 50);
   }
 
   const DEFAULT_URL = "/static/kb/parsed_faqs_en.json";
@@ -118,33 +150,53 @@
   const PAGE_SIZE  = 4;  // “More” pages show one row of 4
 
   const byNumberAsc = (a,b) => (a.number||0)-(b.number||0);
-
   const escapeHTML = s => String(s==null?"":s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  /* remove echo/fragment lines (e.g., "→M", "4", "μν") that repeat prior content */
+  function dedupeEchoLines(text){
+    const lines = String(text||'').replace(/\r\n/g,'\n').split('\n');
+    const kept = [];
+    const norm = s => s.normalize('NFC').replace(/\s+/g,'').replace(/[·•‧∙⋅]/g,'').replace(/[\u200B-\u200F\u2060\uFEFF]/g,'');
+    const isShort = s => norm(s).length <= 8;
+    for (let i=0;i<lines.length;i++){
+      const cur = lines[i];
+      const curTrim = cur.trim();
+      if (!curTrim) { kept.push(cur); continue; }
+      // last non-empty kept line
+      let j = kept.length-1; while (j>=0 && !kept[j].trim()) j--;
+      const prev = j>=0 ? kept[j] : '';
+      const curN = norm(curTrim), prevN = norm(prev);
+      if (prevN && (prevN===curN || (isShort(curTrim) && prevN.includes(curN)))) continue;
+      kept.push(cur);
+    }
+    return kept.join('\n');
+  }
 
   function tokenizeCodeFences(src){
     const out=[]; const re=/```([\s\S]*?)```/g; let last=0,m;
     while((m=re.exec(src))){ if(m.index>last) out.push({type:'text',text:src.slice(last,m.index)}); out.push({type:'code',text:m[1]}); last=re.lastIndex; }
     if(last<src.length) out.push({type:'text',text:src.slice(last)}); return out;
   }
-  function splitDisplayMath(src){
-    const out=[]; const re=/(\$\$[\s\S]*?\$\$|\\\[[\s\S]*?\\\])/g; let last=0,m;
-    while((m=re.exec(src))){ if(m.index>last) out.push({type:'text',text:src.slice(last,m.index)}); out.push({type:'math',text:m[1]}); last=re.lastIndex; }
-    if(last<src.length) out.push({type:'text',text:src.slice(last)}); return out;
-  }
+
   function displayToInlineForSummary(q){
     return String(q||'').replace(/\$\$([\s\S]*?)\$\$/g,'\\($1\\)').replace(/\\\[([\s\S]*?)\\\]/g,'\\($1\\)');
   }
+
   function toAnswerHTML(src){
-    const tokens=tokenizeCodeFences(String(src||'')); return tokens.map(t=>{
+    const tokens=tokenizeCodeFences(String(src||''));
+    return tokens.map(t=>{
       if(t.type==='code') return `<pre><code>${escapeHTML(t.text)}</code></pre>`;
-      return splitDisplayMath(t.text).map(seg=> seg.type==='math' ? escapeHTML(seg.text) : escapeHTML(seg.text).replace(/\n/g,'<br>')).join('');
+      const cleaned = dedupeEchoLines(t.text);
+      return escapeHTML(cleaned);  // no <br>; newlines become spaces; MathJax handles $...$
     }).join('');
   }
+
   function toQuestionHTML(src){
     const inlineQ=displayToInlineForSummary(src);
-    const tokens=tokenizeCodeFences(inlineQ); return tokens.map(t=>{
+    const tokens=tokenizeCodeFences(inlineQ);
+    return tokens.map(t=>{
       if(t.type==='code') return `<code>${escapeHTML(t.text.replace(/\n+/g,' '))}</code>`;
-      return splitDisplayMath(t.text).map(seg=> escapeHTML(seg.text).replace(/\n+/g,' ')).join('');
+      return escapeHTML(t.text.replace(/\s*\n+\s*/g,' '));
     }).join('');
   }
 
@@ -153,7 +205,7 @@
     const sum=document.createElement('summary'); sum.className='q'; sum.innerHTML=toQuestionHTML(q);
     const body=document.createElement('div'); body.className='a '+(status==='spec'?'speculative':'core'); body.innerHTML=toAnswerHTML(aRaw);
     det.append(sum,body);
-    det.addEventListener('toggle',()=>{ if(det.open && window.MathJax?.typeset) MathJax.typeset([det]); });
+    det.addEventListener('toggle',()=>{ if(det.open) typesetNow(det); });
     return det;
   }
 
@@ -199,7 +251,7 @@
       sum.textContent=`More (${start+1}–${end} of ${total})`;
       grid.innerHTML=''; tail.slice(start,end).forEach(it=> grid.appendChild(renderCloud(it.question,it.answer,it._status)));
       btnPrev.disabled=(page===0); btnNext.disabled=(page===totalPages-1);
-      if(window.MathJax?.typeset) window.MathJax.typeset([grid]);
+      typesetNow(grid);
     }
     btnPrev.addEventListener('click',()=>{ if(page>0){ page--; renderPage(); }});
     btnNext.addEventListener('click',()=>{ if(page<totalPages-1){ page++; renderPage(); }});
@@ -232,7 +284,7 @@
         renderMorePager(mount, tail);
       });
 
-      if(window.MathJax?.typeset) MathJax.typeset();
+      typesetNow(document.querySelector('.container'));
     })
     .catch(err=>{
       console.error(err);
@@ -246,4 +298,5 @@
     });
 })();
 </script>
+
 {% endblock %}
