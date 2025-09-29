@@ -2,6 +2,7 @@
 # --- Autoinstall bootstrap (drop-in) ---------------------------------
 import sys, subprocess, importlib, os, ensurepip
 
+
 def _pip_install(pkgs):
     """
     Try to install pkgs with pip. Falls back to --user if needed.
@@ -464,6 +465,7 @@ NAV = [
     ("falsification","nav.falsification","/falsification"),
     ("faq","nav.faq","/faq"),
     ("about","nav.about","/about"),
+    ("memory","nav.memory","/memory"),
     ("articles","nav.articles","/articles")
 ]
 
@@ -519,6 +521,12 @@ def theorems(): return render_template("theorems.html", title=t("nav.theorems"))
 
 @app.route("/plotter")
 def plotter(): return render_template("plotter.html", title=t("nav.plotter"))
+
+@app.route("/time")
+def time(): return render_template("time.html", title=t("nav.time"))
+
+@app.route("/memory")
+def memory(): return render_template("memory.html", title=t("nav.memory"))
 
 
 
