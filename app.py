@@ -465,7 +465,7 @@ NAV = [
     ("falsification","nav.falsification","/falsification"),
     ("faq","nav.faq","/faq"),
     ("about","nav.about","/about"),
-    ("memory","nav.memory","/memory"),
+    # ("memory","nav.memory","/memory"),
     ("articles","nav.articles","/articles")
 ]
 
