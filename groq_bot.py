@@ -13,8 +13,8 @@ from rank_bm25 import BM25Okapi
 from groq import Groq
 
 # ================== Config ==================
-DEFAULT_MODEL        = os.environ.get("GROQ_MODEL","llama-3.3-70b-versatile")
-FALLBACK_MODELS      = ("llama-3.1-8b-instant",)
+DEFAULT_MODEL        = os.environ.get("GROQ_MODEL","qwen/qwen3.8-27b")
+FALLBACK_MODELS      = ("qwen/qwen3-32b", "llama-3.3-70b-versatile")
 RU_GENERIC_FALLBACK  = os.environ.get("RU_GENERIC_FALLBACK", "1") == "1"
 STOP_MARK            = "<END>"
 
