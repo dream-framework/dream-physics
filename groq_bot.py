@@ -14,7 +14,7 @@ from groq import Groq
 
 # ================== Config ==================
 DEFAULT_MODEL        = os.environ.get("GROQ_MODEL","qwen/qwen3.8-27b")
-FALLBACK_MODELS      = ("qwen/qwen3-32b", "llama-3.3-70b-versatile")
+FALLBACK_MODELS      = ("openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.8-27b")
 RU_GENERIC_FALLBACK  = os.environ.get("RU_GENERIC_FALLBACK", "1") == "1"
 STOP_MARK            = "<END>"
 
@@ -384,7 +384,15 @@ class GroqAnswerer:
             resp = _call(self.model, max_tok)
         except Exception as e:
             err = str(e)
-            if "rate limit" in err.lower() or "429" in err:
+            err_lc = err.lower()
+            # Retry fallback models on rate-limit (429), over-capacity (503),
+            # service-unavailable, or any transient error containing those markers.
+            should_fallback = (
+                "rate limit" in err_lc or "429" in err
+                or "over capacity" in err_lc or "503" in err
+                or "service unavailable" in err_lc
+            )
+            if should_fallback:
                 for fb in FALLBACK_MODELS:
                     try:
                         resp = _call(fb, max_tok)
@@ -392,7 +400,7 @@ class GroqAnswerer:
                     except Exception:
                         continue
                 else:
-                    return "Sorry, the model is busy. Please retry shortly."
+                    return "Sorry, all models are busy right now. Please retry in a few seconds."
             else:
                 return f"Error: {html.escape(err)}"
 
