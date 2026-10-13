@@ -9,7 +9,7 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const DEFAULT_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const DEFAULT_MODEL = process.env.GROQ_MODEL || 'qwen/qwen3.8-27b';
 
 // ── Per-IP rate limit (in-memory, resets on redeploy) ─────────────────────
 // Groq free tier = 30 req/min global, 14k/day. 5/min/IP is generous + safe.
