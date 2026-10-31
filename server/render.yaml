@@ -1,3 +1,4 @@
+# Force redeploy: 2026 bot prompt update
 services:
   - type: web
     name: dream-groq
